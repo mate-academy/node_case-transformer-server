@@ -4,7 +4,7 @@ const { Server, get } = require('http');
 
 function request(url = '/') {
   return new Promise((resolve, reject) => {
-    get('http://localhost:5701' + url, (res) => {
+    get('http://localhost:5700' + url, (res) => {
       let body = '';
 
       res.on('data', (chunk) => {
