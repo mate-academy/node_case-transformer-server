@@ -59,7 +59,7 @@ function createServer() {
       targetCase: toCase,
       originalText: textToConvert,
       convertedText: conversionResult.convertedText,
-    })
+    }));
   });
 
   return server;
