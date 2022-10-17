@@ -51,7 +51,7 @@ describe('createServer', () => {
       });
     }
 
-    before(async() => {
+    before(async () => {
       server = createServer();
 
       await listen(5701);
@@ -62,7 +62,7 @@ describe('createServer', () => {
     });
 
     describe('Validation', () => {
-      it('should throw correct error if no text to convert', async() => {
+      it('should throw correct error if no text to convert', async () => {
         const {
           body,
           res,
@@ -81,7 +81,7 @@ describe('createServer', () => {
           });
       });
 
-      it('should throw correct error if no toCase', async() => {
+      it('should throw correct error if no toCase', async () => {
         const {
           body,
           res,
@@ -100,7 +100,7 @@ describe('createServer', () => {
           });
       });
 
-      it('should throw correct error if toCase is invalid', async() => {
+      it('should throw correct error if toCase is invalid', async () => {
         const {
           body,
           res,
@@ -119,7 +119,7 @@ describe('createServer', () => {
           });
       });
 
-      it('should throw correct error for empty URL', async() => {
+      it('should throw correct error for empty URL', async () => {
         const {
           body,
           res,
@@ -143,7 +143,7 @@ describe('createServer', () => {
           });
       });
 
-      it('should throw correct error if no text to convert and invalid toCase', async() => {
+      it('should throw correct error if no text to convert and invalid toCase', async () => {
         const {
           body,
           res,
@@ -155,18 +155,16 @@ describe('createServer', () => {
         const data = JSON.parse(body);
 
         expect(data)
-          .toEqual(
-            expect.arrayContaining({
-              errors: [
-                expect.objectContaining({
-                  message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-                }),
-                expect.objectContaining({
-                  message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-                }),
-              ],
-            }),
-          );
+          .toEqual({
+            errors: expect.arrayContaining([
+              expect.objectContaining({
+                message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+              }),
+              expect.objectContaining({
+                message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+              }),
+            ]),
+          });
       });
     });
 
@@ -181,7 +179,7 @@ describe('createServer', () => {
 
       Object.entries(cases).forEach(([toCase, expected]) => {
         Object.entries(cases).forEach(([originalCase, text]) => {
-          it(`should convert ${originalCase} to ${toCase}`, async() => {
+          it(`should convert ${originalCase} to ${toCase}`, async () => {
             const {
               body,
               res,
