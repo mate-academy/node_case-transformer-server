@@ -60,10 +60,6 @@ function createServer() {
       originalText: textToConvert,
       convertedText: conversionResult.convertedText,
     })
-      .split(',')
-      .join(',\n')
-      .replace('{', '{\n')
-      .replace('}', '\n}'));
   });
 
   return server;
