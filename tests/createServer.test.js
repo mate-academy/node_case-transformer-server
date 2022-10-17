@@ -54,7 +54,7 @@ describe('createServer', () => {
     before(async() => {
       server = createServer();
 
-      await listen(57001);
+      await listen(5701);
     });
 
     after(() => {
