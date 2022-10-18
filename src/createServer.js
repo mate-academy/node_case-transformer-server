@@ -13,33 +13,32 @@ function createServer() {
     const targetCase = caseParams[1];
     const cases = ["SNAKE", "PASCAL", "CAMEL", "KEBAB", "UPPER"];
     const errors = [];
-    const errorValues = [
-      {
+    const errorsMap = {
+      textToConvertIsRequired:{
         message:
           'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       },
-      {
+      toCaseQueryParamIsRequired:{
         message:
           '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       },
-      {
+      caseIsNotSupported:{
         message:
           "This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.",
       },
-    ];
+    };
 
 
-    if (originalText === "") {
-      errors.push(errorValues[0]);
+    if (!originalText) {
+      errors.push(errorsMap.textToConvertIsRequired);
     }
 
     if (caseParams[0] !== "toCase") {
-      console.log('not toCases')
-      errors.push(errorValues[1]);
-      console.log(errors)
+      errors.push(errorsMap.toCaseQueryParamIsRequired);
     } else if (!cases.includes(targetCase) ) {
-      errors.push(errorValues[2]);
+      errors.push(errorsMap.caseIsNotSupported);
     }
+    console.log(errors)
 
     if (errors.length) {
       res.statusCode = 400;
