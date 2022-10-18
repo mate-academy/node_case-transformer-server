@@ -19,8 +19,8 @@ function createServer() {
     ];
 
     const makeError = (...ErrMessage) => {
-      ErrMessage.map(message => {
-        return errors.push({
+      ErrMessage.forEach(message => {
+        errors.push({
           message,
         });
       });
