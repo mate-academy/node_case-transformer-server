@@ -1,32 +1,60 @@
 const http = require('http');
-const fs = require('fs');
+const { convertToCase } = require('./convertToCase');
 
 const createServer = () => {
-  const server = http.createServer(
+  return http.createServer(
     (req, res) => {
-      const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
+      const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+      const [convertText, queryString] = req.url.split('?');
+      const originalText = convertText.slice(1);
+      const params = new URLSearchParams(queryString);
+      const toCase = params.get('toCase');
+      const errorMessages = {
+        noTextMessage: 'Text to convert is required. '
+          + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        noParam: '"toCase" query param is required. '
+          + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        invalidCase: 'This case is not supported. '
+          + `Available cases: ${cases.join(', ')}.`,
+      };
+      const errors = [];
 
-      if (!normalizedURL.startsWith('/file')) {
-        res.statusCode = 404;
-        res.end('File not found. The file path must starts with "/file/"!');
+      res.setHeader('Content-type', 'application/json');
+
+      if (!originalText) {
+        errors.push({ message: errorMessages.noTextMessage });
       }
 
-      const fileName = normalizedURL.pathname.replace('/file', '')
-        || 'index.html';
+      if (!toCase) {
+        errors.push({ message: errorMessages.noParam });
+      }
 
-      fs.readFile(`./public${fileName}`, (error, data) => {
-        if (!error) {
-          res.statusCode = 200;
-          res.end(data);
-        } else {
-          res.statusCode = 404;
-          res.end('Page not found :(');
-        }
-      });
+      if (!cases.includes(toCase) && toCase?.length) {
+        errors.push({ message: errorMessages.invalidCase });
+      }
+
+      if (errors.length) {
+        res.statusCode = 404;
+        res.statusText = 'Bad request';
+        res.end(JSON.stringify(errors));
+
+        return;
+      }
+
+      const {
+        originalCase, convertedText,
+      } = convertToCase(originalText, toCase);
+
+      res.statusCode = 200;
+
+      res.end(JSON.stringify({
+        originalCase,
+        targetCase: toCase,
+        originalText,
+        convertedText,
+      }));
     },
   );
-
-  return server;
 };
 
 module.exports = { createServer };
