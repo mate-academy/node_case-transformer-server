@@ -2,15 +2,6 @@
 
 In this task you will learn how to work with `http` module in Node.js, creating your own simple server.
 
-## About reference solution
-
-This task also shows you how you can dived business and HTTP logic, even in simplest application.
-Check reference solution for details.
-There are `src/createServer.badCode.js` - working example but hard to read and support in future.
-And `src/createServer.js` with files inside `src/server` folder that contain refactored code.
-
-Read both and compare.
-
 ## Requirements
 
 You need to create and export (as an object field) a `createServer` function inside `src/createServer.js`.
@@ -117,20 +108,12 @@ Example:
 }
 ```
 
-## Local playground
-> It's completely optional. You can just solve the task (make tests green) and move to the next task/topic.
+## Guidelines to work on project
+- Fork this repo.
+- After cloning repo, run `npm i`.
+- Run `npm run test:watch` to have automatically rerun tests on code change.
+- Work until all tests are green.
+- Commit and push changes.
+- Make PR to Mate academy repo.
 
-You can download this project (as zip). Run `npm i`, edit files in any IDE and run commands from `package.json` scripts.
-
-`npm start` will start a server on `5700` port.
-You can use Postman or just browser and make requests to `http://localhost:5700`.
-
-Files
-- `main.js`
-- `package.json`
-- `package-lock.json`
-- `.editorconfig`
-- `.eslintrc.js`
-- `.mocharc.js`
-- `mochaGlobalFixtures.js`
-are readonly and you don't need them to solve the task. They are just for local (after download) work.
+> You can run `npm start` to have working server locally.
