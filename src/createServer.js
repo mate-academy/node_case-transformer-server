@@ -1,7 +1,3 @@
-/* eslint-disable max-len */
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
 const http = require('http');
 const convertToCase = require('./convertToCase').convertToCase;
 
@@ -10,25 +6,36 @@ function createServer() {
 
   server.on('request', (req, res) => {
     const urlParts = req.url.split('?');
-    const textToConvert = urlParts[0].slice(1);
+    const originalText = urlParts[0].slice(1);
+
     const params = new URLSearchParams(urlParts[1]);
-    const toCase = params.get('toCase');
+    const targetCase = params.get('toCase');
+
+    const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+    const errorMessages = {
+      emptyText: {
+        message: 'Text to convert is required. '
+        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      },
+      emptyToCase: {
+        message: '"toCase" query param is required. '
+        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      },
+      invalidCase: {
+        message: 'This case is not supported. '
+        + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      },
+    };
     const errors = [];
 
-    if (!textToConvert) {
-      errors.push({
-        message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
+    if (!originalText) {
+      errors.push(errorMessages.emptyText);
     }
 
-    if (!toCase) {
-      errors.push({
-        message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    } else if (!['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase)) {
-      errors.push({
-        message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-      });
+    if (!targetCase) {
+      errors.push(errorMessages.emptyToCase);
+    } else if (!availableCases.includes(targetCase)) {
+      errors.push(errorMessages.invalidCase);
     }
 
     res.setHeader('Content-Type', 'application/json');
@@ -39,13 +46,20 @@ function createServer() {
 
       res.end(JSON.stringify({ errors }));
     } else {
-      const data = {
-        ...convertToCase(textToConvert, toCase),
-        originalText: textToConvert,
-        targetCase: toCase,
-      };
+      const {
+        originalCase,
+        convertedText,
+      } = convertToCase(originalText, targetCase);
 
-      res.end(JSON.stringify(data));
+      res.statusCode = 200;
+      res.statusText = 'OK';
+
+      res.end(JSON.stringify({
+        originalText,
+        originalCase,
+        convertedText,
+        targetCase,
+      }));
     }
   });
 
