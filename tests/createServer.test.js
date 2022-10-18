@@ -155,7 +155,8 @@ describe('createServer', () => {
         const data = JSON.parse(body);
 
         expect(data)
-          .toEqual(
+          .toEqual({
+            errors:
             expect.arrayContaining({
               errors: [
                 expect.objectContaining({
@@ -166,7 +167,7 @@ describe('createServer', () => {
                 }),
               ],
             }),
-          );
+          });
       });
     });
 
