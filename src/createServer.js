@@ -28,58 +28,22 @@ function createServer() {
       },
     ];
 
-    if (originalText === "" && caseParams[0].length === 0) {
-      res.statusCode = 400;
-      errors.push(errorValues[0], errorValues[1]);
-      res.end(
-        JSON.stringify({
-          errors,
-        })
-      );
-      return;
-    }
-
-    if (originalText === "" && !cases.includes(targetCase)) {
-      res.statusCode = 400;
-      errors.push(errorValues[0], errorValues[2]);
-      res.end(
-        JSON.stringify({
-          errors,
-        })
-      );
-      return;
-    }
 
     if (originalText === "") {
-      res.statusCode = 400;
       errors.push(errorValues[0]);
-      res.end(
-        JSON.stringify({
-          errors,
-        })
-      );
-      return;
     }
 
     if (caseParams[0] !== "toCase") {
-      res.statusCode = 400;
+      console.log('not toCases')
       errors.push(errorValues[1]);
-      res.end(
-        JSON.stringify({
-          errors,
-        })
-      );
-      return;
+      console.log(errors)
+    } else if (!cases.includes(targetCase) ) {
+      errors.push(errorValues[2]);
     }
 
-    if (!cases.includes(targetCase)) {
+    if (errors.length) {
       res.statusCode = 400;
-      errors.push(errorValues[2]);
-      res.end(
-        JSON.stringify({
-          errors,
-        })
-      );
+      res.end(JSON.stringify({ errors }));
       return;
     }
     const { originalCase, convertedText } = convertToCase(
