@@ -17,7 +17,8 @@ function createServer() {
      + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
     };
 
-    const originalText = req.url.split('?')[0].split('/')[1];
+    const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
+    const originalText = normalizedURL.pathname.slice(1);
 
     const params = new URLSearchParams(req.url.split('?')[1]);
     const targetCase = params.get('toCase');
