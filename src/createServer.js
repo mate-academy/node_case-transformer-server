@@ -9,9 +9,9 @@ function createServer() {
   const server = http.createServer();
 
   server.on('request', (req, res) => {
-    const reqUrlArr = req.url.split('?');
-    const textToConvert = reqUrlArr[0].slice(1);
-    const params = new URLSearchParams(reqUrlArr[1]);
+    const urlParts = req.url.split('?');
+    const textToConvert = urlParts[0].slice(1);
+    const params = new URLSearchParams(urlParts[1]);
     const toCase = params.get('toCase');
     const errors = [];
 
@@ -35,7 +35,7 @@ function createServer() {
 
     if (errors.length) {
       res.statusCode = 400;
-      res.statusTex = 'Bad request';
+      res.statusText = 'Bad request';
 
       res.end(JSON.stringify({ errors }));
     } else {
