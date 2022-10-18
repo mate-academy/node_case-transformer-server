@@ -8,7 +8,7 @@ const createServer = () => {
       const [convertText, queryString] = req.url.split('?');
       const originalText = convertText.slice(1);
       const params = new URLSearchParams(queryString);
-      const toCase = params.get('toCase');
+      const targetCase = params.get('toCase');
       const errorMessages = {
         noTextMessage: 'Text to convert is required. '
           + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
@@ -25,11 +25,11 @@ const createServer = () => {
         errors.push({ message: errorMessages.noTextMessage });
       }
 
-      if (!toCase) {
+      if (!targetCase) {
         errors.push({ message: errorMessages.noParam });
       }
 
-      if (!cases.includes(toCase) && toCase?.length) {
+      if (!cases.includes(targetCase) && targetCase?.length) {
         errors.push({ message: errorMessages.invalidCase });
       }
 
@@ -43,13 +43,13 @@ const createServer = () => {
 
       const {
         originalCase, convertedText,
-      } = convertToCase(originalText, toCase);
+      } = convertToCase(originalText, targetCase);
 
       res.statusCode = 200;
 
       res.end(JSON.stringify({
         originalCase,
-        targetCase: toCase,
+        targetCase,
         originalText,
         convertedText,
       }));
