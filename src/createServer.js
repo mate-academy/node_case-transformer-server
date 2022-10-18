@@ -1,17 +1,13 @@
-/* eslint-disable no-console */
-
 const http = require('http');
-const { convertToCase } = require('./convertToCase');
+const { convertToCase: convertTo } = require('./convertToCase');
 
 const createServer = () => http.createServer((req, res) => {
-  const url = new URL(req.url, `http://${req.headers.host}`);
-
-  const textToConvert = String(req.url).split('?')[0].slice(1);
-  const toCase = new URLSearchParams(url.searchParams).get('toCase');
-
   res.setHeader('Content-Type', 'application/json');
 
-  const errors = [];
+  const url = new URL(req.url, `http://${req.headers.host}`);
+
+  const originalText = url.pathname.slice(1);
+  const targetCase = new URLSearchParams(url.searchParams).get('toCase');
   const supportedCases = [
     'SNAKE',
     'KEBAB',
@@ -20,22 +16,30 @@ const createServer = () => http.createServer((req, res) => {
     'UPPER',
   ];
 
-  if (!textToConvert) {
+  const errors = [];
+
+  const noTextMessage = 'Text to convert is required. '
+  + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+
+  const noCaseMessage = '"toCase" query param is required. '
+  + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+
+  const invalidCaseMessage = 'This case is not supported. '
+  + `Available cases: ${supportedCases.join(', ')}.`;
+
+  if (!originalText) {
     errors.push({
-      message: 'Text to convert is required. '
-        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: noTextMessage,
     });
   }
 
-  if (!toCase) {
+  if (!targetCase) {
     errors.push({
-      message: '"toCase" query param is required. '
-        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: noCaseMessage,
     });
-  } else if (!supportedCases.includes(toCase)) {
+  } else if (!supportedCases.includes(targetCase)) {
     errors.push({
-      message: 'This case is not supported. '
-        + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      message: invalidCaseMessage,
     });
   }
 
@@ -50,17 +54,16 @@ const createServer = () => http.createServer((req, res) => {
     return;
   }
 
-  const conversionResult = convertToCase(textToConvert, toCase);
+  const { originalCase, convertedText } = convertTo(originalText, targetCase);
 
   res.statusCode = 200;
 
   res.end(JSON.stringify({
-    originalCase: conversionResult.originalCase,
-    targetCase: toCase,
-    originalText: textToConvert,
-    convertedText: conversionResult.convertedText,
+    originalCase,
+    targetCase,
+    originalText,
+    convertedText,
   }));
 });
 
 module.exports = { createServer };
-
