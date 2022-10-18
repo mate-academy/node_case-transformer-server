@@ -78,6 +78,6 @@ function createServer() {
   });
 
   return server;
-}
+};
 
 module.exports = { createServer };
