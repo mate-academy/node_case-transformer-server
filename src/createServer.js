@@ -1,5 +1,5 @@
 const http = require('http');
-const convertToCase = require('./convertToCase').convertToCase;
+const { convertToCase } = require('./convertToCase');
 
 function createServer() {
   const server = http.createServer();
