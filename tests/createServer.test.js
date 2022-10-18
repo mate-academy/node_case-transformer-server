@@ -157,16 +157,14 @@ describe('createServer', () => {
         expect(data)
           .toEqual({
             errors:
-            expect.arrayContaining({
-              errors: [
-                expect.objectContaining({
-                  message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-                }),
-                expect.objectContaining({
-                  message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-                }),
-              ],
-            }),
+            expect.arrayContaining([
+              expect.objectContaining({
+                message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+              }),
+              expect.objectContaining({
+                message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+              }),
+            ]),
           });
       });
     });
