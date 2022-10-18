@@ -10,24 +10,28 @@ function createServer() {
     const targetCase = params.toCase;
     const errors = [];
 
+    const noText = 'Text to convert is required. '
+    + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+    const noCase = '"toCase" query param is required. '
+    + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+    const wrongCase = 'This case is not supported. '
+    + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+
     res.setHeader('Content-Type', 'application/json');
 
     if (!text) {
       errors.push({
-        message: 'Text to convert is required. '
-        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: noText,
       });
     };
 
     if (!targetCase) {
       errors.push({
-        message: '"toCase" query param is required. '
-        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: noCase,
       });
     } else if (!cases.includes(targetCase)) {
       errors.push({
-        message: 'This case is not supported. '
-        + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        message: wrongCase,
       });
     };
 
