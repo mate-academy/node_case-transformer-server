@@ -8,22 +8,27 @@ function createServer() {
     const query = Object.fromEntries(url.searchParams.entries());
     const targetCase = query.toCase;
     const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+    const errorMessages = {
+      noTextMessage: 'Text to convert is required. '
+        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      noParam: '"toCase" query param is required. '
+        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      invalidCase: 'This case is not supported. '
+      + `Available cases: ${cases.join(', ')}.`,
+    };
 
     res.setHeader('Content-type', 'application/json');
 
     const errors = [];
 
     if (!originalText) {
-      errors.push({ message: 'Text to convert is required. '
-      + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
+      errors.push({ message: errorMessages.noTextMessage });
     };
 
     if (!targetCase) {
-      errors.push({ message: '"toCase" query param is required. '
-      + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
+      errors.push({ message: errorMessages.noParam });
     } else if (!(cases.includes(targetCase))) {
-      errors.push({ message: 'This case is not supported. '
-      + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.' });
+      errors.push({ message: errorMessages.invalidCase });
     };
 
     if (errors.length) {
