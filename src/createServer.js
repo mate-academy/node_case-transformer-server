@@ -3,7 +3,8 @@ const { convertToCase } = require('./convertToCase/convertToCase');
 
 function createServer() {
   return http.createServer((req, res) => {
-    const splited = req.url.split('?');
+    const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
+    const wordToConvert = normalizedURL.pathname.slice(1);
     const typeConvent = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
     const messages = {
       badCase: 'This case is not supported. '
@@ -15,42 +16,35 @@ function createServer() {
     };
 
     const errors = [];
-
-    let searchParams = '';
-    let wordToConvert = '';
     let body = {};
 
-    if (splited.length === 2) {
-      searchParams = new URLSearchParams(splited[1]);
-      wordToConvert = splited[0].slice(1);
+    const requestCase = normalizedURL.searchParams.get('toCase');
 
-      const requestCase = searchParams.get('toCase');
-
-      if (typeConvent.includes(requestCase)) {
-        body = convertToCase(wordToConvert, requestCase);
-      } else {
-        errors.push({ message: messages.badCase });
-      }
-
-      body.targetCase = requestCase;
-      body.originalText = wordToConvert;
+    if (!normalizedURL.search) {
+      errors.push({ message: messages.noCase });
     }
 
-    res.setHeader('Content-Type', 'application/json');
+    if (!typeConvent.includes(requestCase) && normalizedURL.search) {
+      errors.push({ message: messages.badCase });
+    } else if (typeConvent.includes(requestCase)) {
+      body = convertToCase(wordToConvert, requestCase);
+    }
 
-    if (splited[0] === '/') {
+    if (!wordToConvert) {
       errors.push({ message: messages.noText });
     }
 
-    if (splited[1] === undefined) {
-      errors.push({ message: messages.noCase });
-    }
+    body.targetCase = requestCase;
+    body.originalText = wordToConvert;
+
+    res.setHeader('Content-Type', 'application/json');
 
     if (errors.length === 0) {
       res.statusCode = 200;
       res.end(JSON.stringify(body));
     } else {
       res.statusCode = 400;
+      res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
     }
   });
