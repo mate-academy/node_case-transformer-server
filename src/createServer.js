@@ -8,7 +8,7 @@ function createServer() {
   const server = http.createServer((request, response) => {
     response.setHeader('Content-Type', 'application/json');
 
-    const url = new URL(request.url, 'http://localhost:3000');
+    const url = new URL(request.url, `http://${request.headers.host}`);
 
     const convertCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
@@ -16,17 +16,17 @@ function createServer() {
 
     const errors = [];
 
-    const text = pathname.slice(1);
+    const originalText = pathname.slice(1);
 
     const params = Object.fromEntries(searchParams.entries());
 
-    if (text === '') {
+    if (originalText === '') {
       errors.push({
         message: ServerError.EmptyText,
       });
     }
 
-    if (Object.keys(params).length === 0) {
+    if (!params.toCase) {
       errors.push({
         message: ServerError.NoToCase,
       });
@@ -42,13 +42,18 @@ function createServer() {
       return;
     }
 
-    const { originalCase, convertedText } = convertToCase(text, params.toCase);
+    const targetCase = params.toCase;
+
+    const { originalCase, convertedText } = convertToCase(
+      originalText,
+      targetCase,
+    );
 
     response.end(JSON.stringify({
       convertedText,
       originalCase,
-      originalText: text,
-      targetCase: params.toCase,
+      originalText,
+      targetCase,
     }));
   });
 
