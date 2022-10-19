@@ -8,7 +8,6 @@ function createServer() {
     const textToConvert = url.pathname.slice(1);
 
     const params = Object.fromEntries(url.searchParams.entries());
-    // URLSerchParams
     const toCase = params.toCase;
 
     const allCases = [
