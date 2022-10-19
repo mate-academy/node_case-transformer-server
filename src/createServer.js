@@ -2,7 +2,7 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 
-const { ServerError } = require('./types/ServerError');
+const { serverError } = require('./types/ServerError');
 
 function createServer() {
   const server = http.createServer((request, response) => {
@@ -22,17 +22,17 @@ function createServer() {
 
     if (originalText === '') {
       errors.push({
-        message: ServerError.EmptyText,
+        message: serverError.EmptyText,
       });
     }
 
     if (!params.toCase) {
       errors.push({
-        message: ServerError.NoToCase,
+        message: serverError.NoToCase,
       });
     } else if (!convertCases.includes(params.toCase)) {
       errors.push({
-        message: ServerError.InvalidToCase,
+        message: serverError.InvalidToCase,
       });
     }
 

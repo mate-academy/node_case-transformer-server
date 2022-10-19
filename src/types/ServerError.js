@@ -1,4 +1,4 @@
-const ServerError = {
+const serverError = {
   EmptyText: 'Text to convert is required. '
     + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
   NoToCase: '"toCase" query param is required. '
@@ -8,5 +8,5 @@ const ServerError = {
 };
 
 module.exports = {
-  ServerError,
+  serverError,
 };
