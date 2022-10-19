@@ -5,9 +5,9 @@ function createServer() {
   const server = http.createServer((req, res) => {
     const normalizedURl = new URL(req.url, `http://${req.headers.host}`);
 
-    const textToConvert = normalizedURl.pathname.replace('/', '');
+    const originalText = normalizedURl.pathname.replace('/', '');
 
-    const toCase = normalizedURl.searchParams.get('toCase');
+    const targetCase = normalizedURl.searchParams.get('toCase');
 
     const response = {};
 
@@ -24,17 +24,17 @@ function createServer() {
     const invalidCaseMessage = 'This case is not supported. '
     + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
 
-    if (!textToConvert) {
+    if (!originalText) {
       errors.push({
         message: noTextToConvertMessage,
       });
     }
 
-    if (!toCase) {
+    if (!targetCase) {
       errors.push({
         message: emptyCaseMessage,
       });
-    } else if (!allowedCases.includes(toCase)) {
+    } else if (!allowedCases.includes(targetCase)) {
       errors.push({
         message: invalidCaseMessage,
       });
@@ -44,21 +44,23 @@ function createServer() {
 
     if (errors.length) {
       res.statusCode = 400;
+      response.statusText = 'Bad request';
 
       res.end(JSON.stringify({ errors }));
     } else {
       res.statusCode = 200;
 
-      response.originalCase = convertToCase(textToConvert, toCase).originalCase;
+      const { originalCase, convertedText } = convertToCase(
+        originalText,
+        targetCase,
+      );
 
-      response.targetCase = toCase;
-
-      response.originalText = textToConvert;
-
-      response.convertedText = convertToCase(textToConvert, toCase)
-        .convertedText;
-
-      res.end(JSON.stringify(response));
+      res.end(JSON.stringify({
+        originalCase,
+        targetCase,
+        originalText,
+        convertedText,
+      }));
     }
   });
 
