@@ -4,63 +4,68 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 
-function createServer() {
-  return http.createServer((req, res) => {
-    const url = new URL(req.url, `http://${req.headers.host}`);
+const createServer = () => http.createServer((req, res) => {
+  const url = new URL(req.url, `http://${req.headers.host}`);
 
-    const textToConvert = url.pathname.slice(1);
+  const textToConvert = url.pathname.slice(1);
 
-    const params = Object.fromEntries(url.searchParams.entries());
+  const params = Object.fromEntries(url.searchParams.entries());
 
-    const toCase = params.toCase;
+  const toCase = params.toCase;
 
-    const allCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+  const allCases = [
+    'SNAKE',
+    'KEBAB',
+    'CAMEL',
+    'PASCAL',
+    'UPPER',
+  ];
 
-    const errors = [];
+  const errors = [];
 
-    res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Type', 'application/json');
 
-    if (!textToConvert) {
-      errors.push({
-        message: 'Text to convert is required. Correct request is: '
-          + '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    };
+  if (!textToConvert) {
+    errors.push({
+      message: 'Text to convert is required. Correct request is: '
+        + '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    });
+  };
 
-    if (!toCase) {
-      errors.push({
-        message: '"toCase" query param is required. '
-        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    };
+  if (!toCase) {
+    errors.push({
+      message: '"toCase" query param is required. '
+      + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    });
+  } else if (!allCases.includes(toCase)) {
+    errors.push({
+      message: 'This case is not supported. '
+      + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+    });
+  }
 
-    if (!allCases.includes(toCase) && toCase) {
-      errors.push({
-        message: 'This case is not supported. '
-        + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-      });
-    };
+  if (errors.length) {
+    res.statusCode = 400;
+    res.statusText = 'Bad request';
 
-    if (errors.length) {
-      res.statusCode = 400;
-      res.statusText = 'Bad request';
+    res.end(JSON.stringify({ errors }));
 
-      res.end(JSON.stringify({ errors }));
+    return;
+  }
 
-      return;
-    }
+  const { originalCase, convertedText } = convertToCase(
+    textToConvert, toCase,
+  );
 
-    const { originalCase, convertedText } = convertToCase(
-      textToConvert, toCase,
-    );
+  res.statusCode = 200;
+  res.statusMessage = 'OK';
 
-    res.end(JSON.stringify({
-      originalCase,
-      convertedText,
-      targetCase: toCase,
-      originalText: textToConvert,
-    }));
-  });
-};
+  res.end(JSON.stringify({
+    originalCase,
+    convertedText,
+    targetCase: toCase,
+    originalText: textToConvert,
+  }));
+});
 
 module.exports = { createServer };
