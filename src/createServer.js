@@ -29,7 +29,7 @@ const createServer = () => {
         errors.push({ message: errorMessages.noParam });
       }
 
-      if (!cases.includes(targetCase) && targetCase?.length) {
+      if (targetCase && !cases.includes(targetCase)) {
         errors.push({ message: errorMessages.invalidCase });
       }
 
