@@ -9,8 +9,6 @@ function createServer() {
 
     const targetCase = normalizedURl.searchParams.get('toCase');
 
-    const response = {};
-
     const errors = [];
 
     const allowedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
@@ -44,7 +42,7 @@ function createServer() {
 
     if (errors.length) {
       res.statusCode = 400;
-      response.statusText = 'Bad request';
+      res.statusText = 'Bad request';
 
       res.end(JSON.stringify({ errors }));
     } else {
