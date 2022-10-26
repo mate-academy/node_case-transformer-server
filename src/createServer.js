@@ -4,7 +4,6 @@ const { convertToCase } = require('./convertToCase');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    // const url = new URL(req.url, `http://${req.headers.host}`);
     const splitedURL = req.url.split('?');
     const params = new URLSearchParams(splitedURL[1]);
     const fromCase = splitedURL[0].replace('/', '');
