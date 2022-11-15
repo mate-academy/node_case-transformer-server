@@ -4,11 +4,11 @@ const { convertToCase } = require('./convertToCase');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    const [query, caseToTransform] = req.url
+    const [originalText, targetCase] = req.url
       .slice(1)
       .split('?')
       .map((a) => a.replace('toCase=', ''));
-    const error = isError(query, caseToTransform);
+    const error = isError(originalText, targetCase);
 
     if (error.errors.length) {
       res.writeHead(400, 'Bad request', {
@@ -17,13 +17,13 @@ function createServer() {
       res.end(JSON.stringify(error));
     } else {
       const { originalCase, convertedText } = convertToCase(
-        query,
-        caseToTransform,
+        originalText,
+        targetCase,
       );
       const retObj = {
         originalCase,
-        targetCase: caseToTransform,
-        originalText: query,
+        targetCase,
+        originalText,
         convertedText,
       };
 

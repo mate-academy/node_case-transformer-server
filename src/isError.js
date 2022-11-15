@@ -1,30 +1,30 @@
-/* eslint-disable */
-
-function isError(q, c) {
-  const errorObj = {
-    errors: [],
-  };
+function isError(query, typeCase) {
+  const errors = [];
 
   const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-  if (!q) {
-    errorObj.errors.push({
-      message:
-        'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-    });
-  }
-  if (!c) {
-    errorObj.errors.push({
-      message:
-        'toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"',
-    });
-  } else if (!cases.includes(c)) {
-    errorObj.errors.push({
-      message:
-        'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+
+  if (!query) {
+    errors.push({
+      message: 'Text to convert is required.',
     });
   }
 
-  return errorObj;
+  if (!typeCase) {
+    errors.push({
+      message: 'toCase" query param is required.',
+    });
+  }
+
+  if (!cases.includes(typeCase)) {
+    errors.push({
+      message: `This case is not supported. Available cases: ${cases.reduce(
+        (acc, singleCase) => acc + singleCase + ' ',
+        '',
+      )}`,
+    });
+  }
+
+  return errors;
 }
 
 module.exports = { isError };
