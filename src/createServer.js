@@ -9,10 +9,6 @@ function createServer() {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    // const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
-    // const originalText = normalizedUrl.hostname;
-    // const targetCase = normalizedUrl.searchParams.get('toCase');
-
     const splitedURL = (req.url.split('?'));
     const params = new URLSearchParams(splitedURL[1]);
 
