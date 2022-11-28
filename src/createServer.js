@@ -1,5 +1,6 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const { checkValidateRequest } = require('./validateRequest');
 
 const errorsTypes = {
   notOriginalText: 'Text to convert is required.'
@@ -19,27 +20,7 @@ function createServer() {
     const originalText = pathname.slice(1);
     const params = new URLSearchParams(searchParams);
     const targetCase = params.get('toCase');
-    const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-    const errors = [];
-    const { notOriginalText, notTargetCase, wrongTargetCase } = errorsTypes;
-
-    if (!originalText) {
-      errors.push({
-        message: notOriginalText,
-      });
-    }
-
-    if (!targetCase) {
-      errors.push({
-        message: notTargetCase,
-      });
-    }
-
-    if (!cases.includes(targetCase) && targetCase) {
-      errors.push({
-        message: wrongTargetCase,
-      });
-    }
+    const errors = checkValidateRequest(errorsTypes, originalText, targetCase);
 
     if (errors.length) {
       res.statusCode = 400;
@@ -71,4 +52,4 @@ function createServer() {
   return server;
 }
 
-module.exports = { createServer }
+module.exports = { createServer };
