@@ -1,5 +1,7 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const { cases } = require('./cases');
+const { errorMessages } = require('./errorMessages');
 
 function createServer() {
   return http.createServer((req, res) => {
@@ -14,22 +16,19 @@ function createServer() {
 
     if (!text) {
       errors.push({
-        message: 'Text to convert is required. '
-        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: errorMessages.noText,
       });
     }
 
     if (!toCase) {
       errors.push({
-        message: '"toCase" query param is required. '
-        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: errorMessages.noCase,
       });
-    } else if (
-      !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase)
-    ) {
+    }
+
+    if (toCase && !cases.includes(toCase)) {
       errors.push({
-        message: 'This case is not supported. '
-        + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        message: errorMessages.wrongCase,
       });
     }
 
@@ -37,16 +36,18 @@ function createServer() {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
-    } else {
-      res.statusCode = 200;
-      res.statusMessage = 'OK';
 
-      res.end(JSON.stringify({
-        ...convertToCase(text, toCase),
-        targetCase: toCase,
-        originalText: text,
-      }));
+      return;
     }
+
+    res.statusCode = 200;
+    res.statusMessage = 'OK';
+
+    res.end(JSON.stringify({
+      ...convertToCase(text, toCase),
+      targetCase: toCase,
+      originalText: text,
+    }));
   });
 }
 
