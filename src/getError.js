@@ -1,3 +1,5 @@
+const { SUPPORTED_CASE, errorsType } = require('./const.js');
+
 const getError = (req) => {
   const errors = [];
 
@@ -6,37 +8,23 @@ const getError = (req) => {
   const params = new URLSearchParams(requestPartsArr[1]);
   const toCase = params.get('toCase');
 
-  const supportedCase = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-  const isCaseSupport = supportedCase.includes(toCase);
-
-  const missingText = 'Text to convert is required.'
-  + ' '
-  + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-
-  const missingParams = '"toCase" query param is required.'
-  + ' '
-  + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-
-  const caseNotSupported = 'This case is not supported.'
-  + ' '
-  + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+  const isCaseSupport = SUPPORTED_CASE.includes(toCase);
 
   if (!text) {
     errors.push({
-      message: missingText,
+      message: errorsType.missingText,
     });
   }
 
   if (!toCase) {
     errors.push({
-      message: missingParams,
+      message: errorsType.missingParams,
     });
   }
 
   if (!isCaseSupport && toCase !== null) {
     errors.push({
-      message: caseNotSupported,
+      message: errorsType.caseNotSupported,
     });
   }
 

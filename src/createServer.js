@@ -24,8 +24,7 @@ function createServer() {
       const params = new URLSearchParams(requestPartsArr[1]);
       const toCase = params.get('toCase');
 
-      const result = convertToCase(text, toCase);
-      const { originalCase, convertedText } = result;
+      const { originalCase, convertedText } = convertToCase(text, toCase);
 
       const response = {
         originalCase,
