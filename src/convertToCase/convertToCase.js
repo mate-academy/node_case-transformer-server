@@ -19,7 +19,7 @@ function convertToCase(text, caseName) {
   const words = toWords(text, originalCase);
   const convertedText = wordsToCase(words, caseName);
 
-  return { originalCase, convertedText };
+  return convertedText;
 }
 
 module.exports = {
