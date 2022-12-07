@@ -19,18 +19,24 @@ function createServer() {
     const errors = [];
 
     if (detectCase(text) === null) {
-      // eslint-disable-next-line max-len
-      errors.push({ message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER' });
+      errors.push({
+        message: `This case is not supported.
+        Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER`,
+      });
     };
 
     if (originalText.length === 0) {
-      // eslint-disable-next-line max-len
-      errors.push({ message: 'Text to convert is required. Correct request is: /<TEXT_TO_CONVERT>?toCase=<CASE_NAME>' });
+      errors.push({
+        message: `Text to convert is required.
+        Correct request is: /<TEXT_TO_CONVERT>?toCase=<CASE_NAME>`,
+      });
     }
 
     if (!isCase) {
-      // eslint-disable-next-line max-len
-      errors.push({ message: 'toCase query param is required. Correct request is: /<TEXT_TO_CONVERT>?toCase=<CASE_NAME>' });
+      errors.push({
+        message: `toCase query param is required.
+        Correct request is: /<TEXT_TO_CONVERT>?toCase=<CASE_NAME>`,
+      });
     }
 
     if (errors.length) {
