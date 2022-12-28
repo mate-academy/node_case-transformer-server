@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const http = require('http');
 const { getTextAndToCase } = require('./serverFunctions/getTextAndToCase');
 const { validation } = require('./serverFunctions/validation');
@@ -11,7 +10,7 @@ function createServer() {
 
     resp.setHeader('Content-Type', 'application/json');
 
-    if (errors.length !== 0) {
+    if (errors.length) {
       resp.statusCode = 400;
       resp.statusText = 'Bad request';
       resp.end(JSON.stringify({ errors }));
