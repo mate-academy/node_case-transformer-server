@@ -1,0 +1,16 @@
+const axios = require('axios');
+const BASE_URL = 'http://localhost:8080';
+
+const path = '/someText?toCase=SNAKE';
+
+const href = BASE_URL + path;
+
+axios.get(href)
+  .then(res => {
+    console.log(res.status);
+
+    console.log(res.data);
+  })
+  .catch(error => {
+    console.error('Error', error);
+  });
