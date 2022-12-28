@@ -9,6 +9,8 @@ const { convertToCase } = require('./convertToCase');
 function createServer() {
   const server = http.createServer((req, res) => {
     // readingURL
+    console.log('req.url: ', req.url);
+
     const [pathname, queryString] = req.url.split('?');
     const text = pathname.slice(1);
 
@@ -46,9 +48,13 @@ function createServer() {
       res.statusCode = 400;
       res.statusText = 'Bad request';
 
-      res.end(JSON.stringify({
+      const errorResponse = {
         errors,
-      }));
+      };
+
+      console.log('Result: ', errorResponse);
+
+      res.end(JSON.stringify(errorResponse));
 
       return;
     }
@@ -76,6 +82,8 @@ function createServer() {
   return server;
 }
 
-module.exports = {
-  createServer,
-};
+createServer();
+
+// module.exports = {
+//   createServer,
+// };
