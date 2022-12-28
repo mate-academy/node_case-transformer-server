@@ -13,7 +13,7 @@ function createServer() {
     const params = new URLSearchParams(queryParams);
     const toCase = params.get('toCase');
 
-    console.log(typeof toCase, 'TO CASE');
+    // console.log(typeof toCase, 'TO CASE');
 
     const errors = [];
     const caseName = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
