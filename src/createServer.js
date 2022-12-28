@@ -1,16 +1,39 @@
 /* eslint-disable no-console */
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
 const http = require('http');
+const { getTextAndToCase } = require('./serverFunctions/getTextAndToCase');
+const { validation } = require('./serverFunctions/validation');
+const { convertToCase } = require('./convertToCase/convertToCase');
 
 function createServer() {
   const server = http.createServer((req, resp) => {
-    console.log('request - ', req);
-    resp.end('hello');
-  });
+    const [originalText, targetCase] = getTextAndToCase(req);
+    const errors = validation(originalText, targetCase);
 
-  console.log('111');
+    resp.setHeader('Content-Type', 'application/json');
+
+    if (errors.length !== 0) {
+      resp.statusCode = 400;
+      resp.statusText = 'Bad request';
+      resp.end(JSON.stringify({ errors }));
+
+      return;
+    }
+
+    const {
+      originalCase,
+      convertedText,
+    } = convertToCase(originalText, targetCase);
+
+    resp.statusCode = 200;
+    resp.statusText = 'OK';
+
+    resp.end(JSON.stringify({
+      originalCase,
+      targetCase,
+      originalText,
+      convertedText,
+    }));
+  });
 
   return server;
 }
