@@ -1,34 +1,20 @@
 const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
-const errosMassega = {
-  emptyText() {
-    return `Text to convert is required. ${this.requestExample}".`;
-  },
-
-  emptyCase() {
-    return `"toCase" query param is required. ${this.requestExample}".`;
-  },
-
-  invalidCase() {
-    return `This case is not supported. Available cases: ${availableCases.join(', ')}.`;
-  },
-
-  requestExample: 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>',
-};
-
 const checkRequestParameters = (text, toCase) => {
   const errors = [];
 
   if (!text) {
-    errors.push({ message: errosMassega.emptyText() });
+    errors.push({ message: 'Text to convert is required. Correct request is: '
+    + '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
   };
 
   if (!toCase) {
-    errors.push({ message: errosMassega.emptyCase() });
+    errors.push({ message: '"toCase" query param is required. '
+    + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
   };
 
   if (!availableCases.includes(toCase) && toCase) {
-    errors.push({ message: errosMassega.invalidCase() });
+    errors.push({ message: `This case is not supported. Available cases: ${availableCases.join(', ')}.` });
   }
 
   return errors;
