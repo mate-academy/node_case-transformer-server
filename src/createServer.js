@@ -6,12 +6,9 @@ function createServer() {
   const server = http.createServer((req, res) => {
     res.setHeader('content-type', 'application/json');
 
-    const arrWithPath = req.url.split('?');
-    const originalText = arrWithPath[0].slice(1);
-    const queryString = arrWithPath[1];
-
-    const params = new URLSearchParams(queryString);
-    const toCase = params.get('toCase');
+    const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
+    const originalText = normalizedURL.pathname.slice(1);
+    const toCase = normalizedURL.searchParams.get('toCase');
 
     const errors = checkIfhasErrors(toCase, originalText);
 
