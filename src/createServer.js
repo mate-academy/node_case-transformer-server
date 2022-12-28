@@ -8,7 +8,7 @@ const createServer = () => {
     const [text, toCase] = getQueryInfo(req);
     const errors = isCodeValid(text, toCase);
 
-    if (errors.length > 0) {
+    if (errors.length) {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 400;
       res.statusText = 'Bad request';
