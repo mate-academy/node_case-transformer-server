@@ -12,9 +12,9 @@ const createServer = () => {
     const toCase = normalizedURL.searchParams.get('toCase');
     const text = normalizedURL.pathname.slice(1);
 
-    const errorsMessages = checkRequestParameters(text, toCase);
+    const errorMessage = checkRequestParameters(text, toCase);
 
-    if (errorsMessages.length === 0) {
+    if (errorMessage.length === 0) {
       res.statusCode = 200;
 
       const originalData = convertToCase(text, toCase);
@@ -29,7 +29,7 @@ const createServer = () => {
       res.statusCode = 400;
 
       answerBody = {
-        errors: [...errorsMessages],
+        errors: [...errorMessage],
       };
     }
 
