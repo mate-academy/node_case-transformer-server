@@ -40,6 +40,4 @@ const createServer = () => {
   return server;
 };
 
-createServer();
-
 module.exports.createServer = createServer;

@@ -22,9 +22,7 @@ const validateErrors = (url, toCase) => {
 
   if (!toCase) {
     errorMassage.push(errors[1]);
-  }
-
-  if (!['SNAKE', 'KEBAB', 'PASCAL', 'CAMEL', 'UPPER'].includes(toCase) && toCase) {
+  } else if (!['SNAKE', 'KEBAB', 'PASCAL', 'CAMEL', 'UPPER'].includes(toCase)) {
     errorMassage.push(errors[2]);
   }
 
