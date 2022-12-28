@@ -3,6 +3,7 @@
 // and import (require) them here
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const { errorMessages } = require('./errosMessages');
 
 function createServer() {
   const server = http.createServer((req, res) => {
@@ -10,6 +11,7 @@ function createServer() {
     const originalText = normalizedURL.pathname.slice(1);
     const targetCase = normalizedURL.searchParams.get('toCase');
     const cases = ['SNAKE', 'KEBAB', 'UPPER', 'PASCAL', 'CAMEL'];
+    const { isNotCase, isNotText, caseNotSupported } = errorMessages;
 
     const errors = [];
 
@@ -17,34 +19,27 @@ function createServer() {
 
     if (originalText.length === 0) {
       errors.push({
-        message: 'Text to convert is required.'
-        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: isNotText,
       });
     }
 
     if (targetCase && !(cases.includes(targetCase))) {
       errors.push({
-        message: 'This case is not supported.'
-        + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        message: caseNotSupported,
       });
     }
 
     if (!targetCase) {
       errors.push({
-        message: '"toCase" query param is required.'
-        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: isNotCase,
       });
     }
 
     if (errors.length > 0) {
-      const errorResponse = {
-        errors,
-      };
-
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
 
-      res.end(JSON.stringify(errorResponse));
+      res.end(JSON.stringify({ errors }));
 
       return;
     }
