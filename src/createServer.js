@@ -3,17 +3,12 @@ const { convertToCase } = require('./convertToCase');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    // /someText?toCase=SNAKE
-    // /?toCase=SNAKE
-    // console.log('req.url: ', req.url);
-
-    // reading URL
     const [pathname, queryParams] = req.url.split('?');
     const text = pathname.slice(1);
     const params = new URLSearchParams(queryParams);
     const toCase = params.get('toCase');
 
-    // console.log(typeof toCase, 'TO CASE');
+    res.setHeader('Content-Type', 'application/json');
 
     const errors = [];
     const caseName = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
@@ -42,8 +37,6 @@ function createServer() {
         errors,
       };
 
-      res.setHeader('Content-Type', 'application/json');
-
       res.statusCode = 400;
       res.statusText = 'Bad request';
 
@@ -54,7 +47,6 @@ function createServer() {
 
     const result = convertToCase(text, toCase);
 
-    res.setHeader('Content-Type', 'application/json');
     res.statusCode = 200;
 
     const formattedResponse = {
@@ -64,19 +56,11 @@ function createServer() {
       convertedText: result.convertedText,
     };
 
-    // console.log('formattedResponse: ', formattedResponse);
-
     res.end(JSON.stringify(formattedResponse));
   });
 
-  // server.listen(8080, () => {
-  //   console.log('Server is running on http://localhost:8080');
-  // });
-
   return server;
 }
-
-// createServer();
 
 module.exports = {
   createServer,
