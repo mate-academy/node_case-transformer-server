@@ -7,18 +7,18 @@ const messages = {
   incorrectToCase: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
 };
 
-function checkIfhasErrors(toCase, textToConvert) {
+function checkIfhasErrors(targetCase, textToConvert) {
   const result = [];
 
   if (!textToConvert.length) {
     result.push({ message: messages.noTextToConvert });
   }
 
-  if (!toCase) {
+  if (!targetCase) {
     result.push({ message: messages.noCaseParam });
   }
 
-  if (!availableCaseNames.includes(toCase) && toCase) {
+  if (!availableCaseNames.includes(targetCase) && targetCase) {
     result.push({ message: messages.incorrectToCase });
   }
 
