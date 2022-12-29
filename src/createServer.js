@@ -1,6 +1,3 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
 const http = require('http');
 const { handleErrors } = require('./handleErrors');
 const { convertToCase } = require('./convertToCase/convertToCase');
@@ -45,15 +42,8 @@ const createServer = () => {
     }));
   });
 
-  // const params = req.searchParams.get('toCase');n
-  // server.listen(8080, () => {
-  //   console.log('is running');
-  // });
-
   return server;
 };
-
-// createServer();
 
 module.exports = {
   createServer,
