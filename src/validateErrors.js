@@ -14,19 +14,21 @@ const errors = [
 ];
 
 const validateErrors = (url, toCase) => {
-  const errorMassage = [];
+  const errorMessage = [];
 
   if (!url.length) {
-    errorMassage.push(errors[0]);
+    errorMessage.push(errors[0]);
   }
 
   if (!toCase) {
-    errorMassage.push(errors[1]);
-  } else if (!['SNAKE', 'KEBAB', 'PASCAL', 'CAMEL', 'UPPER'].includes(toCase)) {
-    errorMassage.push(errors[2]);
+    errorMessage.push(errors[1]);
   }
 
-  return errorMassage;
+  if (!['SNAKE', 'KEBAB', 'PASCAL', 'CAMEL', 'UPPER'].includes(toCase) && toCase) {
+    errorMessage.push(errors[2]);
+  }
+
+  return errorMessage;
 };
 
 module.exports.validateErrors = validateErrors;
