@@ -1,4 +1,4 @@
-const writeErrorMessage = (textToConvert, toCase) => {
+const validateParams = (textToConvert, toCase) => {
   const errors = [];
 
   if (!textToConvert) {
@@ -27,5 +27,5 @@ const writeErrorMessage = (textToConvert, toCase) => {
 };
 
 module.exports = {
-  writeErrorMessage,
+  validateParams,
 };
