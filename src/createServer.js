@@ -15,24 +15,19 @@ const createServer = () => {
 
     const errors = handleErrors(toCase, text);
 
-    if (errors.length > 0) {
-      const errResponse = {
-        errors,
-      };
-
-      res.setHeader('Content-Type', 'application/json');
-
+    if (errors.length) {
       res.statusCode = 400;
       res.statusText = 'Bad request';
 
-      res.end(JSON.stringify(errResponse));
+      res.end(JSON.stringify({ errors }));
 
-      return false;
+      return;
     }
 
     const result = convertToCase(text, toCase);
 
     res.statusCode = 200;
+    res.statusMessage = 'OK';
 
     res.end(JSON.stringify({
       originalCase: result.originalCase,
