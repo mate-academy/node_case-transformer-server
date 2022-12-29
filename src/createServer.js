@@ -7,14 +7,11 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 const { errorsCheck } = require('./errorMessages');
+const { readingParamsFromURL } = require('./readingParamsFromURL');
 
 function createServer() {
   const server = http.createServer((rq, res) => {
-    const [pathName, queryParams] = rq.url.split('?');
-    const originalText = pathName.slice(1);
-    const params = new URLSearchParams(queryParams);
-    const targetCase = params.get('toCase');
-
+    const [originalText, targetCase] = readingParamsFromURL(rq);
     const errors = errorsCheck(originalText, targetCase);
 
     if (errors.length > 0) {
