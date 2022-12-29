@@ -1,4 +1,4 @@
-const getErrorMessage = (textToConvert, toCase) => {
+const validateParams = (textToConvert, toCase) => {
   const errors = [];
   const caseOptions = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
@@ -26,4 +26,4 @@ const getErrorMessage = (textToConvert, toCase) => {
   return errors;
 };
 
-module.exports = { getErrorMessage };
+module.exports = { validateParams };

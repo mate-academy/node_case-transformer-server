@@ -1,16 +1,14 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
-const { getErrorMessage } = require('./getErrorMessage');
+const { validateParams } = require('./validateParams');
+const { getParams } = require('./getParams');
 
 function createServer() {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-type', 'application/json');
 
-    const [path, query] = req.url.split('?');
-    const textToConvert = path.slice(1);
-    const params = new URLSearchParams(query);
-    const toCase = params.get('toCase');
-    const errors = getErrorMessage(textToConvert, toCase);
+    const { textToConvert, toCase } = getParams(req.url);
+    const errors = validateParams(textToConvert, toCase);
 
     if (errors.length > 0) {
       res.statusCode = 400;
