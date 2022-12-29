@@ -1,28 +1,23 @@
 /* eslint-disable max-len */
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
-const { errorValidation } = require('./errorValidation');
+const { validateParams } = require('./errorValidation');
+const { searchParams } = require('./searchParams');
+const { sendResponse } = require('./sendResponse');
 
 const createServer = () => {
   const server = http.createServer((request, response) => {
     response.setHeader('Content-Type', 'application/json');
 
-    const [pathName, queryParams] = request.url.split('?');
-    const text = pathName.slice(1);
-    const params = new URLSearchParams(queryParams);
-    const toCase = params.get('toCase');
-
-    const errors = errorValidation(text, toCase);
+    const [text, toCase] = searchParams(request.url);
+    const errors = validateParams(text, toCase);
 
     if (errors.length) {
       const errorResponse = {
         errors,
       };
 
-      response.statusCode = 400;
-      response.statusText = 'Bad request';
-
-      response.end(JSON.stringify(errorResponse));
+      sendResponse(response, errorResponse, 400);
 
       return;
     }
@@ -35,7 +30,7 @@ const createServer = () => {
       convertedText,
     };
 
-    response.end(JSON.stringify(dataText));
+    sendResponse(response, dataText);
   });
 
   return server;

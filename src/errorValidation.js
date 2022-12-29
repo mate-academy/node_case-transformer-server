@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
-const errorValidation = (text, toCase) => {
+const validateParams = (text, toCase) => {
   const errors = [];
-  const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+  const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
   if (!text) {
     errors.push({
@@ -15,7 +15,7 @@ const errorValidation = (text, toCase) => {
     });
   }
 
-  if (!cases.includes(toCase) && toCase) {
+  if (!supportedCases.includes(toCase) && toCase) {
     errors.push({
       message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
     });
@@ -25,5 +25,5 @@ const errorValidation = (text, toCase) => {
 };
 
 module.exports = {
-  errorValidation,
+  validateParams,
 };
