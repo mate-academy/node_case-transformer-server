@@ -6,7 +6,7 @@
  *
  * @returns {string}
  */
-function convertWords(words, caseName) {
+function wordsToCase(words, caseName) {
   switch (caseName) {
     case 'SNAKE': {
       return words.join('_');
@@ -43,5 +43,5 @@ function convertWords(words, caseName) {
 }
 
 module.exports = {
-  convertWords,
+  wordsToCase,
 };
