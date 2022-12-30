@@ -3,7 +3,7 @@ const getErrors = (textToConvert, caseToChange) => {
 
   const avaibleCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
-  if (textToConvert.length === 0) {
+  if (!textToConvert.length) {
     errors.push(
       {
         message: 'Text to convert is required.'
@@ -12,7 +12,7 @@ const getErrors = (textToConvert, caseToChange) => {
     );
   }
 
-  if (!caseToChange || caseToChange.length === 0) {
+  if (!caseToChange) {
     errors.push(
       {
         message: '"toCase" query param is required.'

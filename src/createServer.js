@@ -18,7 +18,7 @@ const createServer = () => {
 
     const errors = getErrors(textToConvert, caseToChange);
 
-    if (errors.length > 0) {
+    if (errors.length) {
       getFailedResponse(response, errors);
 
       return;
