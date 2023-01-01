@@ -1,0 +1,27 @@
+/* eslint-disable max-len */
+const validator = (text, caseIn) => {
+  const errors = [];
+  const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+  if (!caseIn) {
+    errors.push({
+      message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    });
+  } else if (!cases.includes(caseIn)) {
+    errors.push({
+      message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+    });
+  }
+
+  if (!text) {
+    errors.push({
+      message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    });
+  }
+
+  return errors;
+};
+
+module.exports = {
+  validator,
+};
