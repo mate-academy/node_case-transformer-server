@@ -9,16 +9,16 @@ const PORT = process.env.PORT || 3000
 
 const server = http.createServer((req, res) => {
   const { pathname, searchParams} = new URL(req.url, `http://${req.headers.host}`)
-  const textToConvert = pathname.slice(1)
-  const caseToConvert = searchParams.get('toCase')
-  const errors = validate(textToConvert, caseToConvert)
-
+  const originalText = pathname.slice(1)
+  const targetCase = searchParams.get('toCase')
+  const errors = validate(originalText, targetCase)
 
   if (!errors.length) {
-    const result = convertToCase(textToConvert, caseToConvert)
+    const result = convertToCase(originalText, targetCase)
     res.statusCode = 200
     res.statusMessage = 'OK'
     console.log(result)
+    res.write(JSON.stringify(result))
   } else {
     res.statusCode = 400
     res.statusMessage = 'Bad request'

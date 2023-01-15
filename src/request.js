@@ -6,5 +6,5 @@ const search = '?toCase=SNAKE'
 const href = process.argv[2] || BASE + pathname + search
 
 axios.get(href)
-  .then(response => console.log(response))
+  .then(response => console.log(response.data))
   .catch((error) => console.log(error))

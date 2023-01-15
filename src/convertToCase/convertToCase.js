@@ -14,12 +14,17 @@ const { wordsToCase } = require('./wordsToCase');
  *
  * @returns {Result}
  */
-function convertToCase(text, caseName) {
-  const originalCase = detectCase(text);
-  const words = toWords(text, originalCase);
-  const convertedText = wordsToCase(words, caseName);
+function convertToCase(originalText, targetCase) {
+  const originalCase = detectCase(originalText);
+  const words = toWords(originalText, originalCase);
+  const convertedText = wordsToCase(words, targetCase);
 
-  return { originalCase, convertedText };
+  return {
+    originalCase,
+    targetCase,
+    originalText,
+    convertedText
+  };
 }
 
 module.exports = {
