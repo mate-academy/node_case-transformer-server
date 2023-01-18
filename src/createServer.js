@@ -13,7 +13,7 @@ const createServer = () => {
 
     const errors = validateErrors(...paramsToConvert);
 
-    if (errors.length > 0) {
+    if (errors.length) {
       res.statusCode = 400;
       res.statusText = 'Bad request';
 
