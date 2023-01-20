@@ -32,11 +32,11 @@ function createServer() {
       });
     }
 
-    const data = convertToCase(text, toCase);
-
     if (!errors.length) {
       res.statusCode = 200;
       res.statusMessage = 'OK';
+
+      const data = convertToCase(text, toCase);
 
       res.end(JSON.stringify({
         originalCase: data.originalCase,
