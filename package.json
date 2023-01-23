@@ -17,6 +17,26 @@
     "eslint-plugin-n": "^15.3.0",
     "eslint-plugin-promise": "^6.0.1",
     "expect": "^29.1.2",
-    "mocha": "^10.0.0"
-  }
+    "mocha": "^10.0.0",
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "@types/node": "^18.11.18",
+    "axios": "^1.2.3"
+  },
+  "description": "In this task you will learn how to work with `http` module in Node.js, creating your own simple server.",
+  "main": "main.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmitriyn3679/node_case-transformer-server.git"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dmitriyn3679/node_case-transformer-server/issues"
+  },
+  "homepage": "https://github.com/dmitriyn3679/node_case-transformer-server#readme"
 }
