@@ -13,31 +13,32 @@ function createServer() {
     const caseParams = searchParams.toString().split('=');
     const targetCase = caseParams[1];
     const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-    const errors = [];
+    const trueReq = '/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>';
+    const errorsArr = [];
 
-    const Errors = {
+    const errors = {
       textIsMissing: { message: 'Text to convert is required. Correct request'
-      + ' is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' },
+      + ` is: "${trueReq}".` },
       toCaseIsMissing: { message: '"toCase" query param is required. Correct'
-      + ' request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' },
-      toCaseIsWrong: { message: 'This case is not supported. Available cases:'
-      + ' SNAKE, KEBAB, CAMEL, PASCAL, UPPER.' },
+      + ` request is: "${trueReq}".` },
+      toCaseIsWrong: { message: 'This case is not supported. Available cases: '
+      + `${cases.join(', ')} + '.'` },
     };
 
     if (!originalText) {
-      errors.push(Errors.textIsMissing);
+      errorsArr.push(errors.textIsMissing);
     };
 
     if (caseParams[0] !== 'toCase') {
-      errors.push(Errors.toCaseIsMissing);
+      errorsArr.push(errors.toCaseIsMissing);
     } else if (!cases.includes(targetCase)) {
-      errors.push(Errors.toCaseIsWrong);
+      errorsArr.push(errors.toCaseIsWrong);
     };
 
-    if (errors.length) {
+    if (errorsArr.length) {
       res.statusCode = 404;
       res.statusText = 'Bad request';
-      res.end(JSON.stringify({ errors }));
+      res.end(JSON.stringify({ errorsArr }));
 
       return;
     };
@@ -52,8 +53,8 @@ function createServer() {
     res.end(
       JSON.stringify({
         originalCase,
-        targetCase,
         originalText,
+        targetCase,
         convertedText,
       }),
     );
