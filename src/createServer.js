@@ -24,7 +24,7 @@ function createServer() {
     const resultOfConversation = convertToCase(text, caseName);
 
     res.statusCode = 200;
-    res.statusMessage = 'Bad request';
+    res.statusMessage = 'OK';
 
     res.end(JSON.stringify({
       ...resultOfConversation,
