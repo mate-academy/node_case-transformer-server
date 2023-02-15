@@ -35,10 +35,6 @@ function wordsToCase(words, caseName) {
         return `${word[0].toUpperCase()}${word.slice(1)}`;
       }).join('');
     }
-
-    default: {
-      throw new Error(`Unknown case name: ${caseName}`);
-    }
   }
 }
 
