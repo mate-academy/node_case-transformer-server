@@ -108,6 +108,8 @@ Example:
 }
 ```
 
+{"originalCase":"KEBAB","convertedText":"hello-world","originalText":"hello-world","targetCase":"KEBAB"}
+
 ## Guidelines to work on project
 - Fork this repo.
 - After cloning repo, run `npm i`.
