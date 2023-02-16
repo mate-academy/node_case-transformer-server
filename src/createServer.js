@@ -5,7 +5,7 @@ const { getErrorsFromUrl } = require('./getErrorsFromUrl');
 
 function createServer() {
   return http.createServer((request, response) => {
-    response.setHeader('Content-type', 'applicaion/json');
+    response.setHeader('Content-type', 'application/json');
 
     const normalizedUrl = new URL(request.url, `http://${request.headers.host}`);
     const originalText = normalizedUrl.pathname.slice(1);
