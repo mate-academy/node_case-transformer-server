@@ -1,4 +1,4 @@
-function hendleErrors(text, caseName) {
+function handleErrors(text, caseName) {
   const caseNames = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
   const errors = [];
 
@@ -27,5 +27,5 @@ function hendleErrors(text, caseName) {
 }
 
 module.exports = {
-  hendleErrors,
+  handleErrors,
 };

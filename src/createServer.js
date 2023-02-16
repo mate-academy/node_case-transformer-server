@@ -1,6 +1,6 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
-const { hendleErrors } = require('./hendleErrors');
+const { handleErrors } = require('./handleErrors');
 
 function createServer() {
   return http.createServer((req, res) => {
@@ -11,7 +11,7 @@ function createServer() {
     const targetCase = normalizeURL.searchParams.get('toCase');
     const originalText = normalizeURL.pathname.slice(1);
 
-    const errors = hendleErrors(originalText, targetCase);
+    const errors = handleErrors(originalText, targetCase);
 
     if (errors.length > 0) {
       res.statusCode = 404;
