@@ -1,6 +1,6 @@
 const http = require('http');
 const verifyData = require('./verifyData').verifyData;
-const { convertToCase } = require('./convertToCase');
+const { convertToCase } = require('./convertToCase/convertToCase');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
