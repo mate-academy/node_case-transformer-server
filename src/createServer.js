@@ -19,34 +19,34 @@ function createServer() {
       'UPPER',
     ];
 
-    const errors = [];
+    const ArrOfErrors = [];
 
     res.setHeader('Context-Type', 'application/json');
 
     if (!textToConvert) {
-      errors.push({
+      ArrOfErrors.push({
         message: 'Text to convert is required. Correct request is: '
         + '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     };
 
     if (!toCase) {
-      errors.push({
+      ArrOfErrors.push({
         message: '"toCase" query param is required. '
         + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     } else if (!cases.includes(toCase)) {
-      errors.push({
+      ArrOfErrors.push({
         message: 'This case is not supported. '
         + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
     }
 
-    if (errors.length) {
+    if (ArrOfErrors.length) {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
 
-      res.end(JSON.stringify({ errors }));
+      res.end(JSON.stringify({ ArrOfErrors }));
 
       return;
     }
