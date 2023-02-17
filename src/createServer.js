@@ -12,6 +12,9 @@ const createServer = () => {
     res.setHeader('Content-Type', 'application/json');
 
     if (errors.length) {
+      res.statusCode = 400;
+      res.statusMessage = 'Bad request';
+
       res.end(JSON.stringify({
         errors,
       }));
@@ -23,6 +26,9 @@ const createServer = () => {
         originalText,
         targetCase,
       };
+
+      res.statusCode = 200;
+      res.statusMessage = 'OK';
 
       res.end(JSON.stringify(serverResponse));
     }
