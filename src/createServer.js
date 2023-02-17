@@ -2,7 +2,7 @@ const http = require('http');
 const convertToCase
   = require('./convertToCase/convertToCase').convertToCase;
 
-function getSearchParamsErrors(orirginalText, targetCase) {
+function getURLErrors(orirginalText, targetCase) {
   const arrOfMessages = [];
   const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
@@ -43,7 +43,7 @@ function createServer() {
 
     res.setHeader('Content-Type', 'application/json');
 
-    const errors = getSearchParamsErrors(textToConvert, targetCase);
+    const errors = getURLErrors(textToConvert, targetCase);
 
     if (errors.length !== 0) {
       res.statusCode = 400;
