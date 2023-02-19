@@ -9,16 +9,12 @@ function createServer() {
 
     const forPreparingUrl = req.url.split('?');
 
-    const textToConvert = forPreparingUrl[0].replace('/', '');
+    const originalText = forPreparingUrl[0].replace('/', '');
 
     const params = new URLSearchParams(forPreparingUrl[1]);
-    const toCase = params.get('toCase');
+    const targetCase = params.get('toCase');
 
-    const originalText = textToConvert;
-
-    const targetCase = toCase;
-
-    const errors = isError(originalText, toCase);
+    const errors = isError(originalText, targetCase);
 
     if (errors.length !== 0) {
       res.statusCode = 400;
