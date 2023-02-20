@@ -3,7 +3,6 @@ const { convertToCase } = require('./convertToCase');
 const { urlValidate } = require('./urlValidate');
 
 function createServer() {
-  // const server = http.createServer((req, res) => {
   return http.createServer((req, res) => {
     const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
     const text = normalizedUrl.pathname.slice(1);
@@ -31,15 +30,7 @@ function createServer() {
       targetCase: instance,
     }));
   });
-
-  // return server;
 }
-
-// const server = createServer();
-
-// server.listen(3000, () => {
-//   console.log('Server listening on port 3000');
-// });
 
 createServer();
 
