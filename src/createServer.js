@@ -6,35 +6,37 @@ function createServer() {
   return http.createServer((request, response) => {
     response.setHeader('Content-Type', 'application/json');
 
-    const originalText = request.url.split('?')[0].slice(1);
-    const queryString = request.url.split('?')[1];
-    const params = new URLSearchParams(queryString);
-    const targetCase = params.get('toCase');
+    const normalizedUrl = new URL(request.url, `http://${request.headers.host}`);
+    const originalText = normalizedUrl.pathname.slice(1);
+    const targetCase = normalizedUrl.searchParams.get('toCase');
 
-    const validationResult = validateURL(originalText, targetCase);
+    const errors = validateURL(originalText, targetCase);
 
-    if (validationResult.errors.length === 0) {
-      response.statusCode = 200;
-      response.statusMessage = 'OK';
-
-      const {
-        originalCase,
-        convertedText,
-      } = convertToCase(originalText, targetCase);
-
-      response.end(JSON.stringify({
-        originalCase,
-        targetCase,
-        originalText,
-        convertedText,
-      }));
-    } else {
+    if (errors.length) {
       response.statusCode = 400;
       response.statusMessage = 'Bad Request';
 
-      response.write(JSON.stringify(validationResult));
-      response.end();
+      response.end(JSON.stringify({ errors }));
+
+      return;
     }
+
+    response.statusCode = 200;
+    response.statusMessage = 'OK';
+
+    const {
+      originalCase,
+      convertedText,
+    } = convertToCase(originalText, targetCase);
+
+    const responseData = {
+      originalCase,
+      targetCase,
+      originalText,
+      convertedText,
+    };
+
+    response.end(JSON.stringify(responseData));
   });
 }
 

@@ -1,36 +1,29 @@
 /* eslint-disable max-len */
 
-function validateURL(textToConvert, toCase) {
+function validateURL(originalText, targetCase) {
   const caseOptions = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-  const requestErrors = {
-    errors: [],
-  };
 
-  if (!textToConvert) {
+  const errors = [];
+
+  if (!originalText) {
     const errorMessage = 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
 
-    requestErrors.errors.push({
-      message: errorMessage,
-    });
+    errors.push({ message: errorMessage });
   }
 
-  if (!toCase) {
+  if (!targetCase) {
     const errorMessage = '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
 
-    requestErrors.errors.push({
-      message: errorMessage,
-    });
+    errors.push({ message: errorMessage });
   }
 
-  if (toCase && !caseOptions.includes(toCase)) {
+  if (targetCase && !caseOptions.includes(targetCase)) {
     const errorMessage = 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
 
-    requestErrors.errors.push({
-      message: errorMessage,
-    });
+    errors.push({ message: errorMessage });
   }
 
-  return requestErrors;
+  return errors;
 }
 
 module.exports = {
