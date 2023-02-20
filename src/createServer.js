@@ -6,19 +6,18 @@ const { validateData } = require('./validateData');
 const createServer = () => {
   const server = http.createServer((req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const requestPath = url.pathname.slice(1); // 'UnitedStates'
+    const requestPath = url.pathname.slice(1);
     const entries = Object.fromEntries(url.searchParams.entries());
-    // { toCase: 'UPPER'}
-    const query = entries.toCase; // 'UPPER'
+    const query = entries.toCase;
 
     res.setHeader('Content-Type', 'application/json');
 
-    const foundErrors = validateData(requestPath, query);
+    const errors = validateData(requestPath, query);
 
-    if (foundErrors.length > 0) {
+    if (errors.length > 0) {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
-      res.end(JSON.stringify({ errors: foundErrors }));
+      res.end(JSON.stringify({ errors }));
 
       return;
     }
