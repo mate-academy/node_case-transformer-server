@@ -1,6 +1,5 @@
 const http = require('http');
 
-const { detectCase } = require('./convertToCase/detectCase.js');
 const { convertToCase } = require('./convertToCase/convertToCase.js');
 
 const caseVariants = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
@@ -36,7 +35,7 @@ const validateError = (textToConvert, toCase) => {
 };
 
 function createServer() {
-  const server = http.createServer((req, res) => {
+  return http.createServer((req, res) => {
     const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
     const toCase = normalizedUrl.searchParams.get('toCase');
     const textToConvert = normalizedUrl.pathname.slice(1);
@@ -50,24 +49,25 @@ function createServer() {
       res.statusCode = '400';
 
       res.end(JSON.stringify({ errors }));
-    }
+    } else {
+      const {
+        originalCase,
+        convertedText,
+      } = convertToCase(textToConvert, toCase);
 
-    if (!errors.length) {
       res.statusCode = '200';
       res.statusMessage = 'OK';
 
       const response = {
-        convertedText: convertToCase(textToConvert, toCase).convertedText,
-        originalCase: detectCase(textToConvert),
+        convertedText,
+        originalCase,
         targetCase: toCase,
         originalText: textToConvert,
       };
 
       res.end(JSON.stringify(response));
-    }
+    };
   });
-
-  return server;
 }
 
 module.exports = {
