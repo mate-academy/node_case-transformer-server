@@ -1,4 +1,4 @@
-function valigateData (text, toCase) {
+function validateData (text, toCase) {
   const possibleCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
   const errors = [];
 
@@ -27,4 +27,4 @@ function valigateData (text, toCase) {
   return errors;
 }
 
-module.exports.valigateData = valigateData;
+module.exports.validateData = validateData;

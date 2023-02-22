@@ -1,5 +1,5 @@
 const http = require('http');
-const { valigateData } = require('./validateData');
+const { validateData } = require('./validateData');
 const { convertToCase } = require('./convertToCase/convertToCase')
 
 function createServer() {
@@ -10,7 +10,7 @@ function createServer() {
 
     const params = new URLSearchParams(queryParams);
     const toCase = params.get('toCase');
-    const errors = valigateData(textToConvert, toCase);
+    const errors = validateData(textToConvert, toCase);
 
     response.setHeader('Content-Type', 'application/json');
 
