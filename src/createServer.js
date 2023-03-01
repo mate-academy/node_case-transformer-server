@@ -1,3 +1,6 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
+const http = require('http');
+const { requestListener } = require('./requestListener');
+
+const createServer = () => http.createServer(requestListener);
+
+module.exports = { createServer };

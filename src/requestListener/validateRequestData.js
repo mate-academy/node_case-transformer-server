@@ -1,25 +1,26 @@
-const VALID_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const {
+  ERROR_MESSAGES,
+  VALID_CASES: cases,
+} = require('./validator.constants');
 
-const ERROR_MESSAGE = {
-  ENOTEXT: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-  ENOCASE: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-  EIVCASE: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-};
+const isValidCase = caseToValidate => (
+  cases.some(c => c === caseToValidate)
+);
 
-const isValidCase = caseToValidate => VALID_CASES.some(c => c === caseToValidate);
-
-const validateData = (text, targetCase) => {
+const validateRequestData = ({ originalText, targetCase }) => {
   const errors = [];
 
-  if (!text) {
-    errors.push('ENOTEXT');
+  if (!originalText) {
+    errors.push({ message: ERROR_MESSAGES.ENOTEXT });
   }
 
   if (!targetCase) {
-    errors.push('ENOCASE');
+    errors.push({ message: ERROR_MESSAGES.ENOCASE });
   } else if (!isValidCase(targetCase)) {
-    errors.push('EIVCASE');
+    errors.push({ message: ERROR_MESSAGES.EIVCASE });
   }
 
   return errors;
 };
+
+module.exports = { validateRequestData };
