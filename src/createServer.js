@@ -12,20 +12,20 @@ function createServer() {
 
     const errors = handleErrors(textToConvert, toCase);
 
-    if (errors.errors.length) {
-      req.statusCode = 404;
-      req.statusMessage = 'Bad request';
-      res.end(JSON.stringify(errors));
-    } else {
-      req.statusMessage = 'OK';
-
+    if (!errors.errors.length) {
       const convertedText = convertToCase(textToConvert, toCase);
+
+      req.statusMessage = 'OK';
 
       res.end(JSON.stringify({
         ...convertedText,
         targetCase: toCase,
         originalText: textToConvert,
       }));
+    } else {
+      req.statusCode = 404;
+      req.statusMessage = 'Bad request';
+      res.end(JSON.stringify(errors));
     }
   });
 
