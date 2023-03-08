@@ -1,23 +1,21 @@
+const { validCases, errorMessages } = require('./validateConsts');
+
 const validate = (pathname, toCase) => {
   const errors = [];
-  const validCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
   if (!pathname.length) {
     errors.push({
-      message: 'Text to convert is required.'
-      + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: errorMessages.missingText,
     });
   }
 
   if (!toCase) {
     errors.push({
-      message: '"toCase" query param is required.'
-      + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: errorMessages.missingToCase,
     });
   } else if (!(validCases.includes(toCase))) {
     errors.push({
-      message: 'This case is not supported.'
-      + ' Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      message: errorMessages.incorrectToCase,
     });
   }
 

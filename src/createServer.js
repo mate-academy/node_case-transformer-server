@@ -7,22 +7,25 @@ const createServer = () => {
     res.setHeader('Content-Type', 'application/json');
 
     const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
-    const toCase = normalizedURL.searchParams.get('toCase');
-    const pathname = normalizedURL.pathname.slice(1);
-    const errors = validate(pathname, toCase);
+    const targetCase = normalizedURL.searchParams.get('toCase');
+    const originalText = normalizedURL.pathname.slice(1);
+    const errors = validate(originalText, targetCase);
 
     if (errors.length) {
       req.statusCode = 400;
       req.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
     } else {
-      const convertedPath = convertToCase(pathname, toCase);
+      const { originalCase, convertedText } = convertToCase(
+        originalText,
+        targetCase,
+      );
 
       res.end(JSON.stringify({
-        originalCase: convertedPath.originalCase,
-        targetCase: toCase,
-        originalText: pathname,
-        convertedText: convertedPath.convertedText,
+        originalCase,
+        targetCase,
+        originalText,
+        convertedText,
       }));
     }
   });
