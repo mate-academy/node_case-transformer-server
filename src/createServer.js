@@ -9,7 +9,6 @@ const createServer = () => {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.statusCode = 200;
-    res.statusMessage = 'OK';
 
     const [originalText, targetCase] = getDataURL(req.url);
 
@@ -17,8 +16,6 @@ const createServer = () => {
 
     if (errors.length) {
       res.statusCode = 400;
-      res.statusMessage = 'Bad request';
-
       res.end(JSON.stringify({ errors }));
 
       return;

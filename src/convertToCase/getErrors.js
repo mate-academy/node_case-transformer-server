@@ -4,7 +4,7 @@ const getErrors = (currText, toCase) => {
   const payload = [];
   const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
-  if (!currText.length) {
+  if (!currText) {
     payload.push({
       message: 'Text to convert is required. '
         + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
