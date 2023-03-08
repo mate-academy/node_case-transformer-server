@@ -11,7 +11,7 @@ function createServer() {
     const toCase = params.get('toCase');
     const errors = handleErrors(textToConvert, toCase);
 
-    if (errors.length > 0) {
+    if (errors.length) {
       res.writeHead(400, 'Bad Request', { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ errors }));
 

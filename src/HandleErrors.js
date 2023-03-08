@@ -10,10 +10,10 @@ function handleErrors(textToConvert, toCase) {
 
   if (!toCase) {
     errors.push({ message: errorMessages.queryRequired });
-  } else {
-    if (!supportedCases.includes(toCase)) {
-      errors.push({ message: errorMessages.notSuportedCase });
-    }
+  }
+
+  if (!!toCase && !supportedCases.includes(toCase)) {
+    errors.push({ message: errorMessages.notSuportedCase });
   }
 
   return errors;
