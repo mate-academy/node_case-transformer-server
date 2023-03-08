@@ -1,12 +1,14 @@
 'use strict';
 
 const prepareResponseData = (caughtErrors, result) => {
-  if (caughtErrors.errors.length) {
+  if (caughtErrors.length) {
     return {
       statusCode: 400,
       statusText: 'Bad request',
       contentType: 'application/json',
-      data: caughtErrors,
+      data: {
+        errors: caughtErrors,
+      },
     };
   }
 

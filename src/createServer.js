@@ -21,13 +21,13 @@ const createServer = () => {
 
     const caughtErrors = urlParamsPreValidation(textToConvert, targetCase);
 
-    if (!caughtErrors.errors.length) {
+    if (!caughtErrors.length) {
       let result = {};
 
       try {
         result = convertToCase(textToConvert, targetCase);
       } catch (error) {
-        caughtErrors.errors.push({
+        caughtErrors.push({
           message: 'Something went wrong' + error.message,
         });
       }
