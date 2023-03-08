@@ -1,19 +1,18 @@
+const errorMessages = require('./errorMessages.json');
+
 function handleErrors(textToConvert, toCase) {
   const errors = [];
   const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
   if (!textToConvert) {
-    errors.push({ message: 'Text to convert is required.'
-    + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
+    errors.push({ message: errorMessages.textRequired });
   }
 
   if (!toCase) {
-    errors.push({ message: '"toCase" query param is required.'
-    + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
+    errors.push({ message: errorMessages.queryRequired });
   } else {
     if (!supportedCases.includes(toCase)) {
-      errors.push({ message: 'This case is not supported.'
-      + ' Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.' });
+      errors.push({ message: errorMessages.notSuportedCase });
     }
   }
 
