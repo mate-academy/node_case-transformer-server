@@ -1,9 +1,7 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 const { getErrors } = require('./getErrors');
+const { sendResponse } = require('./sendResponse');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -21,18 +19,13 @@ const createServer = () => {
         originalText: textToTransform,
       };
 
-      res.setHeader('Content-Type', 'application/json');
-      res.write(JSON.stringify(response));
-      res.end();
+      sendResponse(res, 200, response);
     } else {
       const response = {
         errors,
       };
 
-      res.setHeader('Content-Type', 'application/json');
-      res.statusCode = 400;
-      res.write(JSON.stringify(response));
-      res.end();
+      sendResponse(res, 400, response);
     };
   });
 
