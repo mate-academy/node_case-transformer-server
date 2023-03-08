@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 const http = require('http');
+const { catchError } = require('./catchError');
 const { convertToCase } = require('./convertToCase');
 
 function createServer() {
@@ -7,28 +8,7 @@ function createServer() {
     const [text, queryString] = req.url.split('?');
     const params = new URLSearchParams(queryString);
     const toCase = params.get('toCase');
-
-    const errors = [];
-
-    if (!text || text === '/') {
-      errors.push({
-        message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    }
-
-    if (!toCase) {
-      errors.push({
-        message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    }
-
-    const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-    if (!cases.includes(toCase) && toCase) {
-      errors.push({
-        message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-      });
-    }
+    const errors = catchError(text, toCase);
 
     if (errors.length > 0) {
       res.writeHead(400, { 'Content-type': 'application/json' });
