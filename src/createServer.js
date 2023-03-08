@@ -16,17 +16,19 @@ const createServer = () => {
       req.statusCode = 404;
       req.statusMessage = 'Bad request';
       res.end(JSON.stringify(errors));
-    } else {
-      const convertedText = convertToCase(originalText, targetCase);
 
-      const requestData = JSON.stringify({
-        ...convertedText,
-        targetCase,
-        originalText,
-      });
-
-      res.end(requestData);
+			return;
     }
+
+    const convertedText = convertToCase(originalText, targetCase);
+
+    const requestData = JSON.stringify({
+      ...convertedText,
+      targetCase,
+      originalText,
+    });
+
+    res.end(requestData);
   });
 
   return server;
