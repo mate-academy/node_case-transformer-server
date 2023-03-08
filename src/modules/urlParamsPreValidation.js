@@ -13,7 +13,9 @@ const urlParamsPreValidation = (textToConvert, targetCase) => {
       // eslint-disable-next-line max-len
       message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
     });
-  } else if (!validCase) {
+  }
+
+  if (targetCase && !validCase) {
     caughtErrors.errors.push({
       // eslint-disable-next-line max-len
       message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
