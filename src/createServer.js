@@ -16,13 +16,15 @@ function createServer() {
     const hasError = errors.length > 0;
 
     if (hasError) {
+      res.statusCode = 400;
+
       res.end(JSON.stringify({
         errors,
       }));
-
-      res.statusCode = 400;
     } else {
       const result = convertToCase(textToReplace, caseToConvert);
+
+      res.statusCode = 200;
 
       res.end(JSON.stringify({
         originalCase: result.originalCase,
@@ -30,8 +32,6 @@ function createServer() {
         originalText: textToReplace,
         convertedText: result.convertedText,
       }));
-
-      res.statusCode = 200;
     }
   });
 
