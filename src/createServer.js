@@ -9,7 +9,7 @@ const createServer = () => {
     const paramsToConvert = normalizeURL(req.url);
     const errors = validateErrors(...paramsToConvert);
 
-    if (errors.length > 0) {
+    if (errors.length) {
       sendResponse(res, 'Bad request', 400, JSON.stringify({ errors }));
 
       return;
