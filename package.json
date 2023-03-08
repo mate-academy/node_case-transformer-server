@@ -8,7 +8,8 @@
     "test:watch": "mocha --watch",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "gh-pages": "^3.2.3"
   },
   "devDependencies": {
     "@mate-academy/eslint-config": "^0.0.20",
