@@ -1,4 +1,4 @@
-function handleErrors(text, caseName) {
+const handleErrors = (text, caseName) => {
   const caseNames = ["SNAKE", "KEBAB", "CAMEL", "PASCAL", "UPPER"];
   const errors = [];
 

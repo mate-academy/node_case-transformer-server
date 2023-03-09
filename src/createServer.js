@@ -2,7 +2,7 @@ const http = require('http');
 const { convertToCase } = require('./convertToCase');
 const { handleErrors } = require('./handleErrors');
 
-function createServer() {
+const createServer = () => {
   return http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
@@ -13,9 +13,8 @@ function createServer() {
 
     const errors = handleErrors(originalText, targetCase);
 
-    if (errors.length > 0) {
+    if (errors.length) {
       res.statusCode = 404;
-      res.statusMessage = 'Bad request';
 
       res.end(JSON.stringify({
         errors,
@@ -25,7 +24,6 @@ function createServer() {
     }
 
     res.statusCode = 200;
-    res.statusMessage = 'OK';
 
     res.end(JSON.stringify({
       ...convertToCase(originalText, targetCase),
