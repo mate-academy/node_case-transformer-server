@@ -16,7 +16,7 @@ function createServer() {
       req.statusCode = 400;
       req.statusMessage = 'Bad request';
 
-      res.end(JSON.stringify(errors));
+      res.end(JSON.stringify({ errors }));
 
       return;
     }
@@ -28,8 +28,8 @@ function createServer() {
 
     res.end(JSON.stringify({
       ...convertedText,
-      textToConvert,
-      toCase,
+      originalText: textToConvert,
+      targetCase: toCase,
     }));
   });
 

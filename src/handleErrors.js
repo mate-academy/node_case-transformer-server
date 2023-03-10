@@ -27,7 +27,7 @@ const handleErrors = (text, originalCase) => {
     });
   }
 
-  return { errors: allErrors };
+  return allErrors;
 }
 
 module.exports = {
