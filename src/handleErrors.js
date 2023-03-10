@@ -7,27 +7,27 @@ const errorsMessage = {
 };
 
 const handleErrors = (text, originalCase) => {
-  const allErrors = [];
+  const errors = [];
 
   if (!text) {
-    allErrors.push({
+    errors.push({
       message: errorsMessage.missingText,
     });
   }
 
   if (!originalCase) {
-    allErrors.push({
+    errors.push({
       message: errorsMessage.missingCase,
     });
   }
 
   if (originalCase && !supportedTestCases.includes(originalCase)) {
-    allErrors.push({
+    errors.push({
       message: errorsMessage.notSupportedCase,
     });
   }
 
-  return allErrors;
+  return errors;
 }
 
 module.exports = {
