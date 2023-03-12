@@ -1,11 +1,10 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 const { handleErrorMessage } = require('./handleError');
+const { sendResponse } = require('./sendResponse');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-
     const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
 
     const textToConvert = normalizedUrl.pathname.slice(1);
@@ -17,10 +16,7 @@ function createServer() {
     const errors = handleErrorMessage(textToConvert, toCase);
 
     if (errors.length) {
-      res.statusCode = 400;
-      res.statusMessage = 'Bad request';
-
-      res.end(JSON.stringify({ errors }));
+      sendResponse(res, 'Bad request', 400, JSON.stringify({ errors }));
 
       return;
     }
@@ -29,10 +25,7 @@ function createServer() {
       textToConvert, toCase,
     );
 
-    res.statusCode = 200;
-    res.statusMessage = 'OK';
-
-    res.end(JSON.stringify({
+    sendResponse(res, 'OK', 200, JSON.stringify({
       originalCase,
       convertedText,
       targetCase: toCase,

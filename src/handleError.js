@@ -24,4 +24,6 @@ const handleErrorMessage = (textToConvert, toCase) => {
   return errors;
 };
 
-module.exports = { handleErrorMessage };
+module.exports = {
+  handleErrorMessage,
+};
