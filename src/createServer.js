@@ -10,7 +10,7 @@ function createServer() {
     const toCase = params.get('toCase');
     const errors = catchError(text, toCase);
 
-    if (errors.length > 0) {
+    if (errors.length) {
       res.writeHead(400, { 'Content-type': 'application/json' });
       res.end(JSON.stringify({ errors }));
 
