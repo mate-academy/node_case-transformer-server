@@ -23,4 +23,6 @@ function handleError(textConvert, toCase) {
   return { errors };
 };
 
-module.exports = { handleError };
+module.exports = {
+  handleError,
+};

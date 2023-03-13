@@ -7,13 +7,13 @@ function createServer() {
     response.setHeader('Content-type', 'application/json');
 
     const updatedUrl = new URL(request.url, `http://${request.headers.host}`);
-    const textToConvert = updatedUrl.pathname.slice(1) || '';
-    const caseToConvert = updatedUrl.searchParams.get('toCase') || '';
-    const possibleError = handleError(textToConvert, caseToConvert);
+    const textToConvert = updatedUrl.pathname.slice(1);
+    const caseToConvert = updatedUrl.searchParams.get('toCase');
+    const handleErrors = handleError(textToConvert, caseToConvert);
 
-    if (possibleError.errors.length) {
+    if (handleErrors.errors.length) {
       response.statusCode = 400;
-      response.end(JSON.stringify(possibleError));
+      response.end(JSON.stringify(handleErrors));
     } else {
       const converted = convertToCase(textToConvert, caseToConvert);
 
@@ -28,4 +28,6 @@ function createServer() {
   return getServer;
 }
 
-module.exports = { createServer };
+module.exports = {
+  createServer,
+};
