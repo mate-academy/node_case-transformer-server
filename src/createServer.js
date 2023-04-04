@@ -1,29 +1,16 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
+const config = require('./config');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
-
     res.setHeader('Content-Type', 'application/json');
 
-    const { pathname, searchParams } = normalizedUrl;
+    const { originalText, caseParams, targetCase }
+    = config.getRequestParams(req);
+    const { cases, errors } = config;
 
-    const originalText = pathname.slice(1);
-    const caseParams = searchParams.toString().split('=');
-    const targetCase = caseParams[1];
-    const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-    const trueReq = '/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>';
     const errorsArr = [];
-
-    const errors = {
-      textIsMissing: { message: 'Text to convert is required. Correct request'
-      + ` is: "${trueReq}".` },
-      toCaseIsMissing: { message: '"toCase" query param is required. Correct'
-      + ` request is: "${trueReq}".` },
-      toCaseIsWrong: { message: 'This case is not supported. Available cases: '
-      + `${cases.join(', ')} + '.'` },
-    };
 
     if (!originalText) {
       errorsArr.push(errors.textIsMissing);
