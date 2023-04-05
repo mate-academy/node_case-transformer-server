@@ -1,3 +1,35 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
+const http = require('http');
+const { URL } = require('url');
+const { convertToCase } = require('./convertToCase/convertToCase');
+const { checkErrors } = require('./checkErrors');
+
+const HOST = 'http://localhost:5700'
+
+const createServer = () => http.createServer((req, res) => {
+  const url = new URL(`${HOST}${req.url}`)
+  const originalText = url.pathname.slice(1);
+  const targetCase = url.searchParams.get('toCase');
+
+  res.setHeader('Content-Type', 'application/json');
+
+  const errors = checkErrors(originalText, targetCase);
+
+  if (errors.length > 0) {
+    res.statusCode = 400;
+    res.statusMessage = 'Bad request';
+    res.end(JSON.stringify({ errors }));
+
+    return;
+  }
+
+  const converted = convertToCase(originalText, targetCase);
+
+
+  res.end(JSON.stringify({
+    targetCase,
+    originalText,
+    ...converted,
+  }));
+});
+
+module.exports = { createServer };
