@@ -15,7 +15,7 @@ function validateQueries(textToConvert, caseName) {
     });
   } else if (!availableCases.includes(caseName)) {
     errors.push({
-      message: 'This case is not supported. Available cases: ' + `${availableCases.join(', ')}.`,
+      message: `This case is not supported. Available cases: ${availableCases.join(', ')}.`,
     });
   }
 
