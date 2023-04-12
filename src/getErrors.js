@@ -13,7 +13,9 @@ const getErrors = (text, toCase) => {
     errors.push({
       message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
     });
-  } else if (!(correctCases.includes(toCase))) {
+  }
+
+  if (!(correctCases.includes(toCase))) {
     errors.push({
       message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
     });
