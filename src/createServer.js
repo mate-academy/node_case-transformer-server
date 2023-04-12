@@ -1,13 +1,13 @@
-const http = require('node:http')
-const { convertToCase } = require('./convertToCase')
-const { validateQueries } = require('./validateQueries')
+const http = require('http');
+const { convertToCase } = require('./convertToCase');
+const { validateQueries } = require('./validateQueries');
 
 function createServer() {
   const server = http.createServer((req, res) => {
     const url = new URL(req.url, `https://${req.headers.host}`);
-    const textToConvert = req.url.split('?')[0].slice(1) || '';
+    const textToConvert = url.pathname.slice(1);
     const caseName = url.searchParams.get('toCase');
-    const errors = validateQueries(url, textToConvert, caseName);
+    const errors = validateQueries(textToConvert, caseName);
 
     if (errors.length) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -18,10 +18,10 @@ function createServer() {
       res.end(JSON.stringify({
         ...data,
         originalText: textToConvert,
-        targetCase: caseName
+        targetCase: caseName,
       }));
     }
-  })
+  });
 
   return server;
 }
