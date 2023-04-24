@@ -27,7 +27,7 @@ const createServer = () => {
 
     res.end(JSON.stringify({
       originalCase,
-      convertedText,
+      convertedText1: convertedText,
       targetCase,
       originalText,
     }));
