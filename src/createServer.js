@@ -1,12 +1,9 @@
 const http = require('http');
-const { URL } = require('url');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const { checkErrors } = require('./checkErrors');
 
-const HOST = 'http://localhost:5700'
-
 const createServer = () => http.createServer((req, res) => {
-  const url = new URL(`${HOST}${req.url}`)
+  const url = new URL(`${req.host}${req.url}`);
   const originalText = url.pathname.slice(1);
   const targetCase = url.searchParams.get('toCase');
 
@@ -23,7 +20,6 @@ const createServer = () => http.createServer((req, res) => {
   }
 
   const converted = convertToCase(originalText, targetCase);
-
 
   res.end(JSON.stringify({
     targetCase,

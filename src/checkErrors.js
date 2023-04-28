@@ -1,6 +1,8 @@
 const correctRequestMessage = 'Correct request is: '
 + '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
 
+const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
 const errorMessages = {
   textRequired: {
     message: 'Text to convert is required. ' + correctRequestMessage,
@@ -13,8 +15,6 @@ const errorMessages = {
     + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
   },
 };
-
-const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 const checkErrors = (text, caseName) => {
   const errors = [];
