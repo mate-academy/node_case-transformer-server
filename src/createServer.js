@@ -11,7 +11,7 @@ const createServer = () => {
 
     response.setHeader('Content-Type', 'application/json');
 
-    if (errors.length > 0) {
+    if (errors.length) {
       response.statusCode = 400;
       response.end(JSON.stringify({ errors }));
 
