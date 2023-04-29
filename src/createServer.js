@@ -1,6 +1,6 @@
 const http = require('http');
-const { getURLErrors } = require('./URLValidator');
-const { getTextAndCase } = require('./URLHandler');
+const { getURLErrors } = require('./getURLErrors');
+const { getTextAndCase } = require('./getTextAndCase');
 const { convertToCase } = require('./convertToCase');
 
 const createServer = () => {
@@ -17,21 +17,23 @@ const createServer = () => {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
-    } else {
-      const {
-        originalCase,
-        convertedText,
-      } = convertToCase(textToConvert, toCase);
 
-      const responseBody = JSON.stringify({
-        originalCase,
-        targetCase: toCase,
-        originalText: textToConvert,
-        convertedText,
-      });
-
-      res.end(responseBody);
+      return;
     }
+
+    const {
+      originalCase,
+      convertedText,
+    } = convertToCase(textToConvert, toCase);
+
+    const responseBody = JSON.stringify({
+      originalCase,
+      targetCase: toCase,
+      originalText: textToConvert,
+      convertedText,
+    });
+
+    res.end(responseBody);
   });
 
   return server;
