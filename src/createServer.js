@@ -4,7 +4,7 @@ const { getUrlParams } = require('./getUrlParams');
 const { convertToCase } = require('./convertToCase/convertToCase');
 
 function createServer() {
-  const server = http.createServer((req, res) => {
+  return http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     const [urlText, urlQuery] = req.url.split('?');
@@ -40,8 +40,6 @@ function createServer() {
       2,
     ));
   });
-
-  return server;
 }
 
 module.exports = { createServer };
