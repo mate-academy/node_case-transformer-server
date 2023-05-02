@@ -1,8 +1,9 @@
-/* eslint-disable max-len */
 const CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
-const messageTextDoesNotExist = 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-const messageCaseDoesNotExist = '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+const example = '/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>';
+
+const messageTextDoesNotExist = `Text to convert is required. Correct request is: "${example}".`;
+const messageCaseDoesNotExist = `"toCase" query param is required. Correct request is: "${example}".`;
 const messageCaseTypeIsNotValid = `This case is not supported. Available cases: ${CASES.join(', ')}.`;
 
 const getErrors = (text, caseType) => {
