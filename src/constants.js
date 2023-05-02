@@ -4,4 +4,13 @@ const errorMessages = {
   invalidToCase: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
 };
 
+const toCases = [
+  'SNAKE',
+  'KEBAB',
+  'CAMEL',
+  'PASCAL',
+  'UPPER',
+];
+
 module.exports.errorMessages = errorMessages;
+module.exports.toCases = toCases;

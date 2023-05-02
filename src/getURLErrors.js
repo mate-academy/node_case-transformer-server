@@ -1,36 +1,37 @@
 const {
+  errorMessages,
+  toCases,
+} = require('./constants');
+
+const {
   noText,
   noToCase,
   invalidToCase,
-} = require('./constants').errorMessages;
-
-const { createError } = require('./createError');
-
-const toCases = [
-  'SNAKE',
-  'KEBAB',
-  'CAMEL',
-  'PASCAL',
-  'UPPER',
-];
+} = errorMessages;
 
 const getURLErrors = (textToConvert, toCase) => {
   const errors = [];
 
   if (!textToConvert) {
-    const noTextError = createError(noText);
+    const noTextError = {
+      message: noText,
+    };
 
     errors.push(noTextError);
   }
 
   if (!toCase) {
-    const noToCaseError = createError(noToCase);
+    const noToCaseError = {
+      message: noToCase,
+    };
 
     errors.push(noToCaseError);
   }
 
   if (toCase && !toCases.includes(toCase)) {
-    const invalidToCaseError = createError(invalidToCase);
+    const invalidToCaseError = {
+      message: invalidToCase,
+    };
 
     errors.push(invalidToCaseError);
   }
