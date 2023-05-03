@@ -1,6 +1,6 @@
 const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
-const checkURL = (text, toCase) => {
+const validateURL = (text, toCase) => {
   const errors = [];
   const correctExample = '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
 
@@ -28,5 +28,5 @@ const checkURL = (text, toCase) => {
 };
 
 module.exports = {
-  checkURL,
+  validateURL,
 };
