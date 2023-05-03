@@ -8,15 +8,13 @@ function createServer() {
     const [originalText, targetCase] = getParamsFrom(req);
     const errors = getOccuredErrors(originalText, targetCase);
 
+    res.setHeader('Content-Type', 'application/json');
+
     if (errors.length) {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
 
-      errors.forEach(error => (
-        res.write(error)
-      ));
-
-      res.end();
+      res.end(JSON.stringify({ errors }));
 
       return;
     }
@@ -26,7 +24,6 @@ function createServer() {
       convertedText,
     } = convertToCase(originalText, targetCase);
 
-    res.setHeader('Content-Type', 'application/json');
     res.statusCode = 200;
     res.statusMessage = 'OK';
 
