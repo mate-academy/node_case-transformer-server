@@ -1,19 +1,21 @@
-const { availiableCases } = require('./constants');
+const { availiableCases, example } = require('./constants');
 
 function validateParams(originalText, targetCase) {
   const errors = [];
 
   if (!originalText) {
     errors.push('Text to convert is required.'
-    + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".');
+    + ` Correct request is: ${example}.`);
   }
 
   if (!targetCase) {
     errors.push('"toCase" query param is required.'
-    + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".');
-  } else if (!availiableCases.includes(targetCase)) {
+    + ` Correct request is: ${example}.`);
+  }
+
+  if (targetCase && !availiableCases.includes(targetCase)) {
     errors.push('This case is not supported.'
-    + ' Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.');
+    + ` Available cases: ${availiableCases.join(', ')}.`);
   }
 
   return errors;
