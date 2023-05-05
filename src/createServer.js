@@ -1,29 +1,31 @@
 const http = require("http");
-const { parseUrl } = require("./parseUrl/parseUrl");
+const { parseUrlForConversion } = require("./parseUrlForConversion/parseUrlForConversion");
 
 const createServer = () =>
   http.createServer((req, res) => {
     res.setHeader("Content-Type", "application/json");
 
-    const parseResult = parseUrl(req.url);
+    const parseResult = parseUrlForConversion(req.url);
 
-    let data;
+    let data = '';
 
-    if (parseResult.isError) {
-      data = JSON.stringify(parseResult.response);
+    if (parseResult.response.errors.length > 0) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+
+      data = parseResult.response;
       res.statusCode = 400;
     } else {
-      data = JSON.stringify({
-        originalCase: parseResult.originalCase,
-        targetCase: parseResult.targetCase,
-        originalText: parseResult.originalText,
-        convertedText: parseResult.convertedText,
-      });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
 
-      res.statusCode = 200;
+      data = {
+        originalCase: parseResult.response.originalCase,
+        targetCase: parseResult.response.targetCase,
+        originalText: parseResult.response.originalText,
+        convertedText: parseResult.response.convertedText,
+      };
     }
 
-    res.end(data);
+    res.end(JSON.stringify(data));
   });
 
 module.exports = { createServer };
