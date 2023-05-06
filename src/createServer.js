@@ -1,4 +1,5 @@
 const http = require('http');
+const url = require('url');
 
 const { getUrlParameters } = require('./URLParameters');
 const { checkURL } = require('./catchErrors');
@@ -8,42 +9,35 @@ const createServer = () => {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    const [text, query] = req.url.split('?');
-    const { originalText, targetCase } = getUrlParameters(text, query);
+    const { pathname, query } = url.parse(req.url, true);
+    const { originalText, targetCase } = getUrlParameters(pathname, query);
     const errors = checkURL(originalText, targetCase);
 
     if (errors.length) {
-      res.statusCode = 400;
-      res.statusMessage = 'Bad request';
-
-      res.end(
-        JSON.stringify({
-          errors,
-        }),
-      );
-
+      sendJsonResponse(res, 400, 'Bad request', { errors });
       return;
     }
-
-    res.statusCode = 200;
-    res.statusMessage = 'OK';
 
     const { originalCase, convertedText } = convertToCase(
       originalText,
       targetCase,
     );
 
-    res.end(
-      JSON.stringify({
-        originalCase,
-        targetCase,
-        originalText,
-        convertedText,
-      }),
-    );
+    sendJsonResponse(res, 200, 'OK', {
+      originalCase,
+      targetCase,
+      originalText,
+      convertedText,
+    });
   });
 
   return server;
+};
+
+const sendJsonResponse = (res, statusCode, statusMessage, data) => {
+  res.statusCode = statusCode;
+  res.statusMessage = statusMessage;
+  res.end(JSON.stringify(data));
 };
 
 module.exports = { createServer };
