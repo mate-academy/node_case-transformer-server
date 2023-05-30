@@ -4,9 +4,9 @@ const { convertToCase } = require('./convertToCase');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
-    const normolizeURL = new URL(req.url, `http://${req.headers.host}`);
-    const originalText = normolizeURL.pathname.slice(1);
-    const targetCase = normolizeURL.searchParams.get('toCase');
+    const normalizeURL = new URL(req.url, `http://${req.headers.host}`);
+    const originalText = normalizeURL.pathname.slice(1);
+    const targetCase = normalizeURL.searchParams.get('toCase');
     const errors = validation(originalText, targetCase);
 
     if (errors.length) {
