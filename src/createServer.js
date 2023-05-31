@@ -12,16 +12,19 @@ function createServer() {
     const hasError = errorBody.errors.length !== 0;
 
     res.setHeader('Content-Type', 'application/json');
-    res.statusCode = hasError ? 400 : 200;
-    res.statusMessage = hasError ? 'Bad request' : 'OK';
+    res.statusCode = 200;
+    res.statusMessage = 'OK';
 
     if (hasError) {
-      res.end(JSON.stringify(errorBody));
-    } else {
-      const responseBody = createResponseBody(text, targetCase);
+      res.statusCode = 400;
+      res.statusMessage = 'Bad request';
 
-      res.end(JSON.stringify(responseBody));
+      return res.end(JSON.stringify(errorBody));
     }
+
+    const responseBody = createResponseBody(text, targetCase);
+
+    res.end(JSON.stringify(responseBody));
   });
 
   return server;
