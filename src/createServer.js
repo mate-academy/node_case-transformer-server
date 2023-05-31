@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const http = require('http');
 const notification = require('./notifications')
 const { convertToCase } = require('./convertToCase');
@@ -29,17 +28,16 @@ const createServer = () => {
       });
     }
 
-    if (!supportedCases.includes(toCase)) {
+    if (toCase && !supportedCases.includes(toCase)) {
       errorNotifications.errors.push({
         message: notification.toCaseNotExist,
       });
     }
 
-    console.log('errorNotifications', errorNotifications);
-
     if (errorNotifications.errors.length > 0) {
+      console.log(errorNotifications)
       res.statusCode = 400;
-      res.end(JSON.stringify({ errors }));
+      return res.end(JSON.stringify(errorNotifications));
     }
 
     const response = {
@@ -49,12 +47,16 @@ const createServer = () => {
     };
 
     res.statusCode = 200;
-    res.end(JSON.stringify(response));
+    return res.end(JSON.stringify(response));
   });
+
 
   return server;
 };
 
+// createServer().listen(8080, () => {
+//   console.log('Server listening on http://localhost:8080');
+// });
 
 module.exports = {
   createServer,
