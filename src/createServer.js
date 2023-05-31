@@ -15,7 +15,7 @@ function createServer() {
 
       return res.end(
         JSON.stringify({
-          errors: errors.map((error) => ({ message: error })),
+          errors,
         }),
       );
     }

@@ -5,17 +5,21 @@ const getErrors = (textToFormat, toCase) => {
   const regs = '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"';
 
   if (!textToFormat) {
-    errors.push(`Text to convert is required. Correct request is: ${regs}.`);
+    errors.push({
+      message: `Text to convert is required. Correct request is: ${regs}.`,
+    });
   }
 
   if (!toCase) {
-    errors.push(`"toCase" query param is required. Correct request is: ${regs}.`);
+    errors.push({
+      message: `"toCase" query param is required. Correct request is: ${regs}.`,
+    });
   }
 
   if (toCase && !cases.includes(toCase)) {
-    errors.push(
-      `This case is not supported. Available cases: ${cases.join(', ')}.`,
-    );
+    errors.push({
+      message: `This case is not supported. Available cases: ${cases.join(', ')}.`,
+    });
   }
 
   return errors;
