@@ -1,9 +1,9 @@
 'use strict';
 
 function normalizeUrl(requestUrl, requestHost) {
-  const normalizedUrld = new URL(requestUrl, `http://${requestHost}`);
-  const toCase = normalizedUrld.searchParams.get('toCase');
-  const textToConvert = normalizedUrld.pathname.slice(1);
+  const normalizedUrl = new URL(requestUrl, `http://${requestHost}`);
+  const toCase = normalizedUrl.searchParams.get('toCase');
+  const textToConvert = normalizedUrl.pathname.slice(1);
 
   return { toCase, textToConvert };
 }

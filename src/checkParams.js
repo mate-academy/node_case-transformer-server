@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
 'use strict';
 
-const avaliableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const errorMessage = require('./errorMessage');
+const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function checkParams(textToConvert, toCase) {
   const validation = {
@@ -9,15 +10,15 @@ function checkParams(textToConvert, toCase) {
   };
 
   if (!textToConvert) {
-    validation.errors.push({ message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
+    validation.errors.push({ message: errorMessage.textRequired });
   }
 
   if (!toCase) {
-    validation.errors.push({ message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
+    validation.errors.push({ message: errorMessage.toCaseRequired });
   }
 
-  if (!avaliableCases.includes(toCase) && toCase) {
-    validation.errors.push({ message: `This case is not supported. Available cases: ${avaliableCases.join(', ')}.` });
+  if (!availableCases.includes(toCase) && toCase) {
+    validation.errors.push({ message: errorMessage.notSuportedCase(availableCases) });
   }
 
   return validation;
