@@ -9,16 +9,18 @@ const validateRequire = (text, caseName) => {
     });
   };
 
+  const { textError, caseError, caseValidationError } = errorMessages;
+
   if (!text) {
-    addErrorMessage(errorMessages.textError);
+    addErrorMessage(textError);
   }
 
   if (!caseName) {
-    addErrorMessage(errorMessages.caseError);
+    addErrorMessage(caseError);
   }
 
   if (caseName && !supportedCases.includes(caseName)) {
-    addErrorMessage(errorMessages.caseValidationError);
+    addErrorMessage(caseValidationError);
   }
 
   return errors;
