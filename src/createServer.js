@@ -7,21 +7,21 @@ function createServer() {
   const server = http.createServer((req, res) => {
     const urlQuery = req.url.split('?');
 
-    const [text, toCase] = parseUrlQuery(urlQuery);
+    const { text, toCase } = parseUrlQuery(urlQuery);
 
-    const errors = errorCheck(text, toCase);
-    const isError = errors.length !== 0;
+    const errorsMessages = errorCheck(text, toCase);
+    const isError = errorsMessages.errors.length !== 0;
 
     res.setHeader('Content-Type', 'application/json');
-    res.statusCode = isError ? 400 : 200;
-    res.statusMessage = isError ? 'Bad request' : 'OK';
 
     if (isError) {
-      res.end(JSON.stringify({
-        errors: errors.map((error) => ({ message: error })),
-      }));
+      res.statusCode = 400;
+      res.statusMessage = 'Bad request';
+      res.end(JSON.stringify(errorsMessages));
     } else {
-      res.end(JSON.stringify(createResponse(text, toCase)));
+      res.statusCode = 200;
+      res.statusMessage = 'OK';
+      res.end((createResponse(text, toCase)));
     }
   });
 

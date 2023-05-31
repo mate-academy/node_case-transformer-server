@@ -2,21 +2,23 @@ const { errorMessages } = require('./constants/errorsMessages');
 const { availableCases } = require('./constants/availableCases');
 
 function errorCheck(text, targetCase) {
-  const errors = [];
+  const errorsObject = {
+    errors: [],
+  };
 
   if (!text) {
-    errors.push(errorMessages[0]);
+    errorsObject.errors.push({ message: errorMessages.missingText });
   }
 
   if (!targetCase) {
-    errors.push(errorMessages[1]);
+    errorsObject.errors.push({ message: errorMessages.missingQueryParam });
   }
 
   if (targetCase && !availableCases.includes(targetCase)) {
-    errors.push(errorMessages[2]);
+    errorsObject.errors.push({ message: errorMessages.unsupportedCase });
   }
 
-  return errors;
+  return errorsObject;
 }
 
 module.exports = { errorCheck };
