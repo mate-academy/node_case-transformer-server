@@ -1,53 +1,22 @@
 const http = require('http');
-const notification = require('./notifications')
-const { convertToCase } = require('./convertToCase');
-
-const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const validateParams = require('./validateParams');
+const parseRequest = require('./parseRequest');
+const sendResponce = require('./sendResponce');
+const newResponse = require('./newResponse');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
-    const { pathname, searchParams } = new URL(req.url, `http://${req.headers.host}`);
-    const toCase = searchParams.get('toCase');
-    const textToConvert = pathname.slice(1);
-    const errorNotifications = {
-      errors: [],
-    };
-
-    res.setHeader('Content-Type', 'application/json');
-
-    if (!textToConvert) {
-      errorNotifications.errors.push({
-        message: notification.textMissing,
-      });
-    }
-
-    if (!toCase) {
-      errorNotifications.errors.push({
-        message: notification.toCaseMissing,
-      });
-    }
-
-    if (toCase && !supportedCases.includes(toCase)) {
-      errorNotifications.errors.push({
-        message: notification.toCaseNotExist,
-      });
-    }
+    const { toCase, textToConvert } = parseRequest(req);
+    const errorNotifications = validateParams(toCase, textToConvert);
 
     if (errorNotifications.errors.length > 0) {
-      res.statusCode = 400;
-      return res.end(JSON.stringify(errorNotifications));
+      return sendResponce(400, errorNotifications, res);
     }
 
-    const response = {
-      ...convertToCase(textToConvert, toCase),
-      targetCase: toCase,
-      originalText: textToConvert,
-    };
+    const response = newResponse(textToConvert, toCase);
 
-    res.statusCode = 200;
-    return res.end(JSON.stringify(response));
+    return sendResponce(200, response, res);
   });
-
 
   return server;
 };
@@ -55,8 +24,3 @@ const createServer = () => {
 module.exports = {
   createServer,
 };
-
-
-
-
-
