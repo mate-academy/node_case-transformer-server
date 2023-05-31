@@ -1,14 +1,17 @@
-/* eslint-disable max-len */
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
+const errorsMessages = require('./utils/errorsMessages');
+const { sendSuccessResponse } = require('./utils/sendSuccessResponse');
+const { sendErrorResponse } = require('./utils/sendErrorResponse');
+const { handleRequest } = require('./utils/handleRequest');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
-    const textToTransform = req.url.slice(1).split('?')[0];
-    const allowedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-    const queryString = req.url.slice(1).split('?')[1];
-    const params = new URLSearchParams(queryString);
-    const toCase = params.get('toCase');
+    const {
+      textToTransform,
+      allowedCases,
+      toCase,
+    } = handleRequest(req);
     const validation = {
       errors: [],
     };
@@ -17,28 +20,26 @@ const createServer = () => {
 
     if (!textToTransform) {
       validation.errors.push({
-        message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: errorsMessages.noTextError,
       });
     }
 
     if (!toCase) {
       validation.errors.push({
-        message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: errorsMessages.noCaseError,
       });
     }
 
     if (!(allowedCases.includes(toCase)) && toCase) {
       validation.errors.push({
-        message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        message: errorsMessages.invalidCaseError,
       });
     }
 
     if (validation.errors.length) {
       const result = JSON.stringify(validation);
 
-      res.statusCode = 400;
-      res.statusMessage = 'Bad request';
-      res.end(result);
+      sendErrorResponse(res, result);
     }
 
     if (!validation.errors.length) {
@@ -54,13 +55,13 @@ const createServer = () => {
         convertedText,
       });
 
-      res.statusCode = 200;
-      res.statusMessage = 'OK';
-      res.end(result);
+      sendSuccessResponse(res, result);
     }
   });
 
   return server;
 };
 
-module.exports.createServer = createServer;
+module.exports = {
+  createServer,
+};
