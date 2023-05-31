@@ -4,22 +4,22 @@ const validateRequire = (text, caseName) => {
   const requestTemplate = '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
   const casesList = `${supportedCases.join(', ')}.`;
 
-  if (!text) {
+  const addErrorMessage = (message) => {
     errors.push({
-      message: `Text to convert is required. Correct request is: ${requestTemplate}`,
+      message,
     });
+  };
+
+  if (!text) {
+    addErrorMessage(`Text to convert is required. Correct request is: ${requestTemplate}`);
   }
 
   if (!caseName) {
-    errors.push({
-      message: `"toCase" query param is required. Correct request is: ${requestTemplate}`,
-    });
+    addErrorMessage(`"toCase" query param is required. Correct request is: ${requestTemplate}`);
   }
 
   if (caseName && !supportedCases.includes(caseName)) {
-    errors.push({
-      message: `This case is not supported. Available cases: ${casesList}`,
-    });
+    addErrorMessage(`This case is not supported. Available cases: ${casesList}`);
   }
 
   return errors;
