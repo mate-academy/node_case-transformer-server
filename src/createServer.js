@@ -1,20 +1,21 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 const paramsCheck = require('./paramsCheck');
-const sendError = require('./sendError');
+const getParameters = require('./getParameters');
+const sendResponse = require('./sendResponse');
 
 const createServer = () => {
   const server = http.createServer((request, response) => {
     response.setHeader('Content-Type', 'application/json');
 
-    const { pathname, searchParams } = new URL(request.url, `http://${request.headers.host}`);
-    const text = pathname.slice(1);
-    const toCase = searchParams.get('toCase');
+    const { text, toCase } = getParameters(request.url, `http://${request.headers.host}`);
 
     const errorMessages = paramsCheck(text, toCase);
 
     if (errorMessages.length) {
-      return sendError(response, 400, errorMessages);
+      const errorObjects = errorMessages.map(message => ({ message }));
+
+      return sendResponse(response, 400, { errors: errorObjects });
     }
 
     const {
@@ -29,8 +30,7 @@ const createServer = () => {
       convertedText,
     };
 
-    response.statusCode = 200;
-    response.end(JSON.stringify(responseBody));
+    sendResponse(response, 200, responseBody);
   });
 
   return server;
