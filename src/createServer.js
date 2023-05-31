@@ -14,15 +14,12 @@ function createServer() {
 
     res.setHeader('Content-Type', 'application/json');
 
-    if (isError) {
-      res.statusCode = 400;
-      res.statusMessage = 'Bad request';
-      res.end(JSON.stringify(errorsMessages));
-    } else {
-      res.statusCode = 200;
-      res.statusMessage = 'OK';
-      res.end((createResponse(text, toCase)));
-    }
+    res.statusCode = isError ? 400 : 200;
+    res.statusMessage = isError ? 'Bad request' : 'OK';
+
+    res.end(isError
+      ? JSON.stringify(errorsMessages)
+      : createResponse(text, toCase));
   });
 
   return server;
