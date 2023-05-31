@@ -11,6 +11,7 @@ const createServer = () => {
     const params = new URLSearchParams(queryStr);
     const toCase = params.get('toCase');
     const checkError = errorValidation(textToConvert, toCase);
+
     const hasError = checkError.errors.length > 0;
 
     res.setHeader('Content-Type', 'application/json');

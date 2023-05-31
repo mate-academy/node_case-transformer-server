@@ -1,24 +1,30 @@
 /* eslint-disable max-len */
 function errorValidation(textToConvert, toCase) {
   const errorMessages = {
-    errors: [],
+    missingText: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    missingTargetCase: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    wrongTargetCase: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
   };
 
   const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
+  const responceErrors = {
+    errors: [],
+  };
+
   if (!textToConvert) {
-    errorMessages.errors.push({ message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
+    responceErrors.errors.push({ message: errorMessages.missingText });
   }
 
   if (!toCase) {
-    errorMessages.errors.push({ message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
+    responceErrors.errors.push({ message: errorMessages.missingTargetCase });
   }
 
   if (toCase && !availableCases.includes(toCase)) {
-    errorMessages.errors.push({ message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.' });
+    responceErrors.errors.push({ message: errorMessages.wrongTargetCase });
   }
 
-  return errorMessages;
+  return responceErrors;
 }
 
 module.exports = { errorValidation };
