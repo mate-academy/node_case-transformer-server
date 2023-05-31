@@ -37,6 +37,7 @@ const createServer = () => {
       const result = JSON.stringify(validation);
 
       res.statusCode = 400;
+      res.statusMessage = 'Bad request';
       res.end(result);
     }
 
@@ -54,6 +55,7 @@ const createServer = () => {
       });
 
       res.statusCode = 200;
+      res.statusMessage = 'OK';
       res.end(result);
     }
   });
