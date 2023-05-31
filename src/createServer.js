@@ -1,26 +1,15 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
-const errorMessages = require('./errorMessages');
+const { wrongTargetCase } = require('./errorMessages');
+const { getTextAndParams } = require('./getTextAndParams');
+const { getErrors } = require('./getErrors');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    const [path, queryString] = req.url.split('?');
-    const text = path.slice(1);
-    const params = new URLSearchParams(queryString);
-    const targetCase = params.get('toCase');
-    const responseErrors = {
-      errors: [],
-    };
+    const { text, targetCase } = getTextAndParams(req.url);
+    const responseErrors = getErrors(text, targetCase);
 
     res.setHeader('Content-Type', 'application/json');
-
-    if (!text) {
-      responseErrors.errors.push({ message: errorMessages.missingText });
-    }
-
-    if (!targetCase) {
-      responseErrors.errors.push({ message: errorMessages.missingTargetCase });
-    }
 
     const response = {
       originalText: text,
@@ -31,17 +20,19 @@ function createServer() {
       Object.assign(response, convertToCase(text, targetCase));
     } catch {
       if (targetCase) {
-        responseErrors.errors.push({ message: errorMessages.wrongTargetCase });
+        responseErrors.errors.push({ message: wrongTargetCase });
       }
     }
 
     if (!responseErrors.errors.length) {
       res.end(JSON.stringify(response));
-    } else {
-      res.statusCode = 400;
-      res.statusMessage = 'Bad request';
-      res.end(JSON.stringify(responseErrors));
+
+      return server;
     }
+
+    res.statusCode = 400;
+    res.statusMessage = 'Bad request';
+    res.end(JSON.stringify(responseErrors));
   });
 
   return server;
