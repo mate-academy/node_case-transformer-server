@@ -1,5 +1,6 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const { validateParams, sendError } = require('./validation');
 
 const createServer = () => {
   const server = http.createServer((request, response) => {
@@ -9,7 +10,7 @@ const createServer = () => {
     const text = pathname.slice(1);
     const toCase = searchParams.get('toCase');
 
-    const errorMessages = paramsCheck(text, toCase);
+    const errorMessages = validateParams(text, toCase);
 
     if (errorMessages.length) {
       return sendError(response, 400, errorMessages);
@@ -34,42 +35,6 @@ const createServer = () => {
   return server;
 };
 
-const paramsCheck = (text, toCase) => {
-  const emptyTextMessage = 'Text to convert is required.'
-    + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-  const emptyCaseMessage = '"toCase" query param is required.'
-    + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-  const invalidCaseMessage = 'This case is not supported.'
-    + ' Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
-
-  const errorMessages = [];
-  const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-  if (!toCase) {
-    errorMessages.push(emptyCaseMessage);
-  }
-
-  if (!text) {
-    errorMessages.push(emptyTextMessage);
-  }
-
-  if (!!toCase && !supportedCases.includes(toCase)) {
-    errorMessages.push(invalidCaseMessage);
-  }
-
-  return errorMessages;
+module.exports = {
+  createServer,
 };
-
-const sendError = (response, statusCode, errorMessages) => {
-  const errors = [];
-
-  errorMessages.forEach(error => {
-    errors.push({ message: error });
-  });
-  response.statusCode = statusCode;
-  response.end(JSON.stringify({ errors }));
-};
-
-createServer();
-
-module.exports.createServer = createServer;
