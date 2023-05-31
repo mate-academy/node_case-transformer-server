@@ -9,9 +9,6 @@ function createServer() {
 
     const [strQuery, targetCase] = getParams(req.url, req.headers.host);
 
-    console.log(strQuery);
-    console.log(targetCase);
-
     const errors = getErrors(strQuery, targetCase);
 
     if (errors.length > 0) {
@@ -30,8 +27,6 @@ function createServer() {
       targetCase,
       originalText: strQuery,
     };
-
-    console.log(result);
 
     res.statusCode = 200;
     res.statusMessage = 'OK';
