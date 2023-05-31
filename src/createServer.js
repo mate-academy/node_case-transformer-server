@@ -1,8 +1,7 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const errorsMessages = require('./utils/errorsMessages');
-const { sendSuccessResponse } = require('./utils/sendSuccessResponse');
-const { sendErrorResponse } = require('./utils/sendErrorResponse');
+const { sendResponse } = require('./utils/sendResponse');
 const { handleRequest } = require('./utils/handleRequest');
 
 const createServer = () => {
@@ -39,7 +38,7 @@ const createServer = () => {
     if (validation.errors.length) {
       const result = JSON.stringify(validation);
 
-      sendErrorResponse(res, result);
+      sendResponse(res, 400, 'Bad request', result);
     }
 
     if (!validation.errors.length) {
@@ -55,7 +54,7 @@ const createServer = () => {
         convertedText,
       });
 
-      sendSuccessResponse(res, result);
+      sendResponse(res, 200, 'OK', result);
     }
   });
 
