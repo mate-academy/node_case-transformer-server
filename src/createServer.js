@@ -1,40 +1,24 @@
 const http = require('http');
 const { validation } = require('./validation');
-const { convertToCase } = require('./convertToCase');
+const { sendResponse } = require('./sendResponse');
+const { splitUrl } = require('./splitUrl');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
-    const splitUrl = req.url.split('?');
-
-    const path = splitUrl[0];
-    const textToConvert = path.slice(1);
-
-    const queryString = splitUrl[1];
-    const params = new URLSearchParams(queryString);
-
-    const toCase = params.get('toCase');
-
+    const { textToConvert, toCase } = splitUrl(req.url);
     const errorsCheck = validation(textToConvert, toCase);
     const hasError = errorsCheck.errors.length > 0;
 
     res.setHeader('Content-Type', 'application/json');
-    res.statusCode = hasError ? 400 : 200;
-    res.statusMessage = hasError ? 'Bad Request' : 'OK';
 
-    if (errorsCheck.errors.length) {
-      res.end(JSON.stringify(errorsCheck));
+    if (hasError) {
+      res.statusCode = 400;
+      res.statusMessage = 'Bad Request';
     } else {
-      const result = convertToCase(textToConvert, toCase);
-
-      const response = {
-        originalCase: result.originalCase,
-        targetCase: toCase,
-        originalText: textToConvert,
-        convertedText: result.convertedText,
-      };
-
-      res.end(JSON.stringify(response));
+      res.statusCode = 200;
+      res.statusMessage = 'OK';
     }
+    sendResponse(errorsCheck, textToConvert, toCase, res);
   });
 
   return server;
