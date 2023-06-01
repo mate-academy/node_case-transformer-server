@@ -1,0 +1,18 @@
+const { convertToCase } = require('./convertToCase');
+
+const createResponseBody = (text, toCase) => {
+  const bodyToCase = convertToCase(text, toCase);
+
+  const responseBody = {
+    originalCase: bodyToCase.originalCase,
+    targetCase: toCase,
+    originalText: text,
+    convertedText: bodyToCase.convertedText,
+  };
+
+  return responseBody;
+};
+
+module.exports = {
+  createResponseBody,
+};
