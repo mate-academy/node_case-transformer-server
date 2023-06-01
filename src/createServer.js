@@ -11,19 +11,23 @@ function createServer() {
 
     if (errors.length > 0) {
       sendRequest(res, 'Bad request', 400, { errors });
-    } else {
-      const { originalCase, convertedText } = convertToCase(
-        textToFormat,
-        caseToFormat,
-      );
 
-      sendRequest(res, 'OK', 200, {
-        originalCase,
-        convertedText,
-        targetCase: caseToFormat,
-        originalText: textToFormat,
-      });
+      return;
     }
+
+    const { originalCase, convertedText } = convertToCase(
+      textToFormat,
+      caseToFormat,
+    );
+
+    const requestData = {
+      originalCase,
+      convertedText,
+      targetCase: caseToFormat,
+      originalText: textToFormat,
+    };
+
+    sendRequest(res, 'OK', 200, requestData);
   });
 
   return server;
