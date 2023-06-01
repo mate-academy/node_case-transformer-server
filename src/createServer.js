@@ -2,6 +2,7 @@ const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const { getReqData } = require('./getReqData');
 const { validateReq } = require('./validateReq');
+const { sendReq } = require('./sendReq');
 
 function createServer() {
   const server = http.createServer((req, res) => {
@@ -12,7 +13,7 @@ function createServer() {
     res.statusCode = errors.length ? 400 : 200;
 
     if (errors.length) {
-      res.end(JSON.stringify({ errors }));
+      sendReq(res, { errors });
 
       return;
     }
@@ -29,7 +30,7 @@ function createServer() {
       convertedText,
     };
 
-    res.end(JSON.stringify(resBody));
+    sendReq(res, resBody);
   });
 
   return server;
