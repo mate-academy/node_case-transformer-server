@@ -2,27 +2,19 @@
 const http = require('http');
 const { validateReq } = require('./validateReq');
 const { prepareResponse } = require('./prepareResponse');
+const { getUrlParams } = require('./getUrlParams');
+const { sendResponse } = require('./sendResponse');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
-    const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
-    const textToConvert = normalizedUrl.pathname.slice(1);
-    const caseToConvert = normalizedUrl.searchParams.get('toCase');
-    const errors = validateReq(textToConvert, caseToConvert);
-    const response = prepareResponse(textToConvert, caseToConvert);
+    const { textToConvert, caseToConvert } = getUrlParams(req);
+    const validationResult = validateReq(textToConvert, caseToConvert);
+    const responseBody = prepareResponse(textToConvert, caseToConvert);
 
-    res.setHeader = ('Content-Type', 'application/json');
-    res.statusCode = errors.length === 0 ? 200 : 400;
-    res.statusText = errors.length === 0 ? 'OK' : 'Bad request';
-
-    if (errors.length !== 0) {
-      console.log(errors);
-      res.end(JSON.stringify({ errors }));
-    }
-
-    if (errors.length === 0) {
-      console.log(response);
-      res.end(JSON.stringify({ response }));
+    if (validationResult.errors.length === 0) {
+      sendResponse(res, responseBody, 200, 'OK');
+    } else {
+      sendResponse(res, validationResult, 400, 'Bad request');
     }
   });
 
