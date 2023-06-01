@@ -1,7 +1,7 @@
 const http = require('http');
 const { normalizeUrl } = require('./normalizeUrl');
 const { checkErrors } = require('./checkErrors');
-const { sendErrors } = require('./sendErrors');
+const { sendResponse } = require('./sendResponse');
 const { createResponseBody } = require('./createResponseBody');
 
 const createServer = () => {
@@ -9,8 +9,8 @@ const createServer = () => {
     const { text, toCase } = normalizeUrl(req);
     const errors = checkErrors(text, toCase);
 
-    if (!!errors.length) {
-      return sendErrors(res, 400, errors);
+    if (errors.length) {
+      return sendResponse(res, 400, errors);
     }
 
     const responseBody = createResponseBody(text, toCase);
@@ -21,8 +21,7 @@ const createServer = () => {
   });
 
   return server;
-}
-
+};
 
 module.exports = {
   createServer,

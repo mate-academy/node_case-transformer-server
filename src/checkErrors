@@ -8,15 +8,15 @@ const checkErrors = (text, toCase) => {
   const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
   if (!toCase) {
-    errors.push(requiredCase);
+    errors.push({ message: requiredCase });
   }
 
   if (!text) {
-    errors.push(requiredText);
+    errors.push({ message: requiredText });
   }
 
   if (!!toCase && !availableCases.includes(toCase)) {
-    errors.push(notSupportedCase);
+    errors.push({ message: notSupportedCase });
   }
 
   return errors;
