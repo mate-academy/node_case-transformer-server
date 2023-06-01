@@ -1,4 +1,10 @@
-const errorMessages = require('./errorMessages.json');
+/* eslint-disable max-len */
+
+const errorMessages = {
+  textRequired: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+  queryRequired: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+  notSuportedCase: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+};
 
 function handleErrors(textToConvert, toCase) {
   const errors = [];
