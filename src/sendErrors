@@ -1,0 +1,14 @@
+const sendErrors = (res, statusCode, messages) => {
+  const errors = [];
+
+  messages.forEach(error => {
+    errors.push({ message: error });
+  });
+  res.setHeader('Content-Type', 'application/json');
+  res.statusCode = statusCode;
+  res.end(JSON.stringify({ errors }));
+};
+
+module.exports = {
+  sendErrors,
+};

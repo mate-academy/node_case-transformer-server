@@ -1,0 +1,27 @@
+/* eslint-disable max-len */
+const checkErrors = (text, toCase) => {
+  const requiredText = 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+  const requiredCase = '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+  const notSupportedCase = 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+
+  const errors = [];
+  const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+  if (!toCase) {
+    errors.push(requiredCase);
+  }
+
+  if (!text) {
+    errors.push(requiredText);
+  }
+
+  if (!!toCase && !availableCases.includes(toCase)) {
+    errors.push(notSupportedCase);
+  }
+
+  return errors;
+};
+
+module.exports = {
+  checkErrors,
+};

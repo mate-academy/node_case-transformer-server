@@ -1,0 +1,11 @@
+const normalizeUrl = (req) => {
+  const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
+  const text = normalizedUrl.pathname.slice(1);
+  const toCase = normalizedUrl.searchParams.get('toCase');
+
+  return { text, toCase };
+};
+
+module.exports = {
+  normalizeUrl,
+};
