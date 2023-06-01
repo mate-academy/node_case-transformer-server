@@ -1,4 +1,4 @@
-const standartizeURL = (url) => {
+const standardizeURL = (url) => {
   const textToConvert = url.split('?');
   const params = new URLSearchParams(textToConvert[1]);
   const toCase = params.get('toCase');
@@ -7,5 +7,5 @@ const standartizeURL = (url) => {
 };
 
 module.exports = {
-  standartizeURL,
+  standardizeURL,
 };

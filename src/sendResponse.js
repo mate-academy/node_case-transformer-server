@@ -3,7 +3,7 @@ const sendResponse = (res, response, statusCode, data) => {
   res.statusCode = statusCode;
   res.statusText = response;
 
-  res.end(data);
+  res.end(JSON.stringify(data));
 };
 
 module.exports = {

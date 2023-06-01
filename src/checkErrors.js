@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-const errors = [
+const errorMessages = [
   {
     message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
   },
@@ -13,17 +13,18 @@ const errors = [
 
 const checkErrors = (url, toCase) => {
   const errorMessage = [];
+  const cases = ['SNAKE', 'KEBAB', 'PASCAL', 'CAMEL', 'UPPER'];
 
   if (!url.length) {
-    errorMessage.push(errors[0]);
+    errorMessage.push(errorMessages[0]);
   }
 
   if (!toCase) {
-    errorMessage.push(errors[1]);
+    errorMessage.push(errorMessages[1]);
   }
 
-  if (!['SNAKE', 'KEBAB', 'PASCAL', 'CAMEL', 'UPPER'].includes(toCase) && toCase) {
-    errorMessage.push(errors[2]);
+  if (!cases.includes(toCase) && toCase) {
+    errorMessage.push(errorMessages[2]);
   }
 
   return errorMessage;
