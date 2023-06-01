@@ -10,14 +10,12 @@ const createServer = () => {
     const errors = checkErrors(text, toCase);
 
     if (errors.length) {
-      return sendResponse(res, 400, errors);
+      return sendResponse(res, 400, { errors });
     }
 
     const responseBody = createResponseBody(text, toCase);
 
-    res.setHeader('Content-Type', 'application/json');
-    res.statusCode = 200;
-    res.end(JSON.stringify(responseBody));
+    sendResponse(res, 200, responseBody);
   });
 
   return server;
