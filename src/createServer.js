@@ -1,50 +1,30 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const { parseURL } = require('./parseURL');
-const errorMessages = require('./errorMessages');
+const { validateData } = require('./validateData');
+const { sendResponse } = require('./sendResponse');
 
 const createServer = () => {
   return http.createServer((req, res) => {
     const { stringCase, queryString } = parseURL(req.url, req.headers.host);
-    const validation = {
-      errors: [],
-    };
+    const validation = validateData(queryString, stringCase);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
 
-    if (!queryString) {
-      validation.errors.push({
-        message: errorMessages.TEXT_REQUIRED,
-      });
-    }
-
-    if (!stringCase) {
-      validation.errors.push({
-        message: errorMessages.TOCASE_REQUIRED,
-      });
-    }
-
-    let result;
-
-    try {
-      result = {
+    if (!validation.errors.length) {
+      const result = {
         ...convertToCase(queryString, stringCase),
         originalText: queryString,
         targetCase: stringCase,
       };
-    } catch {
-      if (stringCase) {
-        validation.errors.push({
-          message: errorMessages.INVALID_CASE,
-        });
-      }
+
+      sendResponse(res, 200, result);
+
+      return;
     }
 
-    if (!validation.errors.length) {
-      res.end(JSON.stringify(result));
-    } else {
-      res.statusCode = 400;
-      res.end(JSON.stringify(validation));
+    if (validation.errors.length) {
+      sendResponse(res, 400, validation);
     }
   });
 };
