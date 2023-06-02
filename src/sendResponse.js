@@ -1,7 +1,7 @@
-function sendResponce(res, statusCode, statusMessage, data) {
+function sendResponse(res, statusCode, statusMessage, data) {
   res.statusCode = 400;
   res.statusMessage = 'Bad request';
   res.end(JSON.stringify(data));
 };
 
-module.exports = { sendResponce };
+module.exports = { sendResponse };

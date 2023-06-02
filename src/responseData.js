@@ -1,6 +1,6 @@
 const { convertToCase } = require('./convertToCase/convertToCase');
 
-function responceData(textToConvert, toCase) {
+function responseData(textToConvert, toCase) {
   const result = convertToCase(textToConvert, toCase);
 
   const responceObject = {
@@ -13,4 +13,4 @@ function responceData(textToConvert, toCase) {
   return responceObject;
 }
 
-module.exports = { responceData };
+module.exports = { responseData };

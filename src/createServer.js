@@ -1,8 +1,8 @@
 const http = require('http');
 const { errorValidation } = require('./errorValidation');
-const { responceData } = require('./responceData');
+const { responseData } = require('./responseData');
 const { getURL } = require('./getURL');
-const { sendResponce } = require('./sendResponce');
+const { sendResponse } = require('./sendResponse');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -14,12 +14,12 @@ const createServer = () => {
     res.setHeader('Content-Type', 'application/json');
 
     if (hasError) {
-      sendResponce(res, 404, 'Bad request', errorMessage);
+      sendResponse(res, 404, 'Bad request', errorMessage);
 
       return;
     }
 
-    sendResponce(res, 200, 'OK', responceData(textToConvert, toCase));
+    sendResponse(res, 200, 'OK', responseData(textToConvert, toCase));
   });
 
   return server;
