@@ -2,7 +2,7 @@ const http = require('http');
 const { errorValidation } = require('./errorValidation');
 const { responceData } = require('./responceData');
 const { getURL } = require('./getURL');
-const { sendResponce } = require('./sendResponce')
+const { sendResponce } = require('./sendResponce');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
