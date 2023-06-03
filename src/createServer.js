@@ -3,18 +3,22 @@ const { getData } = require('./getData');
 const { validateData } = require('./validateData');
 const { convertToCase } = require('./convertToCase/convertToCase');
 
+function sendResponse(res, statusCode, statusMessage, data) {
+  res.statusCode = statusCode;
+  res.statusMessage = statusMessage;
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify(data));
+}
+
 function createServer() {
   const server = http.createServer((request, response) => {
     const [textToConvert, caseName] = getData(request);
     const errors = validateData(textToConvert, caseName);
 
-    response.setHeader('Content-Type', 'application/json');
-
     if (errors.length) {
-      response.statusCode = 400;
-      response.statusMessage = 'Something went wrong.';
+      sendResponse(response, 400, 'Something went wrong.', { errors });
 
-      return response.end(JSON.stringify({ errors }));
+      return;
     }
 
     const {
@@ -22,12 +26,12 @@ function createServer() {
       originalCase,
     } = convertToCase(textToConvert, caseName);
 
-    return response.end(JSON.stringify({
+    sendResponse(response, 200, 'OK', {
       originalText: textToConvert,
       convertedText,
       originalCase,
       targetCase: caseName,
-    }));
+    });
   });
 
   return server;
