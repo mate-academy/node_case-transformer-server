@@ -17,9 +17,9 @@ function checkParams(textToConvert, neededCase) {
   }
 
   if (!availableCases.includes(neededCase) && neededCase) {
-    validation.errors.push(
-      { message: errorMessages.notSuportedCase(availableCases) },
-    );
+    validation.errors.push({
+      message: errorMessages.notSuportedCase(availableCases),
+    });
   }
 
   return validation;

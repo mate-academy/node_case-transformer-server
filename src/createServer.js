@@ -1,17 +1,23 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const { checkParams } = require('./checkParams');
+const { normalaizeUrl } = require('./normalaizeUrl');
 
 function createServer() {
   return http.createServer((req, res) => {
-    const normalaizedUrl = new URL(req.url, `http://${req.headers.host}`);
-    const textToConvert = normalaizedUrl.pathname.slice(1);
-    const neededCase = normalaizedUrl.searchParams.get('toCase');
+    const {
+      textToConvert,
+      neededCase,
+    } = normalaizeUrl(req.url, req.headers.host);
 
     const validation = checkParams(textToConvert, neededCase);
 
+    function responseSendler(stat) {
+      res.writeHead(stat, { 'Content-Type': 'application/json' });
+    }
+
     if (validation.errors.length) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
+      responseSendler(400);
 
       return res.end(JSON.stringify(validation));
     }
@@ -21,7 +27,7 @@ function createServer() {
       convertedText,
     } = convertToCase(textToConvert, neededCase);
 
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    responseSendler(200);
 
     return res.end(JSON.stringify({
       originalCase,
