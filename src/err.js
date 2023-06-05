@@ -1,19 +1,26 @@
 function errorCatch(text, toCase) {
-  const errors = [];
+  const errors = {
+    noText: 'Text to convert is required',
+    noCase: 'toCase query param is required',
+    wrongCase: 'This case is not supported',
+  };
+  const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+  const errorMessages = [];
 
   if (!text) {
-    errors.push({ message: 'Text to convert is required' });
+    errorMessages.push(errors.noText);
   }
 
   if (!toCase) {
-    errors.push({ message: '"toCase" query param is required' });
+    errorMessages.push(errors.noCase);
   }
 
-  if (!['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase)) {
-    errors.push({ message: 'This case is not supported' });
+  if (!cases.includes(toCase)) {
+    errorMessages.push(errors.wrongCase);
   }
 
-  return errors;
-};
+  return errorMessages;
+}
 
 module.exports = { errorCatch };
