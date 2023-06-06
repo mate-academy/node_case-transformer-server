@@ -3,6 +3,12 @@ const { convertToCase } = require('./convertToCase/convertToCase');
 const { checkParams } = require('./checkParams');
 const { normalaizeUrl } = require('./normalaizeUrl');
 
+function sendResponse(res, stat, data) {
+  res.writeHead(stat, { 'Content-Type': 'application/json' });
+
+  return res.end(JSON.stringify(data));
+};
+
 function createServer() {
   return http.createServer((req, res) => {
     const {
@@ -12,14 +18,8 @@ function createServer() {
 
     const validation = checkParams(textToConvert, neededCase);
 
-    function responseSendler(stat) {
-      res.writeHead(stat, { 'Content-Type': 'application/json' });
-    }
-
     if (validation.errors.length) {
-      responseSendler(400);
-
-      return res.end(JSON.stringify(validation));
+      sendResponse(res, 400, validation);
     }
 
     const {
@@ -27,15 +27,15 @@ function createServer() {
       convertedText,
     } = convertToCase(textToConvert, neededCase);
 
-    responseSendler(200);
-
-    return res.end(JSON.stringify({
+    const data = {
       originalCase,
       targetCase: neededCase,
       originalText: textToConvert,
       convertedText,
-    }));
+    };
+
+    sendResponse(res, 200, data);
   });
-}
+};
 
 module.exports = { createServer };
