@@ -1,11 +1,10 @@
-/* eslint-disable max-len */
 'use strict';
 /* eslint-disable no-console */
-/* eslint-disable dot-notation */
 
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
-const allowedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const { allowedCases } = require('./AllowedCases');
+const { validationErrors } = require('./validationErrors');
 
 function createServer() {
   const server = http.createServer((req, res) => {
@@ -21,19 +20,19 @@ function createServer() {
 
     if (!textToTransform) {
       validation.errors.push({
-        message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: validationErrors.missingTextToTransform,
       });
     }
 
     if (!toCase) {
       validation.errors.push({
-        message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: validationErrors.missingToCase,
       });
     }
 
     if (!(allowedCases.includes(toCase)) && toCase) {
       validation.errors.push({
-        message: `This case is not supported. Available cases: ${allowedCases.join(', ')}.`,
+        message: validationErrors.unUllowedCase,
       });
     }
 
@@ -59,8 +58,6 @@ function createServer() {
 
   return server;
 }
-
-createServer();
 
 module.exports = {
   createServer,
