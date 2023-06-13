@@ -1,23 +1,23 @@
-/* eslint-disable max-len */
+const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
-function isValidReq(text, searchProperty, searchParam) {
+function isValidRequest(text, searchProperty, searchParam) {
   let error = false;
   let message = '';
-  const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+  const templateText = '/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>';
 
   if (!text) {
     error = true;
-    message = 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+    message = `Text to convert is required. Correct request is: "${templateText}".`;
   }
 
   if (searchProperty !== 'toCase') {
     error = true;
-    message = '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+    message = `"toCase" query param is required. Correct request is: "${templateText}".`;
   }
 
   if (!cases.includes(searchParam)) {
     error = true;
-    message = 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+    message = `This case is not supported. Available cases: ${cases.join(', ')}.`;
   }
 
   return {
@@ -27,5 +27,5 @@ function isValidReq(text, searchProperty, searchParam) {
 }
 
 module.exports = {
-  isValidReq,
+  isValidRequest,
 };
