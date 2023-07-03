@@ -1,11 +1,7 @@
 const isCaseValid = (targetCase) => {
   const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
-  if (cases.includes(targetCase)) {
-    return true;
-  }
-
-  return false;
+  return cases.includes(targetCase);
 };
 
 module.exports = { isCaseValid };
