@@ -2,8 +2,6 @@ const http = require('http');
 const { convertToCase } = require('./convertToCase');
 const { validate } = require('./validate');
 
-const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
 function createServer() {
   return http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
