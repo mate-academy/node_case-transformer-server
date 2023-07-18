@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const { convertToCase } = require('./convertToCase/index');
 const { validateRequest } = require('./validateRequest');
 const http = require('http');
