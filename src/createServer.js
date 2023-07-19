@@ -10,15 +10,10 @@ const createServer = () => {
     const params = normalizedURL.searchParams;
     const targetCase = params.get('toCase');
 
-    const { isError, errorMessages } = validateData(originalText, targetCase);
-    let payload;
+    const errors = validateData(originalText, targetCase);
 
-    if (isError) {
-      payload = {
-        errors: errorMessages,
-      };
-
-      sendResponse(response, 400, 'Bad request', payload);
+    if (errors.length) {
+      sendResponse(response, 400, 'Bad request', { errors });
 
       return;
     }
@@ -28,13 +23,14 @@ const createServer = () => {
       convertedText,
     } = convertToCase(originalText, targetCase);
 
-    payload = {
+    const result = {
       originalCase,
       targetCase,
       originalText,
       convertedText,
     };
-    sendResponse(response, 200, 'OK', payload);
+
+    sendResponse(response, 200, 'OK', result);
   });
 
   return server;
