@@ -1,6 +1,6 @@
 const { cases, errorMessages } = require('./constants');
 
-function validateRequest(originalText, targetCase) {
+function validateParameters(originalText, targetCase) {
   const errors = [];
 
   if (!originalText || originalText.trim() === '') {
@@ -18,4 +18,4 @@ function validateRequest(originalText, targetCase) {
   return errors;
 }
 
-module.exports = { validateRequest };
+module.exports = { validateParameters };
