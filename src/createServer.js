@@ -1,12 +1,12 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
-const { getData } = require('./getData');
+const { getParamsFrom } = require('./getParamsFrom');
 const { validateData } = require('./validateData');
 const { sendResponse } = require('./sendResponse');
 
 const createServer = () => {
   const server = http.createServer((request, response) => {
-    const [text, toCase] = getData(request);
+    const [text, toCase] = getParamsFrom(request);
     const errors = validateData(text, toCase);
 
     if (errors.length > 0) {
