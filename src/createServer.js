@@ -15,13 +15,11 @@ function createServer() {
 
     if (paramsErrors.length) {
       res.statusCode = 400;
-      res.write(JSON.stringify({ errors: paramsErrors }));
-      res.end();
+      res.statusMessage = 'Bad Request';
+      res.end(JSON.stringify({ errors: paramsErrors }));
 
       return;
     }
-
-    res.statusCode = 200;
 
     const { originalCase, convertedText } = convertToCase(
       originalText, targetCase,
@@ -34,6 +32,8 @@ function createServer() {
       convertedText,
     };
 
+    res.statusCode = 200;
+    res.statusMessage = 'OK';
     res.end(JSON.stringify(result));
   });
 
