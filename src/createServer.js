@@ -1,37 +1,20 @@
 
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const { paramsValidation } = require('./paramsValidation');
 
-const caseName = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+// const caseName = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 const createServer = () => http.createServer((req, res) => {
-  const errors = [];
-
   const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
   const originalText = normalizedURL.pathname.slice(1);
   const targetCase = normalizedURL.searchParams.get('toCase') || '';
 
   res.setHeader('Content-type', 'application/json');
 
-  if (!originalText) {
-    errors.push({
-      message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".'
-    });
-  }
+  const errors = paramsValidation(originalText, targetCase);
 
-  if (!targetCase) {
-    errors.push({
-      message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".'
-    });
-  }
-
-  if (targetCase && !caseName.includes(targetCase)) {
-    errors.push({
-      message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.'
-    });
-  }
-
-  if (errors.length > 0) {
+  if (errors.length) {
     res.statusCode = 400;
     res.statusMessage = 'Bad request';
 
