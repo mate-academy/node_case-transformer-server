@@ -17,15 +17,24 @@ function createServer() {
       res.statusMessage = 'Bad request';
 
       res.end(JSON.stringify({ errors }));
-    } else {
-      const conversionResult = convertToCase(textToConvert, caseName);
 
-      conversionResult.targetCase = caseName;
-      conversionResult.originalText = textToConvert;
-
-      res.statusCode = 200;
-      res.end(JSON.stringify(conversionResult));
+      return;
     }
+
+    const { originalCase, convertedText } = convertToCase(
+      textToConvert, caseName,
+    );
+
+    const result = {
+      originalCase,
+      targetCase: caseName,
+      originalText: textToConvert,
+      convertedText,
+    };
+
+    res.statusCode = 200;
+    res.statusMessage = 'OK';
+    res.end(JSON.stringify(result));
   });
 
   return server;

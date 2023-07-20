@@ -9,21 +9,15 @@ const errorMessages = {
 function handleErrors(textToConvert, caseName) {
   const errors = [];
 
-  if (!textToConvert && !caseName) {
-    errors.push(
-      { message: errorMessages.missedText },
-      { message: errorMessages.missedCase },
-    );
-  } else if (!textToConvert && !caseNames.includes(caseName)) {
-    errors.push(
-      { message: errorMessages.missedText },
-      { message: errorMessages.notListedCase },
-    );
-  } else if (!textToConvert) {
+  if (!textToConvert) {
     errors.push({ message: errorMessages.missedText });
-  } else if (!caseName) {
+  }
+
+  if (!caseName) {
     errors.push({ message: errorMessages.missedCase });
-  } else if (!caseNames.includes(caseName)) {
+  }
+
+  if (caseName && !caseNames.includes(caseName)) {
     errors.push({ message: errorMessages.notListedCase });
   }
 
