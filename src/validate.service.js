@@ -3,12 +3,12 @@ const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 function validationService(textToConvert, convertType) {
   const noTextToConvert = !textToConvert;
   const noConvertType = !convertType;
-  const validContentType = !availableCases.includes(convertType);
+  const invalidContentType = !availableCases.includes(convertType);
 
-  const isDataUnValid = noTextToConvert || noConvertType || validContentType;
+  const isDataInvalid = noTextToConvert || noConvertType || invalidContentType;
 
-  if (!isDataUnValid) {
-    return { isDataUnValid };
+  if (!isDataInvalid) {
+    return { isDataInvalid };
   }
 
   const result = [];
@@ -27,14 +27,14 @@ function validationService(textToConvert, convertType) {
     });
   }
 
-  if (validContentType && !noConvertType) {
+  if (invalidContentType && !noConvertType) {
     result.push({
       message: 'This case is not supported.'
         + ' Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
     });
   }
 
-  return { isDataUnValid, errors: result };
+  return { isDataInvalid, errors: result };
 }
 
 module.exports = { validationService };

@@ -10,11 +10,11 @@ function createServer() {
 
     res.setHeader('Content-Type', 'application/json');
 
-    const { isDataUnValid, errors } = validationService(
+    const { isDataInvalid, errors } = validationService(
       textToConvert, convertType,
     );
 
-    if (isDataUnValid) {
+    if (isDataInvalid) {
       res.statusCode = 400;
 
       const errorMessage = JSON.stringify({ errors });
