@@ -12,26 +12,27 @@ function createServer() {
     const [textToConvert, toCase] = parseUrl(req);
     const errors = validateUrl(textToConvert, toCase);
 
-    if (errors.length > 0) {
+    if (errors.length) {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
-    } else {
-      res.statusCode = 200;
-      res.statusMessage = 'OK';
 
-      const { originalCase, convertedText }
+      return;
+    }
+    res.statusCode = 200;
+    res.statusMessage = 'OK';
+
+    const { originalCase, convertedText }
       = convertToCase(textToConvert, toCase);
 
-      const jsonResponse = {
-        originalCase,
-        targetCase: toCase,
-        originalText: textToConvert,
-        convertedText,
-      };
+    const jsonResponse = {
+      originalCase,
+      targetCase: toCase,
+      originalText: textToConvert,
+      convertedText,
+    };
 
-      res.end(JSON.stringify(jsonResponse));
-    }
+    res.end(JSON.stringify(jsonResponse));
   });
 
   return server;
