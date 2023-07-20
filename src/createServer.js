@@ -6,13 +6,13 @@ const createServer = () => (
   http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    const originalText = req.url.split('?')[0].slice(1);
-    const params = new URLSearchParams(req.url.split('?')[1]);
-    const targetCase = params.get('toCase');
+    const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
+    const originalText = normalizedURL.pathname.slice(1);
+    const targetCase = normalizedURL.searchParams.get('toCase');
 
     const errors = getErrors(originalText, targetCase);
 
-    if (errors.length > 0) {
+    if (errors.length) {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
@@ -20,8 +20,11 @@ const createServer = () => (
       return;
     }
 
-    const convertedData = convertToCase(originalText, targetCase);
-    const { originalCase, convertedText } = convertedData;
+    const {
+      originalCase,
+      convertedText,
+    } = convertToCase(originalText, targetCase);
+
     const result = {
       originalCase,
       targetCase,
@@ -30,6 +33,7 @@ const createServer = () => (
     };
 
     res.statusCode = 200;
+    res.statusMessage = 'OK';
     res.end(JSON.stringify(result));
   })
 );
