@@ -15,7 +15,7 @@ function createServer() {
 
     const errors = validate(originalText, targetCase);
 
-    if (errors.length > 0) {
+    if (errors.length) {
       response.statusCode = 400;
       response.statusMessage = 'Bad request';
       response.end(JSON.stringify({ errors }));
