@@ -1,6 +1,6 @@
 const http = require('http');
-const { convertToCase } = require('./convertToCase');
-const acceptableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const { convertToCase } = require('./convertToCase/convertToCase');
+const { getErrors } = require('./helper');
 
 const createServer = () => (
   http.createServer((req, res) => {
@@ -10,26 +10,7 @@ const createServer = () => (
     const params = new URLSearchParams(req.url.split('?')[1]);
     const targetCase = params.get('toCase');
 
-    const errors = [];
-
-    if (!originalText) {
-      errors.push({
-        message: 'Text to convert is required. '
-          + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    }
-
-    if (!targetCase) {
-      errors.push({
-        message: '"toCase" query param is required. '
-          + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    } else if (!acceptableCases.includes(targetCase)) {
-      errors.push({
-        message: 'This case is not supported. '
-          + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-      });
-    }
+    const errors = getErrors(originalText, targetCase);
 
     if (errors.length > 0) {
       res.statusCode = 400;
