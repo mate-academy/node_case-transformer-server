@@ -1,31 +1,27 @@
+/* eslint-disable max-len */
+const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const errorMessage = {
+  hasNoString: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+  hasNoCase: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+  hasNoAvailableCase: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+};
+
 function validateRequest(string, toCase) {
-  const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
   const errorArray = [];
-  const isStringEmpty = string.length === 0;
-  const isInvalidToCaseParam = toCase === null;
-  const isAviableToCase = availableCases.includes(toCase);
 
-  if (isStringEmpty) {
-    // eslint-disable-next-line max-len
-    errorArray.push({ message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
+  if (!string) {
+    errorArray.push({ message: errorMessage.hasNoString });
   }
 
-  if (isInvalidToCaseParam) {
-    // eslint-disable-next-line max-len
-    errorArray.push({ message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
+  if (!toCase) {
+    errorArray.push({ message: errorMessage.hasNoCase });
   }
 
-  if (!isAviableToCase && toCase) {
-    // eslint-disable-next-line max-len
-    errorArray.push({ message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.' });
+  if (toCase && !availableCases.includes(toCase)) {
+    errorArray.push({ message: errorMessage.hasNoAvailableCase });
   }
 
-  const isNoErrors = errorArray.length === 0;
-
-  return {
-    isValid: isNoErrors,
-    errorArray,
-  };
+  return errorArray;
 };
 
 module.exports = { validateRequest };

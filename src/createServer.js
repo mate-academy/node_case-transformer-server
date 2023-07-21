@@ -3,30 +3,21 @@ const { validateRequest } = require('./validateRequest');
 const { generateRespond } = require('./generateRespond');
 
 function createServer() {
-  const faviconURL = '/favicon.ico';
-
   const server = http.createServer((req, res) => {
     try {
       const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
 
-      if (normalizedUrl.pathname === faviconURL) {
-        res.end();
-
-        return;
-      }
-
       const textToTransform = normalizedUrl.pathname.slice(1);
       const toCaseTransform = normalizedUrl.searchParams.get('toCase');
-      const isValidData = validateRequest(textToTransform, toCaseTransform);
+      const errors = validateRequest(textToTransform, toCaseTransform);
 
-      if (!isValidData.isValid) {
-        const error = { errors: isValidData.errorArray };
+      if (errors.length) {
+        const error = { errors };
 
-        res.writeHead(400, 'Bad reguest', {
+        res.writeHead(400, 'Bad request', {
           'content-type': 'application/json',
         });
-        res.write(JSON.stringify(error));
-        res.end();
+        res.end(JSON.stringify(error));
 
         return;
       }
@@ -36,8 +27,7 @@ function createServer() {
       res.writeHead(200, 'OK', {
         'content-type': 'application/json',
       });
-      res.write(JSON.stringify(resultRespond));
-      res.end();
+      res.end(JSON.stringify(resultRespond));
     } catch (err) {
       // eslint-disable-next-line no-console
       console.log(err);
