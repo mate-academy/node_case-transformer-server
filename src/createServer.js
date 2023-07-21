@@ -1,9 +1,7 @@
 
 const http = require('http');
-const { errorMessage } = require('./errorMessage');
 const { convertToCase } = require('./convertToCase/convertToCase');
-
-const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const { validateQueryParams } = require('./convertToCase/validateQueryParams');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -13,94 +11,21 @@ const createServer = () => {
     const originalText = normalizedUrl.pathname.slice(1);
     const targetCase = normalizedUrl.searchParams.get('toCase');
 
-    if (!originalText && !targetCase) {
+    const errors = validateQueryParams(originalText, targetCase);
+
+    if (errors.length) {
       res.statusCode = 400;
+      res.statusMessage = 'Bad request ';
 
-      res.write(JSON.stringify({
-        errors: [
-          { message: errorMessage.textIsRequired },
-          { message: errorMessage.caseIsIsRequired },
-        ],
+      res.end(JSON.stringify({
+        errors,
       }));
-
-      res.end();
-
-      return;
-    }
-
-    if (!originalText && !targetCase) {
-      res.statusCode = 400;
-
-      res.write(JSON.stringify({
-        errors: [
-          { message: errorMessage.textIsRequired },
-          { message: errorMessage.caseIsIsRequired },
-        ],
-      }));
-
-      res.end();
-
-      return;
-    }
-
-    if (!originalText && supportedCases.includes(targetCase)) {
-      res.statusCode = 400;
-
-      res.write(JSON.stringify({
-        errors: [
-          { message: errorMessage.textIsRequired },
-        ],
-      }));
-
-      res.end();
-
-      return;
-    }
-
-    if (!targetCase) {
-      res.statusCode = 400;
-
-      res.write(JSON.stringify({
-        errors: [
-          { message: errorMessage.caseIsIsRequired },
-        ],
-      }));
-
-      res.end();
-
-      return;
-    }
-
-    if (!originalText && !supportedCases.includes(targetCase)) {
-      res.statusCode = 400;
-
-      res.write(JSON.stringify({
-        errors: [
-          { message: errorMessage.textIsRequired },
-          { message: errorMessage.caseIsNotSupported },
-        ],
-      }));
-
-      res.end();
-
-      return;
-    }
-
-    if (!supportedCases.includes(targetCase)) {
-      res.statusCode = 400;
-
-      res.write(JSON.stringify({
-        errors: [
-          { message: errorMessage.caseIsNotSupported },
-        ],
-      }));
-
-      res.end();
 
       return;
     }
 
     res.statusCode = 200;
+    res.statusMessage = 'OK';
 
     const { originalCase, convertedText } = convertToCase(
       originalText, targetCase,
@@ -113,8 +38,7 @@ const createServer = () => {
       convertedText,
     };
 
-    res.write(JSON.stringify(result));
-    res.end();
+    res.end(JSON.stringify(result));
   });
 
   return server;
