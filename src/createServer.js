@@ -1,91 +1,32 @@
-/* eslint-disable max-len */
+
 const { convertToCase } = require('./convertToCase/convertToCase');
 const http = require('http');
-
-const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-const errorMessage = {
-  missingText: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-  missingCase: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-  unavailableCase: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-};
+const {
+  availableCases,
+  errorMessage,
+  createErrorResponse,
+} = require('./utils');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-
     const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
     const originalText = normalizedUrl.pathname.slice(1);
     const targetCase = normalizedUrl.searchParams.get('toCase');
 
-    if (!originalText && !targetCase) {
-      res.statusCode = 400;
+    const errors = [];
 
-      res.write(JSON.stringify({
-        errors: [
-          { message: errorMessage.missingText },
-          { message: errorMessage.missingCase },
-        ],
-      }));
-
-      res.end();
-
-      return;
-    }
-
-    if (!originalText && availableCases.includes(targetCase)) {
-      res.statusCode = 400;
-
-      res.write(JSON.stringify({
-        errors: [
-          { message: errorMessage.missingText },
-        ],
-      }));
-
-      res.end();
-
-      return;
+    if (!originalText) {
+      errors.push({ message: errorMessage.missingText });
     }
 
     if (!targetCase) {
-      res.statusCode = 400;
-
-      res.write(JSON.stringify({
-        errors: [
-          { message: errorMessage.missingCase },
-        ],
-      }));
-
-      res.end();
-
-      return;
+      errors.push({ message: errorMessage.missingCase });
+    } else if (!availableCases.includes(targetCase)) {
+      errors.push({ message: errorMessage.unavailableCase });
     }
 
-    if (!originalText && !availableCases.includes(targetCase)) {
-      res.statusCode = 400;
-
-      res.write(JSON.stringify({
-        errors: [
-          { message: errorMessage.missingText },
-          { message: errorMessage.unavailableCase },
-        ],
-      }));
-
-      res.end();
-
-      return;
-    }
-
-    if (!availableCases.includes(targetCase)) {
-      res.statusCode = 400;
-
-      res.write(JSON.stringify({
-        errors: [
-          { message: errorMessage.unavailableCase },
-        ],
-      }));
-
-      res.end();
+    if (errors.length) {
+      createErrorResponse(res, 400, errors);
 
       return;
     }
@@ -103,8 +44,8 @@ const createServer = () => {
       convertedText,
     };
 
-    res.write(JSON.stringify(result));
-    res.end();
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result));
   });
 
   return server;
