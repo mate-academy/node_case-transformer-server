@@ -3,7 +3,7 @@ const http = require('http');
 const {
   availableCases,
   errorMessage,
-  createErrorResponse: sendResponse,
+  sendResponse,
 } = require('./utils');
 
 const validateRequest = (originalText, targetCase) => {
