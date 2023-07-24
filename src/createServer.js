@@ -3,8 +3,26 @@ const http = require('http');
 const {
   availableCases,
   errorMessage,
-  createErrorResponse,
+  createErrorResponse: sendResponse,
 } = require('./utils');
+
+const validateRequest = (originalText, targetCase) => {
+  const errors = [];
+
+  if (!originalText) {
+    errors.push({ message: errorMessage.missingText });
+  }
+
+  if (!targetCase) {
+    errors.push({ message: errorMessage.missingCase });
+  }
+
+  if (targetCase && !availableCases.includes(targetCase)) {
+    errors.push({ message: errorMessage.unavailableCase });
+  }
+
+  return errors;
+};
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -12,29 +30,20 @@ const createServer = () => {
     const originalText = normalizedUrl.pathname.slice(1);
     const targetCase = normalizedUrl.searchParams.get('toCase');
 
-    const errors = [];
-
-    if (!originalText) {
-      errors.push({ message: errorMessage.missingText });
-    }
-
-    if (!targetCase) {
-      errors.push({ message: errorMessage.missingCase });
-    } else if (!availableCases.includes(targetCase)) {
-      errors.push({ message: errorMessage.unavailableCase });
-    }
+    const errors = validateRequest(originalText, targetCase);
 
     if (errors.length) {
-      createErrorResponse(res, 400, errors);
+      sendResponse(res, 400, 'Bad Request', errors);
 
       return;
     }
 
     res.statusCode = 200;
 
-    const { originalCase, convertedText } = convertToCase(
-      originalText, targetCase,
-    );
+    const {
+      originalCase,
+      convertedText,
+    } = convertToCase(originalText, targetCase);
 
     const result = {
       originalCase,
@@ -43,8 +52,7 @@ const createServer = () => {
       convertedText,
     };
 
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result));
+    sendResponse(res, 200, 'OK', result);
   });
 
   return server;

@@ -7,15 +7,15 @@ const errorMessage = {
   unavailableCase: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
 };
 
-function createErrorResponse(res, statusCode, errors) {
+function sendResponse(res, statusCode, statusText, payload) {
   res.statusCode = statusCode;
-  res.statusMessage = 'Bad Request';
+  res.statusMessage = statusText;
   res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify({ errors }));
+  res.end(JSON.stringify(payload));
 }
 
 module.exports = {
   availableCases,
   errorMessage,
-  createErrorResponse,
+  sendResponse,
 };
