@@ -15,7 +15,7 @@ const createServer = () => {
 
     if (errors.length) {
       res.statusCode = 400;
-      res.statusMessage = 'Bad request ';
+      res.statusMessage = 'Bad request';
 
       res.end(JSON.stringify({
         errors,
@@ -23,9 +23,6 @@ const createServer = () => {
 
       return;
     }
-
-    res.statusCode = 200;
-    res.statusMessage = 'OK';
 
     const { originalCase, convertedText } = convertToCase(
       originalText, targetCase,
@@ -38,6 +35,8 @@ const createServer = () => {
       convertedText,
     };
 
+    res.statusCode = 200;
+    res.statusMessage = 'OK';
     res.end(JSON.stringify(result));
   });
 
