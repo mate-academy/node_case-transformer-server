@@ -15,6 +15,18 @@ const sendResponse = (response, statusCode, data) => {
   response.setHeader('Content-Type', 'application/json');
   response.statusCode = statusCode;
 
+  switch (statusCode) {
+    case 200:
+      response.statusMessage = 'OK';
+      break;
+    case 400:
+      response.statusMessage = 'Bad Request';
+      break;
+    default:
+      response.statusMessage = '';
+      break;
+  }
+
   return response.end(JSON.stringify(data));
 };
 
@@ -23,7 +35,7 @@ const createServer = () => {
     const [text, toCase] = getParams(request);
     const errors = validate(text, toCase);
 
-    if (errors.length > 0) {
+    if (errors.length) {
       return sendResponse(response, 400, { errors });
     }
 
