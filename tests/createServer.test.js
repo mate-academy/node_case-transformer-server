@@ -1,73 +1,206 @@
-'use strict';
 /* eslint-disable max-len */
 
-const http = require('http');
-const { convertToCase } = require('../src/convertToCase');
+const { Server, get } = require('http');
 
-const createServer = () => {
-  const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+function request(url = '/') {
+  return new Promise((resolve, reject) => {
+    get('http://localhost:5701' + url, (res) => {
+      let body = '';
 
-  const server = http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'application/json');
+      res.on('data', (chunk) => {
+        body += chunk;
+      });
 
-    const normalizedURL = new URL(
-      req.url, `http://localhost${req.headers.host}`,
-    );
+      res.on('end', () => {
+        resolve({ res, body });
+      });
+    })
+      .on('error', (err) => {
+        reject(err);
+      });
+  });
+}
 
-    const originalText = normalizedURL.pathname.slice(1);
-    const targetCase = normalizedURL.searchParams.get('toCase');
+describe('createServer', () => {
+  let createServer;
 
-    const textIsMissing = !originalText;
-    const caseIsMissing = !targetCase;
-    const caseNameIsNotSupported = !availableCases.includes(targetCase);
-
-    const hasError = textIsMissing
-      || caseIsMissing
-      || caseNameIsNotSupported;
-
-    if (hasError) {
-      const errorMessages = {
-        errors: [],
-      };
-
-      if (textIsMissing) {
-        errorMessages.errors.push({
-          message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        });
-      }
-
-      if (caseIsMissing) {
-        errorMessages.errors.push({
-          message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        });
-      } else if (caseNameIsNotSupported) {
-        errorMessages.errors.push({
-          message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-        });
-      }
-
-      res.statusCode = 400;
-      res.statusMessage = 'Bad request';
-      res.end(JSON.stringify(errorMessages));
-
-      return;
-    }
-
-    const { originalCase, convertedText } = convertToCase(originalText, targetCase);
-
-    const data = {
-      originalCase,
-      convertedText,
-      targetCase,
-      originalText,
-    };
-
-    res.statusCode = 200;
-    res.statusMessage = 'OK';
-    res.end(JSON.stringify(data));
+  before(() => {
+    createServer = require('../src/createServer').createServer;
   });
 
-  return server;
-};
+  describe('basic scenarios', () => {
+    it('should create a server', () => {
+      expect(createServer)
+        .toBeInstanceOf(Function);
+    });
 
-module.exports = { createServer };
+    it('should create an instance of Server', () => {
+      expect(createServer())
+        .toBeInstanceOf(Server);
+    });
+  });
+
+  describe('Server', () => {
+    let server;
+
+    function listen(port) {
+      return new Promise((resolve) => {
+        server.listen(port, () => {
+          resolve();
+        });
+      });
+    }
+
+    before(async() => {
+      server = createServer();
+
+      await listen(5701);
+    });
+
+    after(() => {
+      server.close();
+    });
+
+    describe('Validation', () => {
+      it('should throw correct error if no text to convert', async() => {
+        const {
+          body,
+          res,
+        } = await request('/?toCase=SNAKE');
+
+        expect(res.headers['content-type'])
+          .toEqual('application/json');
+
+        const data = JSON.parse(body);
+
+        expect(data)
+          .toEqual({
+            errors: [{
+              message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+            }],
+          });
+      });
+
+      it('should throw correct error if no toCase', async() => {
+        const {
+          body,
+          res,
+        } = await request('/helloWorld');
+
+        expect(res.headers['content-type'])
+          .toEqual('application/json');
+
+        const data = JSON.parse(body);
+
+        expect(data)
+          .toEqual({
+            errors: [{
+              message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+            }],
+          });
+      });
+
+      it('should throw correct error if toCase is invalid', async() => {
+        const {
+          body,
+          res,
+        } = await request('/helloWorld?toCase=invalid');
+
+        expect(res.headers['content-type'])
+          .toEqual('application/json');
+
+        const data = JSON.parse(body);
+
+        expect(data)
+          .toEqual({
+            errors: [{
+              message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+            }],
+          });
+      });
+
+      it('should throw correct error for empty URL', async() => {
+        const {
+          body,
+          res,
+        } = await request('/');
+
+        expect(res.headers['content-type'])
+          .toEqual('application/json');
+
+        const data = JSON.parse(body);
+
+        expect(data)
+          .toEqual({
+            errors: expect.arrayContaining([
+              expect.objectContaining({
+                message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+              }),
+              expect.objectContaining({
+                message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+              }),
+            ]),
+          });
+      });
+
+      it('should throw correct error if no text to convert and invalid toCase', async() => {
+        const {
+          body,
+          res,
+        } = await request('/?toCase=LOWER');
+
+        expect(res.headers['content-type'])
+          .toEqual('application/json');
+
+        const data = JSON.parse(body);
+
+        expect(data)
+          .toEqual({
+            errors:
+            expect.arrayContaining([
+              expect.objectContaining({
+                message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+              }),
+              expect.objectContaining({
+                message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+              }),
+            ]),
+          });
+      });
+    });
+
+    describe('Response', () => {
+      const cases = {
+        SNAKE: 'hello_world',
+        KEBAB: 'hello-world',
+        CAMEL: 'helloWorld',
+        PASCAL: 'HelloWorld',
+        UPPER: 'HELLO_WORLD',
+      };
+
+      Object.entries(cases).forEach(([toCase, expected]) => {
+        Object.entries(cases).forEach(([originalCase, text]) => {
+          it(`should convert ${originalCase} to ${toCase}`, async() => {
+            const {
+              body,
+              res,
+            } = await request(`/${text}?toCase=${toCase}`);
+
+            expect(res.headers['content-type'])
+              .toEqual('application/json');
+
+            const data = JSON.parse(body);
+
+            expect(data)
+              .toEqual({
+                originalCase,
+                targetCase: toCase,
+                convertedText: expected,
+                originalText: text,
+              });
+          });
+        });
+      });
+    });
+  });
+});

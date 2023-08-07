@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-const availableCases = ['SNAKE' | 'KEBAB' | 'CAMEL' | 'PASCAL' | 'UPPER'];
+const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function isError(originalText, targetCase) {
   const textIsMissing = !originalText;
@@ -15,19 +14,22 @@ function isError(originalText, targetCase) {
 
     if (textIsMissing) {
       errorMessages.errors.push({
-        message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: 'Text to convert is required. '
+        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
     if (caseIsMissing) {
       errorMessages.errors.push({
-        message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: '\"toCase"\ query param is required. '
+        + 'Correct request is: \"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>\".',
       });
     }
 
-    if (caseIsNotSupported) {
+    if (caseIsNotSupported && !caseIsMissing) {
       errorMessages.errors.push({
-        message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        message: 'This case is not supported. '
+        + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
     }
 
