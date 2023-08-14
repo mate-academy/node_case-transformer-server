@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
+'use strict';
+
 const http = require('http');
-const convertToCase = require('./convertToCase/convertToCase').convertToCase;
-const validationRequest = require('./validationRequest').validationRequest;
+const { convertToCase } = require('./convertToCase/convertToCase');
+const { validateRequest } = require('./validateRequest');
 const PORT = process.env.PORT || 3000;
 
 function createServer() {
@@ -11,11 +13,13 @@ function createServer() {
     const queryString = urlParts[1];
     const params = new URLSearchParams(queryString);
     const targetCase = params.get('toCase');
-    const isRequestCorrect = validationRequest(originalText, targetCase);
+    const isRequestInvalid = validateRequest(originalText, targetCase);
 
-    if (isRequestCorrect) {
+    console.log(queryString);
+
+    if (isRequestInvalid) {
       const errorResponse = {
-        errors: isRequestCorrect,
+        errors: isRequestInvalid,
       };
 
       res.statusCode = 400;
@@ -47,5 +51,7 @@ function createServer() {
 
   return server;
 };
+
+createServer();
 
 module.exports = { createServer };
