@@ -15,8 +15,6 @@ function createServer() {
     const targetCase = params.get('toCase');
     const isRequestInvalid = validateRequest(originalText, targetCase);
 
-    console.log(queryString);
-
     if (isRequestInvalid) {
       const errorResponse = {
         errors: isRequestInvalid,
