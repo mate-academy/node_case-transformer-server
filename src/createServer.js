@@ -8,34 +8,29 @@ const createServer = () => {
     const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
 
     const AvailableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-    const text = normalizedURL.pathname.slice(1);
-    const caseName = normalizedURL.searchParams.get('toCase');
+    const originalText = normalizedURL.pathname.slice(1);
+    const targetCase = normalizedURL.searchParams.get('toCase');
 
     const response = {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: {
-        data: null,
-        errors: null,
-      },
+      body: {},
     };
 
-    if (!text || !caseName || !AvailableCases.includes(caseName)) {
+    if (!originalText || !targetCase || !AvailableCases.includes(targetCase)) {
       const errors = [];
 
-      if (!text) {
+      if (!originalText) {
         errors.push({
           message: error.textIsRequired,
         });
       }
 
-      if (!caseName) {
+      if (!targetCase) {
         errors.push({
           message: error.caseNameIsRequired,
         });
-      }
-
-      if (!AvailableCases.includes(caseName)) {
+      } else if (!AvailableCases.includes(targetCase)) {
         errors.push({ message: error.invalidCaseName });
       }
 
@@ -43,7 +38,11 @@ const createServer = () => {
 
       response.body.errors = errors;
     } else {
-      response.body.data = convertToCase(text, caseName);
+      response.body = {
+        originalText,
+        targetCase,
+        ...convertToCase(originalText, targetCase),
+      };
     }
 
     res.writeHead(response.status, response.headers);
