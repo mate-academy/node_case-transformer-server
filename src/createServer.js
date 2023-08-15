@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const { createErrorResponse, createSuccessResponse } = require('./responseHepler');
@@ -8,7 +10,7 @@ const createServer = () => http.createServer((req, res) => {
 
   const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
   const textToConvert = normalizedURL.pathname.slice(1);
-  let toCase = normalizedURL.searchParams.get('toCase');
+  const toCase = normalizedURL.searchParams.get('toCase');
 
   const errors = getValidationErrors(textToConvert, toCase);
 
@@ -16,17 +18,17 @@ const createServer = () => http.createServer((req, res) => {
     res.statusCode = 400;
     res.statusMessage = 'Bad request';
     res.end(JSON.stringify(createErrorResponse(errors)));
+
     return;
   }
 
   const { originalCase, convertedText } = convertToCase(textToConvert, toCase);
+
   res.statusCode = 200;
   res.statusMessage = 'OK';
   res.end(JSON.stringify(createSuccessResponse(originalCase, toCase, textToConvert, convertedText)));
-})
+});
 
 module.exports = {
   createServer,
 };
-
-

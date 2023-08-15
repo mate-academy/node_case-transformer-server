@@ -1,4 +1,5 @@
-const validCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER']
+/* eslint-disable max-len */
+const validCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 const getValidationErrors = (text, toCase) => {
   const errors = [];
@@ -16,9 +17,8 @@ const getValidationErrors = (text, toCase) => {
   }
 
   return errors;
-}
+};
 
 module.exports = {
   getValidationErrors,
 };
-
