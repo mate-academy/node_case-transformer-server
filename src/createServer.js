@@ -1,5 +1,6 @@
+'use strict';
+
 const http = require('http');
-const url = require('url');
 const { convertToCase } = require('./convertToCase/convertToCase');
 
 const caseOptions = ['SNAKE', 'KEBAB', 'UPPER', 'CAMEL', 'PASCAL'];
@@ -8,7 +9,7 @@ function createServer() {
   const server = http.createServer((request, response) => {
     const [path, queryString] = request.url.split('?');
 
-    const params = new url.URLSearchParams(queryString);
+    const params = new URLSearchParams(queryString);
     const toCase = params.get('toCase');
     const textToConvert = path.slice(1);
 
