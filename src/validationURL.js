@@ -29,6 +29,8 @@ function validationURL(text, toCase) {
       + 'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
     });
   }
+
+  return errors;
 };
 
 module.export = { validationURL };

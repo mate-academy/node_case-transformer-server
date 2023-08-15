@@ -10,7 +10,7 @@ function createServer() {
     const toCase = myURL.searchParams.get('toCase');
     const errors = validationURL(text, toCase);
 
-    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Content-Type', 'application/json');
 
     if (errors.length) {
       res.writeHead(400, 'Error', { 'Content-Type': 'application/json' });
