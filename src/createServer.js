@@ -40,10 +40,11 @@ function createServer() {
       return;
     }
 
-    const result = convertToCase(textToConvert, toCase);
-
-    result.targetCase = toCase;
-    result.originalText = textToConvert;
+    const result = {
+      ...convertToCase(textToConvert, toCase),
+      targetCase: toCase,
+      originalText: textToConvert,
+    };
 
     res.statusCode = 200;
     res.statusMessage = 'Ok';
