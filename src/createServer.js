@@ -3,7 +3,7 @@
 // and import (require) them here
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
-const { ERROR_MESSAGES, SUPPORTED_CASES } = require('./constants');
+const { validateParams } = require('./validation');
 
 function createServer() {
   return http.createServer((request, response) => {
@@ -15,23 +15,7 @@ function createServer() {
 
     response.setHeader('content-type', 'application/json');
 
-    const errors = [];
-
-    if (originalText.length === 0) {
-      errors.push({
-        message: ERROR_MESSAGES.noTextToConvert,
-      });
-    }
-
-    if (!targetCase) {
-      errors.push({
-        message: ERROR_MESSAGES.noCaseParam,
-      });
-    } else if (!SUPPORTED_CASES.includes(targetCase)) {
-      errors.push({
-        message: ERROR_MESSAGES.notSupportedCase,
-      });
-    }
+    const errors = validateParams(originalText, targetCase);
 
     if (errors.length) {
       responseData = {
