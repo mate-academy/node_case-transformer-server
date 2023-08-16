@@ -13,34 +13,28 @@ function createServer() {
 
     const urlParts = req.url.split('?');
 
-    try {
-      if (errorObject.errors.length) {
-        throw new Error(JSON.stringify(errorObject));
-      }
-
-      res.statusCode = 200;
-
-      const text = urlParts[0].slice(1);
-
-      const searchParams = new URLSearchParams(urlParts[1]);
-      const toCase = searchParams.get('toCase');
-
-      const responseBody = {
-        ...convertToCase(text, toCase),
-        targetCase: toCase,
-        originalText: text,
-      };
-
-      res.end(JSON.stringify(responseBody));
-    } catch (error) {
+    if (errorObject.errors.length) {
       res.statusCode = 400;
 
-      res.end(error.message);
-    }
-  });
+      res.end(JSON.stringify(errorObject));
 
-  newServer.on('error', (err) => {
-    throw err;
+      return;
+    }
+
+    res.statusCode = 200;
+
+    const text = urlParts[0].slice(1);
+
+    const searchParams = new URLSearchParams(urlParts[1]);
+    const toCase = searchParams.get('toCase');
+
+    const responseBody = {
+      ...convertToCase(text, toCase),
+      targetCase: toCase,
+      originalText: text,
+    };
+
+    res.end(JSON.stringify(responseBody));
   });
 
   return newServer;
