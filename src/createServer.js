@@ -4,7 +4,6 @@
 // and import (require) them here
 const http = require('http');
 
-const { CASES_LIST } = require('./constants/CASES_LIST');
 const { getErrorMessages } = require('./utils/getErrorMessages');
 const { convertToCase } = require('./convertToCase/convertToCase');
 
@@ -17,8 +16,9 @@ function createServer() {
     const originalText = text.slice(1);
     const targetCase = new URLSearchParams(params).get('toCase');
 
-    if (!originalText || !targetCase || !CASES_LIST.includes(targetCase)) {
-      const errorMessages = getErrorMessages(originalText, targetCase);
+    const errorMessages = getErrorMessages(originalText, targetCase);
+
+    if (errorMessages.errors.length > 0) {
       const errorBody = JSON.stringify(errorMessages);
 
       res.statusCode = 400;
