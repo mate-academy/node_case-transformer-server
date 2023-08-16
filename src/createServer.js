@@ -26,9 +26,7 @@ const createServer = () => {
       error.errors.push({
         message: ERROR_TYPES.missingCase,
       });
-    }
-
-    if (!CASE_TYPES.includes(targetCase)) {
+    } else if (!CASE_TYPES.includes(targetCase)) {
       error.errors.push({
         message: ERROR_TYPES.caseIsNotValid,
       });
