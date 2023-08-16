@@ -3,14 +3,13 @@
 // and import (require) them here
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
+const { ERROR_MESSAGES, SUPPORTED_CASES } = require('./constants');
 
 function createServer() {
   return http.createServer((request, response) => {
     const normalizedURL = new URL(request.url, `http://${request.headers.host}`);
     const originalText = normalizedURL.pathname.slice(1);
     const targetCase = normalizedURL.searchParams.get('toCase');
-
-    const caseNames = ['SNAKE', 'KEBAB', 'UPPER', 'PASCAL', 'CAMEL'];
 
     let responseData = {};
 
@@ -20,20 +19,17 @@ function createServer() {
 
     if (originalText.length === 0) {
       errors.push({
-        message: 'Text to convert is required.'
-          + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: ERROR_MESSAGES.noTextToConvert,
       });
     }
 
     if (!targetCase) {
       errors.push({
-        message: '"toCase" query param is required.'
-          + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: ERROR_MESSAGES.noCaseParam,
       });
-    } else if (!caseNames.includes(targetCase)) {
+    } else if (!SUPPORTED_CASES.includes(targetCase)) {
       errors.push({
-        message: 'This case is not supported.'
-          + ' Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        message: ERROR_MESSAGES.notSupportedCase,
       });
     }
 
