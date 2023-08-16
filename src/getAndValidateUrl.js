@@ -17,7 +17,8 @@ function getAndValidateUrl(requestUrl, host) {
       + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".');
   }
 
-  if (toCase && !['CAMEL', 'SNAKE', 'PASCAL', 'KEBAB', 'UPPER'].includes(toCase)) {
+  if (toCase
+    && !['CAMEL', 'SNAKE', 'PASCAL', 'KEBAB', 'UPPER'].includes(toCase)) {
     errorCollector.addError('This case is not supported. Available cases:'
       + ' SNAKE, KEBAB, CAMEL, PASCAL, UPPER.');
   }
