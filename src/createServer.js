@@ -25,22 +25,22 @@ const createServer = () => {
       });
     };
 
-    if (!originalText || !targetCase || !availableCases.includes(targetCase)) {
-      if (!targetCase) {
-        errorResponse.errors.push({
-          message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        });
-      } else if (!availableCases.includes(targetCase)) {
-        errorResponse.errors.push({
-          message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-        });
-      }
+    if (!targetCase) {
+      errorResponse.errors.push({
+        message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      });
+    } else if (!availableCases.includes(targetCase)) {
+      errorResponse.errors.push({
+        message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      });
+    }
 
+    if (errorResponse.errors.length) {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
 
       return res.end(JSON.stringify(errorResponse));
-    };
+    }
 
     const { originalCase, convertedText } = convertToCase(originalText, targetCase);
 
