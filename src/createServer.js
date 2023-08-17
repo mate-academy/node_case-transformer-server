@@ -1,7 +1,6 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
-
-const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const { error, supportedCases } = require('./error');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -13,22 +12,18 @@ const createServer = () => {
     const targetCase = query.get('toCase');
 
     const errors = [];
-    // eslint-disable-next-line
-    const correctRequestText = 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-    // eslint-disable-next-line
-    const availableCases = `Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`;
 
     if (!convertedText) {
-      errors.push({ message: `Text to convert is required. ${correctRequestText}` });
+      errors.push({ message: error.correctRequestText });
     }
 
     if (!targetCase) {
-      errors.push({ message: `"toCase" query param is required. ${correctRequestText}` });
+      errors.push({ message: error.caseIsRequired });
     } else {
       const upperCaseTargetCase = targetCase.toUpperCase();
 
       if (!supportedCases.includes(upperCaseTargetCase)) {
-        errors.push({ message: `This case is not supported. ${availableCases}` });
+        errors.push({ message: error.availableCases });
       }
     }
 
