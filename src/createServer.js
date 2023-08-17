@@ -15,17 +15,17 @@ const createServer = () => {
     const params = new URLSearchParams(url[1]);
     const targetCase = params.get('toCase');
 
+    const errorResponse = {
+      errors: [],
+    };
+
+    if (!originalText) {
+      errorResponse.errors.push({
+        message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      });
+    };
+
     if (!originalText || !targetCase || !availableCases.includes(targetCase)) {
-      const errorResponse = {
-        errors: [],
-      };
-
-      if (!originalText) {
-        errorResponse.errors.push({
-          message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        });
-      };
-
       if (!targetCase) {
         errorResponse.errors.push({
           message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
