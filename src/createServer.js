@@ -1,80 +1,38 @@
 /* eslint-disable max-len */
 const http = require('http');
+
 const { convertToCase } = require('./convertToCase/convertToCase.js');
-
-const validateInput = (originalText, targetCase) => {
-  const errorArray = [];
-  const validCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-  if (!originalText) {
-    errorArray.push(
-      new Error(
-        'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      ),
-    );
-  }
-
-  if (!targetCase) {
-    errorArray.push(
-      new Error(
-        '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      ),
-    );
-
-    throw errorArray;
-  }
-
-  if (!validCases.includes(targetCase)) {
-    errorArray.push(
-      new Error(
-        'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-      ),
-    );
-  }
-
-  if (errorArray.length > 0) {
-    throw errorArray;
-  }
-};
+const { getQueryParamsError } = require('./server/getQueryParamsError.js');
+const { parseUrl } = require('./server/parseUrl.js');
+const { sendResponse } = require('./server/sendResponse.js');
 
 const createServer = () => {
   return http.createServer((req, res) => {
-    res.setHeader('Content-type', 'application/json');
+    const { targetCase, originalText } = parseUrl(req);
 
-    const url = new URL(req.url, `http://${req.headers.host}`);
+    const errors = getQueryParamsError(originalText, targetCase);
 
-    try {
-      const originalText = url.pathname.slice(1);
-      const targetCase = url.searchParams.get('toCase');
+    if (errors.length > 0) {
+      const errorData = {
+        errors: errors.map((error) => ({ message: error.message })),
+      };
 
-      validateInput(originalText, targetCase);
-
-      const { originalCase, convertedText } = convertToCase(
-        originalText,
-        targetCase,
-      );
-
-      res.statusCode = 200;
-
-      res.end(
-        JSON.stringify({
-          originalCase,
-          originalText,
-          targetCase,
-          convertedText,
-        }),
-      );
-    } catch (err) {
-      res.statusCode = 400;
-
-      if (Array.isArray(err)) {
-        res.end(
-          JSON.stringify({
-            errors: err.map((error) => ({ message: error.message })),
-          }),
-        );
-      }
+      return sendResponse(res, errorData, 400);
     }
+
+    const { originalCase, convertedText } = convertToCase(
+      originalText,
+      targetCase,
+    );
+
+    const resData = {
+      originalCase,
+      originalText,
+      targetCase,
+      convertedText,
+    };
+
+    sendResponse(res, resData, 200);
   });
 };
 
