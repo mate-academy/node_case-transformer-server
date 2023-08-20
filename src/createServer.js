@@ -6,14 +6,7 @@ const { convertToCase } = require('./convertToCase/convertToCase');
 const { errorMessages } = require('./errorMessages');
 
 function createServer() {
-  const PORT = process.env.PORT || 3000;
-  const options = {
-    hostname: 'localhost',
-    port: PORT,
-    method: 'GET',
-  };
-
-  const server = http.createServer(options, (req, res) => {
+  const server = http.createServer((req, res) => {
     const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
     const caseFromURL = normalizedURL.searchParams.get('toCase');
     const textFromURL = normalizedURL.pathname.split('/')[1];
@@ -47,9 +40,11 @@ function createServer() {
         });
       }
 
-      response.statusCode = 400;
-      response.statusMessage = 'Bad request';
-      response.body.errors = errors;
+      if (errors.length > 0) {
+        response.statusCode = 400;
+        response.statusMessage = 'Bad request';
+        response.body.errors = errors;
+      }
     } else {
       const {
         originalCase,
@@ -72,10 +67,8 @@ function createServer() {
     res.end(JSON.stringify(response.body));
   });
 
-  server.listen(PORT, () => console.log(`Server in running on http://localhost:${PORT}`));
+  return server;
 }
-
-createServer();
 
 module.exports = {
   createServer,
