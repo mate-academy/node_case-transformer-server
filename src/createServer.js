@@ -15,12 +15,10 @@ function createServer() {
     res.setHeader('Content-type', 'application/json');
 
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const Case = url.searchParams.get('toCase');
+    const newCase = url.searchParams.get('toCase');
     const recievedText = url.pathname.slice(1);
 
-    const isError = !Case || !recievedText || !isValidCase(Case);
-
-    if (isError) {
+    if (!newCase || !recievedText || !isValidCase(newCase)) {
       const errorResponse = {
         errors: [],
       };
@@ -31,11 +29,11 @@ function createServer() {
         });
       }
 
-      if (!Case) {
+      if (!newCase) {
         errorResponse.errors.push({
           message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
         });
-      } else if (!isValidCase(Case)) {
+      } else if (!isValidCase(newCase)) {
         errorResponse.errors.push({
           message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
         });
@@ -46,12 +44,12 @@ function createServer() {
       return res.end(JSON.stringify(errorResponse));
     }
 
-    const { originalCase, convertedText } = convertToCase(recievedText, Case);
+    const { originalCase, convertedText } = convertToCase(recievedText, newCase);
 
     const response = {
       originalCase,
       convertedText,
-      targetCase: Case,
+      targetCase: newCase,
       originalText: recievedText,
     };
 
