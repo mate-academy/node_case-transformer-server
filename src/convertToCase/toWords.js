@@ -8,7 +8,8 @@
  */
 function toWords(text, originalCase) {
   if (
-    ['SNAKE', 'KEBAB', 'UPPER'].includes(originalCase)
+    ['SNAKE', 'KEBAB', 'UPPER']
+      .includes(originalCase)
   ) {
     return text.split(/[_-]/).map((str) => str.toLowerCase());
   }
