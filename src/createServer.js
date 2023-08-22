@@ -21,16 +21,16 @@ const createServer = () => {
       return;
     }
   
-    const cases = Object.fromEntries(urlParams.searchParams.entries());
+    const caseTransform = Object.fromEntries(urlParams.searchParams.entries());
   
-    if (!Object.keys(cases).includes('toCase')) {
+    if (!Object.keys(caseTransform).includes('toCase')) {
       res.statusCode = 400;
       res.end('"toCase" query param is required. Correct request is: /<TEXT_TO_CONVERT>?toCase=<CASE_NAME>');
       return;
     }
 
     try {
-      res.end(JSON.stringify(convertToCase(pathName.slice(1), cases.toCase)));
+      res.end(JSON.stringify(convertToCase(pathName.slice(1), caseTransform.toCase)));
     } catch {
       res.statusCode = 400;
       res.end('This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.');
