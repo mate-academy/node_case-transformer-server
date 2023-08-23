@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import http from 'http';
+const http = require('http');
 
 const { convertToCase } = require('./convertToCase/convertToCase.js');
 const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
