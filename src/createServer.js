@@ -1,6 +1,6 @@
 const http = require('http');
 const { URL } = require('url')
-const {convertToCase } = require('./convertToCase/convertToCase');
+const { convertToCase } = require('./convertToCase/convertToCase');
 
 const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
@@ -15,7 +15,7 @@ function createServer() {
 
     const isError = !textToConvert
     || !targetCase
-    || availableCases.every(availableCase => availableCase !== targetCase);
+    || !availableCases.includes(targetCase);
 
     if (isError) {
       const errors = [];
@@ -32,14 +32,13 @@ function createServer() {
         })
       }
 
-      if (availableCases.every(availableCase => availableCase !== targetCase && targetCase)) {
+      if (!availableCases.includes(targetCase) && targetCase) {
         errors.push({
           "message": `This case is not supported. Available cases: ${availableCases.join(', ')}.`
         })
       }
 
         res.writeHead(400, 'Bad request');
-        res.statusCode = 400;
         res.end(JSON.stringify({"errors": errors}))
     } else {
       const { originalCase, convertedText } = convertToCase(textToConvert, targetCase);
