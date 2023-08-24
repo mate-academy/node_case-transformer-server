@@ -2,16 +2,16 @@
 // Also, you can create additional files in the src folder
 // and import (require) them here
 const http = require('http');
-const fs = require('fs');
 const { convertToCase } = require('./convertToCase/convertToCase');
 
 const createServer = () => {
   return http.createServer((req, res) => {
-    const fileName = req.url.slice(1);
     const urlParams = new URL(req.url, `http://${req.headers.host}`);
     const pathName = urlParams.pathname;
 
     if (pathName === '/favicon.ico') {
+      res.statusCode = 404;
+      res.end('Favicon not found');
       return;
     }
 
