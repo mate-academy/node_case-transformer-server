@@ -1,4 +1,4 @@
-const validation = (text, toCase) => {
+const validateTextAndCase = (text, toCase) => {
   const caseOptions = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
   const errors = [];
@@ -27,4 +27,4 @@ const validation = (text, toCase) => {
   return errors;
 };
 
-module.exports = validation;
+module.exports = validateTextAndCase;

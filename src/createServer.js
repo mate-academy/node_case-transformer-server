@@ -1,6 +1,6 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
-const validation = require('./validation');
+const validateTextAndCase = require('./validateTextAndCase');
 
 module.exports.createServer = () => {
   const server = http.createServer((req, res) => {
@@ -10,16 +10,16 @@ module.exports.createServer = () => {
 
     res.setHeader('Content-type', 'application/json');
 
-    const errors = validation(text, caseName);
+    const errors = validateTextAndCase(text, caseName);
 
     if (errors.length) {
-      res.status = 400;
+      res.statusCode = 400;
       res.end(JSON.stringify({ errors }));
 
       return;
     }
 
-    const converted = convertToCase(text, caseName.toUpperCase());
+    const converted = convertToCase(text, caseName);
     const response = JSON.stringify({
       originalCase: converted.originalCase,
       targetCase: caseName,
