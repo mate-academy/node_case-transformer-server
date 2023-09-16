@@ -2,7 +2,7 @@ const { noTextError, noCaseError, wrongCaseError } = require('./errorMessages');
 const { TO_CASE_PARAM } = require('./constants');
 
 module.exports = {
-  validateUrl: (text, toCase) => {
+  validateParams: (text, toCase) => {
     const errors = [];
     const validCases = ['SNAKE', 'KEBAB', 'UPPER', 'PASCAL', 'CAMEL'];
 
