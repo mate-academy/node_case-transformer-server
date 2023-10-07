@@ -9,83 +9,67 @@ function createServer() {
     const params = normalizedURL.searchParams.get('toCase');
     const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
-    if (!pathname && !params) {
+    const validateWithOneMessage = (message) => {
       res.statusCode = 400;
       res.setHeader('Content-Type', 'application/json');
 
       res.end(JSON.stringify({
         errors: [
           {
-            message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-          },
-          {
-            message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+            message,
           },
         ],
       }));
+    };
+
+    const validateWithTwoMessages = (message1, message2) => {
+      res.statusCode = 400;
+      res.setHeader('Content-Type', 'application/json');
+
+      res.end(JSON.stringify({
+        errors: [
+          {
+            message: message1,
+          },
+          {
+            message: message2,
+          },
+        ],
+      }));
+    };
+
+    if (!pathname && !params) {
+      validateWithTwoMessages(
+        'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      );
 
       return;
-    }
+    };
 
     if (!pathname && !supportedCases.includes(params)) {
-      res.statusCode = 400;
-      res.setHeader('Content-Type', 'application/json');
-
-      res.end(JSON.stringify({
-        errors: [
-          {
-            message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-          },
-          {
-            message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-          },
-        ],
-      }));
+      validateWithTwoMessages(
+        'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      );
 
       return;
-    }
+    };
 
     if (!params) {
-      res.statusCode = 400;
-      res.setHeader('Content-Type', 'application/json');
-
-      res.end(JSON.stringify({
-        errors: [
-          {
-            message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-          },
-        ],
-      }));
+      validateWithOneMessage('"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".');
 
       return;
-    }
+    };
 
     if (!supportedCases.includes(params)) {
-      res.statusCode = 400;
-      res.setHeader('Content-Type', 'application/json');
-
-      res.end(JSON.stringify({
-        errors: [
-          {
-            message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-          },
-        ],
-      }));
+      validateWithOneMessage('This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.');
 
       return;
-    }
+    };
 
     if (!pathname) {
-      res.statusCode = 400;
-      res.setHeader('Content-Type', 'application/json');
-
-      res.end(JSON.stringify({
-        errors: [
-          {
-            message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-          },
-        ],
-      }));
+      validateWithOneMessage('Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".');
 
       return;
     }
