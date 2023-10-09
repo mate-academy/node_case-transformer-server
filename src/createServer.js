@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 'use strict';
 
 const http = require('http');
