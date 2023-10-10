@@ -28,22 +28,30 @@ function createServer() {
 
     const caseTypes = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
+    const errorObj = {
+      errors: [
+        {
+          message: '<SPECIFIC MESSAGE TEXT HERE>',
+        },
+      ],
+    };
+
     if (text.trim().length < 1) {
-      throw new Error(textE);
+      errorObj.errors.push({ message: textE });
     }
 
     if (toCase.trim().length < 1) {
-      throw new Error(toCaseE);
+      errorObj.errors.push({ message: toCaseE });
     }
 
     if (!caseTypes.includes(toCase)) {
-      throw new Error(caseE);
+      errorObj.errors.push({ message: caseE });
     }
 
-    // sends a portion of data
-    res.write('<h1>Hello, world!</h1>');
-    res.write('next portion of data');
-    res.write('one more portion of data');
+    if (errorObj.errors.length > 0) {
+      res.end(errorObj);
+    }
+
     res.write(convertToCase(text, toCase));
 
     // finishes the response
