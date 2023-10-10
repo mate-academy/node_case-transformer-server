@@ -36,8 +36,12 @@ function createServer() {
     }
 
     if (erorr.errors.length > 0) {
+      res.statusCode = 400;
+      res.statusMessage = 'Bad request';
       res.end(JSON.stringify(erorr));
     } else {
+      res.statusCode = 200;
+      res.statusMessage = 'OK';
       const { originalCase, convertedText } = convertToCase(originalText, targetCase);
       const response = {
         originalCase,
