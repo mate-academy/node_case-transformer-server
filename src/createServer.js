@@ -1,4 +1,4 @@
-import http from 'http';
+const http = require('http');
 
 function createServer() {
   const convertToCase = require('./convertToCase/convertToCase').convertToCase;
