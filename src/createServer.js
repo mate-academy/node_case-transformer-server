@@ -9,7 +9,7 @@ const {
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    const normalizedUrl = new URL(req.url, 'http://localhost:5007');
+    const normalizedUrl = new URL(req.url, 'http://localhost:5700/');
     const textToConvert = normalizedUrl.pathname.slice(1);
     const toCase = normalizedUrl.searchParams.get('toCase');
     const err = { errors: [] };
@@ -32,12 +32,14 @@ function createServer() {
       result.targetCase = toCase;
       result.originalText = textToConvert;
 
-      res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
+      res.statusCode = 200;
+      res.statusText = 'OK';
       res.end(JSON.stringify(result));
     } else {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 400;
+      res.statusText = 'Bad request';
       res.end(JSON.stringify(err));
     }
   });
