@@ -27,7 +27,7 @@ function createServer() {
       errors.push({ message: ERROR_NO_CASE_PROVIDED });
     }
 
-    if (originalText && targetCase && !AVAILABLE_CASES.includes(targetCase)) {
+    if (targetCase && !AVAILABLE_CASES.includes(targetCase)) {
       errors.push({ message: ERROR_INVALID_CASE });
     }
 
