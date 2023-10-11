@@ -4,7 +4,7 @@ const { handleErrors } = require('./handleErrors');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    const myURL = new URL(req.url, 'http://localhost:5700');
+    const myURL = new URL(req.url, `http://${req.headers.host}`);
 
     res.setHeader('Content-Type', 'application/json');
 
@@ -15,7 +15,6 @@ function createServer() {
 
     if (errors.length) {
       res.statusCode = 400;
-      res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
 
       return;
@@ -32,7 +31,6 @@ function createServer() {
     };
 
     res.statusCode = 200;
-    res.statusMessage = 'OK';
     res.end(JSON.stringify(result));
   });
 
