@@ -9,7 +9,7 @@ function getError(textFromUrl, caseFromUrl, ALLOWED_CASES) {
     errors: [],
   };
 
-  if (textFromUrl === '') {
+  if (!textFromUrl) {
     errors.errors.push({ message: NO_TEXT_ERROR_MESSAGE });
   }
 
