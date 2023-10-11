@@ -1,0 +1,10 @@
+const HTTP_OK = 200;
+const HTTP_BAD_REQUEST = 400;
+
+const SUPPORTED_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+module.exports = {
+  HTTP_OK,
+  HTTP_BAD_REQUEST,
+  SUPPORTED_CASES,
+};
