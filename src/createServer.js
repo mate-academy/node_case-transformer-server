@@ -49,19 +49,15 @@ function createServer() {
     }
 
     if (errorObj.errors.length > 0) {
-      res.end(errorObj);
+      res.status(400).end(errorObj);
     }
 
-    res.write(convertToCase(text, toCase));
-
     // finishes the response
-    res.end('the last portion of data');
+    res.status(200).end(convertToCase(text, toCase));
   });
 
   // enables the server
-  server.listen(PORT, () => {
-    // console.log(`Server is running on http://localhost:${PORT}`);
-  });
+  server.listen(PORT, () => {});
 }
 
 module.exports = {
