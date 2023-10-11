@@ -1,5 +1,37 @@
 const http = require('http');
 
+function vadidation(text, toCase) {
+  const cR = 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"';
+  const textE = 'Text to convert is required. ' + cR;
+  const toCaseE = '"toCase" query param is required. ' + cR;
+  const caseE = `This case is not supported.
+    Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER`;
+
+  const caseTypes = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+  const errorObj = {
+    errors: [
+      {
+        message: '<SPECIFIC MESSAGE TEXT HERE>',
+      },
+    ],
+  };
+
+  if (text.trim().length < 1) {
+    errorObj.errors.push({ message: textE });
+  }
+
+  if (toCase.trim().length < 1) {
+    errorObj.errors.push({ message: toCaseE });
+  }
+
+  if (!caseTypes.includes(toCase)) {
+    errorObj.errors.push({ message: caseE });
+  }
+
+  return errorObj;
+}
+
 function createServer() {
   const convertToCase = require('./convertToCase/convertToCase').convertToCase;
 
@@ -20,36 +52,8 @@ function createServer() {
       throw new Error(error);
     });
 
-    const cR = 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"';
-    const textE = 'Text to convert is required. ' + cR;
-    const toCaseE = '"toCase" query param is required. ' + cR;
-    const caseE = `This case is not supported.
-      Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER`;
-
-    const caseTypes = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-    const errorObj = {
-      errors: [
-        {
-          message: '<SPECIFIC MESSAGE TEXT HERE>',
-        },
-      ],
-    };
-
-    if (text.trim().length < 1) {
-      errorObj.errors.push({ message: textE });
-    }
-
-    if (toCase.trim().length < 1) {
-      errorObj.errors.push({ message: toCaseE });
-    }
-
-    if (!caseTypes.includes(toCase)) {
-      errorObj.errors.push({ message: caseE });
-    }
-
-    if (errorObj.errors.length > 0) {
-      res.status(400).end(errorObj);
+    if (vadidation(text, toCase).errors.length > 0) {
+      res.status(400).end(vadidation());
     }
 
     // finishes the response
