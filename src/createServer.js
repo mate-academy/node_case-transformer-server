@@ -1,11 +1,11 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase.js');
 const { urlValidator } = require('./urlValidator.js');
-const { SUCCESS, BAD_REQUEST } = require('./statusCodes.js');
+const { SUCCESS_CODE, BAD_REQUEST_CODE } = require('./statusCodes.js');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    res.writeHead(SUCCESS, { 'content-type': 'application/json' });
+    res.writeHead(SUCCESS_CODE, { 'content-type': 'application/json' });
 
     const serverLink = `http://${req.headers.host}`;
 
@@ -16,7 +16,7 @@ function createServer() {
     const errorMessage = urlValidator(textToConvert, style);
 
     if (errorMessage) {
-      res.statusCode = BAD_REQUEST;
+      res.statusCode = BAD_REQUEST_CODE;
       res.statusMessage = 'Bad request';
 
       res.end(JSON.stringify({
@@ -26,8 +26,9 @@ function createServer() {
       return;
     }
 
-    const convertedText = convertToCase(textToConvert, style);
+    res.statusCode = SUCCESS_CODE;
 
+    const convertedText = convertToCase(textToConvert, style);
     const preparedResponse = {
       ...convertedText,
       originalText: textToConvert,
@@ -36,11 +37,6 @@ function createServer() {
 
     res.end(JSON.stringify(preparedResponse));
   });
-
-  // server.listen(PORT, () => {
-  //   // eslint-disable-next-line
-  //   console.log(`The server is running on ${serverLink}`);
-  // });
 
   return server;
 }

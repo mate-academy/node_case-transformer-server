@@ -1,7 +1,7 @@
-const SUCCESS = 200;
-const BAD_REQUEST = 400;
+const SUCCESS_CODE = 200;
+const BAD_REQUEST_CODE = 400;
 
 module.exports = {
-  SUCCESS,
-  BAD_REQUEST,
+  SUCCESS_CODE,
+  BAD_REQUEST_CODE,
 };
