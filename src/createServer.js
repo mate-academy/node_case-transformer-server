@@ -1,15 +1,15 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
 'use strict';
 
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const { validateRequest } = require('./validator');
+const {
+  PORT,
+} = require('./constants');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    const url = new URL(req.url, 'http://localhost:5700');
+    const url = new URL(req.url, `http://localhost:${PORT}`);
 
     res.setHeader('Content-Type', 'application/json');
 
