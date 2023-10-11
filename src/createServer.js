@@ -1,4 +1,7 @@
 const { BASE } = require('./constants/base');
+const { CORRECT_REQUEST_MESSAGE }
+  = require('./constants/correctRequestMessage');
+const { CASE_NAMES } = require('./constants/caseNames');
 const { convertToCase } = require('./convertToCase');
 
 const http = require('http');
@@ -46,32 +49,26 @@ function getValidation(text, caseName) {
 
   if (!text) {
     errors.push(
-      "Text to convert is required." +
-        ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".'
+      'Text to convert is required. '
+      + CORRECT_REQUEST_MESSAGE,
     );
   }
 
   if (!caseName) {
     errors.push(
-      '"toCase" query param is required. ' +
-        'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".'
+      '"toCase" query param is required. '
+      + CORRECT_REQUEST_MESSAGE,
     );
-  } else if (
-    caseName !== "SNAKE" &&
-    caseName !== "KEBAB" &&
-    caseName !== "CAMEL" &&
-    caseName !== "PASCAL" &&
-    caseName !== "UPPER"
-  ) {
+  } else if (!CASE_NAMES.includes(caseName)) {
     errors.push(
-      "This case is not supported. " +
-        "Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER."
+      'This case is not supported. '
+      + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
     );
   }
 
   return !errors.length
     ? null
     : {
-        errors: errors.map((errMessage) => ({ message: errMessage })),
-      };
+      errors: errors.map((errMessage) => ({ message: errMessage })),
+    };
 }
