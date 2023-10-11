@@ -8,7 +8,6 @@ const {
   CODE_ERROR_OCCURRED,
   CODE_SUCCESS,
 } = require('./utils/constants');
-const { detectCase } = require('./convertToCase/detectCase');
 const { convertToCase } = require('./convertToCase');
 
 function createServer() {
@@ -16,8 +15,10 @@ function createServer() {
     res.setHeader('Content-type', 'application/json');
 
     const errors = [];
-    const [originalText, searchCase] = req.url.slice(1).split('?');
-    const targetCase = searchCase?.split('=')[1];
+    const fullUrl = `http://${req.headers.host}${req.url}`;
+    const requestURL = new URL(fullUrl);
+    const originalText = requestURL.pathname.slice(1);
+    const targetCase = requestURL.searchParams.get('toCase');
 
     if (!originalText) {
       errors.push({ message: ERROR_NO_TEXT_PROVIDED });
@@ -43,7 +44,10 @@ function createServer() {
 
     res.statusCode = CODE_SUCCESS;
 
-    const { originalCase, convertedText } = convertToCase(originalText, targetCase);
+    const { originalCase, convertedText } = convertToCase(
+      originalText,
+      targetCase,
+    );
 
     const responseBody = JSON.stringify({
       originalCase,
