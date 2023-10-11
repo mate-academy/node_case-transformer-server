@@ -1,36 +1,20 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const {
-  NO_TEXT_ERROR_MESSAGE,
-  NO_CASE_ERROR_MESSAGE,
-  STATIC_CASES,
-  INVALID_CASE_ERROR_MESSAGE,
+  ALLOWED_CASES,
+  PORT,
 } = require('./constatnts');
+const { getError } = require('./getErrors');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    const url = new URL(req.url, 'http://localhost:5700');
+    const url = new URL(req.url, `http://localhost:${PORT}`);
 
     res.setHeader('Content-Type', 'application/json');
 
     const textFromUrl = url.pathname.slice(1);
     const caseFromUrl = url.searchParams.get('toCase');
-
-    const errors = {
-      errors: [],
-    };
-
-    if (textFromUrl === '') {
-      errors.errors.push({ message: NO_TEXT_ERROR_MESSAGE });
-    }
-
-    if (!caseFromUrl) {
-      errors.errors.push({ message: NO_CASE_ERROR_MESSAGE });
-    }
-
-    if (caseFromUrl && !STATIC_CASES.includes(caseFromUrl)) {
-      errors.errors.push({ message: INVALID_CASE_ERROR_MESSAGE });
-    }
+    const errors = getError(textFromUrl, caseFromUrl, ALLOWED_CASES);
 
     if (!errors.errors.length) {
       const {
@@ -45,8 +29,12 @@ function createServer() {
         convertedText,
       };
 
+      res.statusCode = 200;
+      res.statusMessage = 'OK';
       res.end(JSON.stringify(result));
     } else {
+      res.statusCode = 400;
+      res.statusMessage = 'Bad request';
       res.end(JSON.stringify(errors));
     }
   });
