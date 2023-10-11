@@ -6,28 +6,34 @@ function createServer() {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    const currentURL = new URL('htto://' + req.url);
-    const reqText = currentURL.pathname.slice(1);
-    const reqCase = currentURL.searchParams.get('toCase');
-    const errors = getErrors(reqText, reqCase);
+    const [reqPath, queryString] = req.url.split('?');
+    const params = new URLSearchParams(queryString);
+    const targetCase = params.get('toCase');
+    const originalText = reqPath.slice(1);
+    const errors = getErrors(originalText, targetCase);
 
-    if (!errors.length) {
-      const {
-        convertedText,
-        originalCase,
-      } = convertToCase(reqText, reqCase);
-
-      const convertResult = {
-        originalCase,
-        targetCase: reqCase,
-        originalText: reqText,
-        convertedText,
-      };
-
-      res.end(JSON.stringify(convertResult));
-    } else {
+    if (errors.length) {
+      res.statusCode = 400;
+      res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
+
+      return;
     }
+
+    const {
+      originalCase,
+      convertedText,
+    } = convertToCase(originalText, targetCase);
+
+    res.statusCode = 200;
+    res.statusMessage = 'OK';
+
+    res.end(JSON.stringify({
+      originalCase,
+      targetCase,
+      originalText,
+      convertedText,
+    }));
   });
 
   return server;
