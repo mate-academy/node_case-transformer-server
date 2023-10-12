@@ -1,61 +1,45 @@
 const http = require('http');
 
-// http//localchost:8080/test?url?toCASE=shake
-
-const TRANSFORM_FORMATS_URL = [
-  'SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER',
-];
+const { convertToCase } = require('./convertToCase');
+const { dataValidate } = require('./dataValidate');
 
 function createServer() {
-  const server = http.createServer((req, res) => {
-
+  return http.createServer((req, res) => {
     const url = new URL(`http://${req.headers.host}${req.url}`);
-    const textTransform = url.pathname.slice(1);
-    const transformFormat = url.searchParams.get('toCase');
+    const originalText = url.pathname.slice(1);
+    const targetCase = url.searchParams.get('toCase');
 
-    const errors = [];
-
-    if (!textTransform) {
-      errors.push({
-        message: 'Text to convert is required. Correct request is:'
-        + '/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"',
-      });
-    }
-
-    if (!transformFormat) {
-      errors.push({
-        message: '"toCase" query param is required. Correct request is:'
-          + '/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"',
-      });
-    }
-
-    if (
-      transformFormat
-      && !TRANSFORM_FORMATS_URL.includes(transformFormat)
-    ) {
-      errors.push({
-        message: 'This case is not supported. Available cases:'
-        + 'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-      });
-    }
+    const errors = dataValidate({ originalText, targetCase });
 
     if (errors.length) {
       res.statusCode = 400;
       res.statusText = 'Bad request';
+      res.setHeader('Content-Type', 'application/json');
 
-      const payload = { errors };
+      const errorPayload = { errors };
 
-      res.end(JSON.stringify(payload));
+      res.end(JSON.stringify(errorPayload));
 
       return;
     }
 
-    res.end('fd');
-  });
+    const { originalCase, convertedText } = convertToCase(
+      originalText,
+      targetCase,
+    );
 
-  server.listen(8080, () => {
-    // eslint-disable-next-line no-console
-    console.log('working...');
+    const succesPayload = {
+      originalCase,
+      targetCase,
+      originalText,
+      convertedText,
+    };
+
+    res.statusCode = 200;
+    res.statusText = 'OK';
+    res.setHeader('Content-Type', 'application/json');
+
+    res.end(JSON.stringify(succesPayload));
   });
 }
 
