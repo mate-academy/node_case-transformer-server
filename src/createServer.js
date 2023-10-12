@@ -10,22 +10,22 @@ function createServer() {
 
     const errors = validateData(textToConvert, toCase);
 
+    res.setHeader('Content-Type', 'application/json');
+
     if (!errors.length) {
       const result = convertToCase(textToConvert, toCase);
 
       result.targetCase = toCase;
       result.originalText = textToConvert;
-
-      res.setHeader('Content-Type', 'application/json');
       res.statusCode = 200;
       res.statusText = 'OK';
       res.end(JSON.stringify(result));
-    } else {
-      res.setHeader('Content-Type', 'application/json');
-      res.statusCode = 400;
-      res.statusText = 'Bad request';
-      res.end(JSON.stringify({ errors }));
+
+      return;
     }
+    res.statusCode = 400;
+    res.statusText = 'Bad request';
+    res.end(JSON.stringify({ errors }));
   });
 
   return server;
