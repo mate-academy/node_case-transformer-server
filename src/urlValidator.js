@@ -1,35 +1,33 @@
 const { REQUEST_EXAMPLE, AVALIABLE_STYLES } = require('./constants');
 
+const errorValidationMessages = {
+  noStyle: `"toCase" query param is required. ${REQUEST_EXAMPLE}.`,
+  noTextToConvert: `Text to convert is required. ${REQUEST_EXAMPLE}.`,
+  wrongStyle: `This case is not supported. Available cases: ${AVALIABLE_STYLES.join(', ')}.`,
+};
+
 function urlValidator(textToConvert, style) {
-  const noStyle = {
-    message: `"toCase" query param is required. ${REQUEST_EXAMPLE}.`,
-  };
-  const noTextToConvert = {
-    message: `Text to convert is required. ${REQUEST_EXAMPLE}.`,
-  };
-  const wrongStyle = {
-    message: `This case is not supported. Available cases: ${AVALIABLE_STYLES.join(', ')}.`,
-  };
+  const errors = [];
 
-  if (!textToConvert && !style) {
-    return [noTextToConvert, noStyle];
-  }
-
-  if (!textToConvert && !AVALIABLE_STYLES.includes(style)) {
-    return [noTextToConvert, wrongStyle];
+  if (!textToConvert) {
+    errors.push({
+      message: errorValidationMessages.noTextToConvert,
+    });
   }
 
   if (!style) {
-    return [noStyle];
+    errors.push({
+      message: errorValidationMessages.noStyle,
+    });
   }
 
-  if (!textToConvert) {
-    return [noTextToConvert];
+  if (!AVALIABLE_STYLES.includes(style) && style) {
+    errors.push({
+      message: errorValidationMessages.wrongStyle,
+    });
   }
 
-  if (!AVALIABLE_STYLES.includes(style)) {
-    return [wrongStyle];
-  }
+  return errors;
 }
 
 module.exports = {

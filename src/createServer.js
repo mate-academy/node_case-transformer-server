@@ -15,7 +15,7 @@ function createServer() {
 
     const errorMessage = urlValidator(textToConvert, style);
 
-    if (errorMessage) {
+    if (errorMessage.length) {
       res.statusCode = BAD_REQUEST_CODE;
       res.statusMessage = 'Bad request';
 
