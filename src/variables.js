@@ -3,7 +3,6 @@ const SUCCESS_CODE = 200;
 const ERROR_CODE = 400;
 const SUCCESS_STATUS = 200;
 const ERROR_STATUS = 400;
-const PORT = 5700;
 
 const errorMessages = {
   NoOriginalText: 'Text to convert is required.'
@@ -20,6 +19,5 @@ module.exports = {
   ERROR_CODE,
   SUCCESS_STATUS,
   ERROR_STATUS,
-  PORT,
   errorMessages,
 };

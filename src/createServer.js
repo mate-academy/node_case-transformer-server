@@ -1,14 +1,12 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const {
-  SUPPORTED_CASES,
-  ERROR_CODE,
   SUCCESS_CODE,
   SUCCESS_STATUS,
+  ERROR_CODE,
   ERROR_STATUS,
-  PORT,
-  errorMessages,
 } = require('./variables');
+const { validateData } = require('./validation');
 
 function createServer() {
   return http.createServer((req, res) => {
@@ -16,29 +14,11 @@ function createServer() {
     res.statusCode = SUCCESS_CODE;
     res.statusMessage = SUCCESS_STATUS;
 
-    const normalizedURL = new URL(req.url, `http://localhost:${PORT}`);
+    const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
     const formattingType = normalizedURL.searchParams.get('toCase');
     const textForFormatting = normalizedURL.pathname.slice(1);
 
-    const errors = [];
-
-    if (!textForFormatting) {
-      errors.push({
-        message: errorMessages.NoOriginalText,
-      });
-    }
-
-    if (!formattingType) {
-      errors.push({
-        message: errorMessages.NoFormattingType,
-      });
-    }
-
-    if (formattingType && !SUPPORTED_CASES.includes(formattingType)) {
-      errors.push({
-        message: errorMessages.WrongFormattingType,
-      });
-    }
+    const errors = validateData(formattingType, textForFormatting);
 
     if (errors.length) {
       res.statusCode = ERROR_CODE;
