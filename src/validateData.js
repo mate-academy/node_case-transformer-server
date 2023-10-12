@@ -1,23 +1,22 @@
 const { convertToCase } = require('./convertToCase');
+const { constants } = require('./constants');
 
-function validateData(reqURL) {
+function validateData(params, originalText) {
   const errors = [];
 
-  const [originalText, query] = reqURL.slice(1).split('?');
-  const params = new URLSearchParams(query);
   const targetCase = params.get('toCase');
 
   if (!originalText) {
     errors.push({
       message: 'Text to convert is required. Correct request is:'
-       + ' "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+       + constants.CORRECT_REQUEST,
     });
   }
 
   if (!targetCase) {
     errors.push({
       message: '"toCase" query param is required. Correct request is:'
-       + ' "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+       + constants.CORRECT_REQUEST,
     });
   }
 
@@ -28,7 +27,7 @@ function validateData(reqURL) {
       errors.push({
         message:
           'This case is not supported. Available cases:'
-          + ' SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+          + constants.CORRECT_CASES,
       });
     }
   }
@@ -36,7 +35,6 @@ function validateData(reqURL) {
   return {
     errors,
     targetCase,
-    originalText,
   };
 }
 

@@ -6,7 +6,10 @@ function createServer() {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    const { errors, targetCase, originalText } = validateData(req.url);
+    const [originalText, query] = req.url.slice(1).split('?');
+    const params = new URLSearchParams(query);
+
+    const { errors, targetCase } = validateData(params, originalText);
 
     if (errors.length) {
       res.statusCode = 400;
