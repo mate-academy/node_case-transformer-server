@@ -20,7 +20,7 @@ function errorHandler(originalText, targetCase) {
   if (targetCase && !AVALIABLE_CASES.includes(targetCase)) {
     errors.push({
       message: 'This case is not supported. '
-      + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      + `Available cases: ${AVALIABLE_CASES.join(', ')}.`,
     });
   }
 
