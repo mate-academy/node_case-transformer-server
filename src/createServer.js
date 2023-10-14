@@ -8,8 +8,8 @@ function createServer() {
 
     const [originalText, queryString] = req.url.slice(1).split('?');
     const params = new URLSearchParams(queryString);
-    const toCase = params.get('toCase');
-    const errors = errorManager(originalText, toCase);
+    const targetCase = params.get('toCase');
+    const errors = errorManager(originalText, targetCase);
 
     if (errors.length) {
       res.statusCode = 400;
@@ -22,11 +22,11 @@ function createServer() {
     const {
       originalCase,
       convertedText,
-    } = convertToCase(originalText, toCase);
+    } = convertToCase(originalText, targetCase);
 
     const response = {
       originalCase,
-      toCase,
+      targetCase,
       originalText,
       convertedText,
     };
