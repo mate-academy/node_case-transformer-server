@@ -1,6 +1,6 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
-const { validation } = require('./validation');
+const { dataValidate } = require('./dataValidate');
 
 function createServer() {
   const server = http.createServer((req, res) => {
@@ -12,7 +12,7 @@ function createServer() {
         .replace('/', ''));
     const params = new URLSearchParams(queryString);
     const targetCase = params.get('toCase');
-    const errors = validation(originalText, targetCase);
+    const errors = dataValidate(originalText, targetCase);
 
     if (errors.length) {
       res.statusCode = 400;
