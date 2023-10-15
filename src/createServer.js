@@ -10,14 +10,13 @@ function createServer() {
 
     const errors = validateData(originalText, targetCase);
 
+    res.setHeader('Content-Type', 'application/json');
+
     if (errors.length) {
       res.statusCode = 400;
       res.statusText = 'Bad request';
-      res.setHeader('Content-Type', 'application/json');
 
-      const errorPayload = { errors };
-
-      res.end(JSON.stringify(errorPayload));
+      res.end(JSON.stringify({ errors }));
 
       return;
     }
@@ -36,7 +35,6 @@ function createServer() {
 
     res.statusCode = 200;
     res.statusText = 'OK';
-    res.setHeader('Content-Type', 'application/json');
 
     res.end(JSON.stringify(successPayLoad));
   });

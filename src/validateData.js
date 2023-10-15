@@ -1,33 +1,24 @@
-const AVAILBLE_TRANSFORM = [
-  'SNAKE',
-  'KEBAB',
-  'CAMEL',
-  'PASCAL',
-  'UPPER',
-];
+const { AVAILBLE_TRANSFORM, REQUIRED_MESSAGE } = require('./const');
 
 function validateData(originalText, targetCase) {
   const errors = [];
 
   if (!originalText) {
     errors.push({
-      message: 'Text to convert is required. '
-        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: 'Text to convert is required. ' + REQUIRED_MESSAGE,
     });
   }
 
   if (!targetCase) {
     errors.push({
-      message: '"toCase" query param is required. '
-        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: '"toCase" query param is required. ' + REQUIRED_MESSAGE,
     });
   }
 
   if (targetCase
     && !AVAILBLE_TRANSFORM.includes(targetCase)) {
     errors.push({
-      message: 'This case is not supported. '
-        + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      message: `This case is not supported. Available cases: ${AVAILBLE_TRANSFORM.join(', ')}.`,
     });
   }
 
