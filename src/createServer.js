@@ -5,6 +5,7 @@ const { getError } = require('./errors');
 function createServer() {
   const server = http.createServer((request, response) => {
     const requestURL = new URL(request.url, 'http://localhost:5700');
+
     response.setHeader('Content-Type', 'application/json');
 
     const originalText = requestURL.pathname.slice(1);
@@ -14,6 +15,7 @@ function createServer() {
     if (errors.errors.length) {
       response.write(JSON.stringify(errors));
       response.statusCode = 400;
+      response.statusMessage = 'Bad request';
       response.end();
 
       return;
@@ -21,10 +23,11 @@ function createServer() {
 
     const {
       originalCase,
-      convertedText
+      convertedText,
     } = convertToCase(originalText, targetCase);
 
     response.statusCode = 200;
+    response.statusMessage = 'OK';
 
     response.write(JSON.stringify({
       originalCase,
