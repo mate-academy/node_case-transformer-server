@@ -2,12 +2,13 @@
   "version": "1.0.0",
   "name": "@mate-academy/case-transformer-server",
   "author": "Mate academy",
+
   "scripts": {
     "start": "node main.js",
     "test": "mocha",
     "test:watch": "mocha --watch",
     "lint": "eslint .",
-    "lint:fix": "npm run lint -- --fix",
+    "lint:fix": "npm run lint -- --fix"
   },
   "devDependencies": {
     "@mate-academy/eslint-config": "^0.0.20",
