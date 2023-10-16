@@ -1,10 +1,11 @@
 const http = require('http');
-const { convertToCase } = require('./convertToCase/convertToCase')
+const { convertToCase } = require('./convertToCase/convertToCase');
 const { getError } = require('./errors');
+const { PORT } = require('./utils/constants');
 
 function createServer() {
   const server = http.createServer((request, response) => {
-    const requestURL = new URL(request.url, 'http://localhost:5700');
+    const requestURL = new URL(request.url, `http://localhost:${PORT}`);
 
     response.setHeader('Content-Type', 'application/json');
 

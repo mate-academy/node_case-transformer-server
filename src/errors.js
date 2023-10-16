@@ -1,9 +1,9 @@
-/* eslint-disable max-len */
-const ERROR_MESSAGE_NO_TEXT = 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-const ERROR_MESSAGE_NO_CASE = '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-const ERROR_MESSAGE_INVALID_CASE = 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
-
-const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const {
+  ERROR_MESSAGE_INVALID_CASE,
+  ERROR_MESSAGE_NO_CASE,
+  ERROR_MESSAGE_NO_TEXT,
+  availableCases,
+} = require('./utils/constants');
 
 function getError(originalText, targetCase) {
   const errors = {
@@ -22,7 +22,7 @@ function getError(originalText, targetCase) {
     });
   }
 
-  if (targetCase && !cases.includes(targetCase)) {
+  if (targetCase && !availableCases.includes(targetCase)) {
     errors.errors.push({
       message: ERROR_MESSAGE_INVALID_CASE,
     });
