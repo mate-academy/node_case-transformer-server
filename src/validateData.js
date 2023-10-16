@@ -1,7 +1,7 @@
-const { errorMessages } = require('./errorMessages');
+const { errorMessages } = require('./constants/errorsMessage');
 const { CASE_OPTIONS } = require('./constants/constants');
 
-function dataValidate(originalText, targetCase) {
+function validateData(originalText, targetCase) {
   const errors = [];
 
   if (!targetCase) {
@@ -19,4 +19,4 @@ function dataValidate(originalText, targetCase) {
   return errors;
 }
 
-module.exports = { dataValidate };
+module.exports = { validateData };
