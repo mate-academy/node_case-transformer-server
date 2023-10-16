@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  * @typedef {'SNAKE' | 'KEBAB' | 'CAMEL' | 'PASCAL' | 'UPPER'} CaseName
  *
