@@ -4,7 +4,7 @@
 const http = require('http');
 const url = require('url');
 const { convertToCase } = require('./convertToCase/convertToCase');
-const { errorCases } = require('./errorMesseges');
+const { errorCases } = require('./errorCases');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
