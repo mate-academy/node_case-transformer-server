@@ -25,3 +25,4 @@ function convertToCase(text, caseName) {
 module.exports = {
   convertToCase,
 };
+
