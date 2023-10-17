@@ -14,11 +14,9 @@ const createServer = () => {
 
     const errors = [];
 
-    // Define constant error message strings.
     const correctRequestText = 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
     const availableCases = 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
 
-    // Check for errors in the request.
     if (!convertedText) {
       errors.push({ message: `Text to convert is required. ${correctRequestText}` });
     }
