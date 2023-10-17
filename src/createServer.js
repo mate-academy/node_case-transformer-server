@@ -1,7 +1,7 @@
+/* eslint-disable max-len */
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
-
-const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const { supportedCases } = require('./constants');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -13,11 +13,12 @@ const createServer = () => {
     const targetCase = query.get('toCase');
 
     const errors = [];
-    // eslint-disable-next-line
-    const correctRequestText = 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-    // eslint-disable-next-line
-    const availableCases = `Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`;
 
+    // Define constant error message strings.
+    const correctRequestText = 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+    const availableCases = 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+
+    // Check for errors in the request.
     if (!convertedText) {
       errors.push({ message: `Text to convert is required. ${correctRequestText}` });
     }
@@ -34,22 +35,24 @@ const createServer = () => {
 
     const response = {
       status: errors.length > 0 ? 400 : 200,
+      statusText: errors.length > 0 ? 'Bad Request' : 'OK',
       headers: { 'Content-Type': 'application/json' },
       body: errors.length > 0 ? { errors } : {},
     };
 
-    if (errors.length === 0) {
-      const result = convertToCase(convertedText, targetCase.toUpperCase());
+    if (!errors.length) {
+      const upperCaseTargetCase = targetCase.toUpperCase();
+      const result = convertToCase(convertedText, upperCaseTargetCase);
 
       response.body = {
         originalText: convertedText,
-        targetCase: targetCase.toUpperCase(),
+        targetCase: upperCaseTargetCase,
         convertedText: result.convertedText,
         originalCase: result.originalCase,
       };
     }
 
-    res.writeHead(response.status, response.headers);
+    res.writeHead(response.status, response.statusText, response.headers);
     res.end(JSON.stringify(response.body));
   });
 
