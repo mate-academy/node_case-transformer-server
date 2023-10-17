@@ -17,20 +17,25 @@ function createServer() {
     if (validationErrors.length) {
       res.statusCode = HTTP_BAD_REQUEST;
       res.end(JSON.stringify({ errors: validationErrors }));
-    } else {
-      const convertedText = convertToCase(textToConvert, targetCase);
 
-      const response = {
-        originalCase: convertedText.originalCase,
-        targetCase,
-        originalText: textToConvert,
-        convertedText: convertedText.convertedText,
-      };
-
-      res.statusCode = HTTP_OK;
-
-      res.end(JSON.stringify(response));
+      return;
     }
+
+    const {
+      originalCase,
+      convertedText,
+    } = convertToCase(textToConvert, targetCase);
+
+    const response = {
+      originalCase,
+      targetCase,
+      originalText: textToConvert,
+      convertedText,
+    };
+
+    res.statusCode = HTTP_OK;
+
+    res.end(JSON.stringify(response));
   });
 
   return server;

@@ -1,27 +1,26 @@
-const { SUPPORTED_CASES } = require('./constants');
+const {
+  SUPPORTED_CASES,
+  CASE_NOT_SUPPORTED,
+  TEXT_TO_CONVERT_MESSAGE,
+  QUERY_PARAM_IS_REQUIRED_MESSAGE,
+} = require('./constants');
 
 function validateRequest(textToConvert, targetCase) {
   const errors = [];
 
   if (!textToConvert) {
     errors.push({
-      message:
-        'Text to convert is required.'
-        + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: TEXT_TO_CONVERT_MESSAGE,
     });
   }
 
   if (!targetCase) {
     errors.push({
-      message:
-        '"toCase" query param is required.'
-        + ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: QUERY_PARAM_IS_REQUIRED_MESSAGE,
     });
   } else if (!SUPPORTED_CASES.includes(targetCase)) {
     errors.push({
-      message:
-        'This case is not supported.'
-        + ' Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      message: CASE_NOT_SUPPORTED,
     });
   }
 
