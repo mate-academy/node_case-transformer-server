@@ -15,8 +15,9 @@ const { wordsToCase } = require('./wordsToCase');
  * @returns {Result}
  */
 function convertToCase(text, caseName) {
-  const originalCase = detectCase(text);
-  const words = toWords(text, originalCase);
+  const originalCase = detectCase(text.split('?')[0]);
+  const touse = text.split('?')[0];
+  const words = toWords(touse, originalCase);
   const convertedText = wordsToCase(words, caseName);
 
   return { originalCase, convertedText };
