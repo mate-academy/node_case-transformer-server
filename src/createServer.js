@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 
