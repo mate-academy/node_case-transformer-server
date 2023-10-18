@@ -8,7 +8,6 @@ const createServer = () => {
       request.url,
       `http://${request.headers.host}`,
     );
-
     const textToConvert = pathname.slice(1);
     const toCase = searchParams.get('toCase');
     const errors = [];
