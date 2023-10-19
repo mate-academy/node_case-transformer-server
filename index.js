@@ -1,6 +1,6 @@
 const {
   convertToCase,
-} = require('./convertToCase');
+} = require('./src/convertToCase');
 
 module.exports = {
   convertToCase,
