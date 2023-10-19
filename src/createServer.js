@@ -11,11 +11,14 @@ function createServer() {
     const reqText = normalizedURL.pathname.slice(1);
     const reqCase = normalizedURL.searchParams.get('toCase');
 
-    const errors = serverError(reqText, reqCase);
+    const errorsParams = serverError(reqText, reqCase);
 
-    if (errors.errors.length) {
-      res.end(JSON.stringify(errors));
-    } else {
+    if (errorsParams.errors.length) {
+      res.statusCode = 400;
+      res.end(JSON.stringify(errorsParams));
+    }
+
+    if (!errorsParams.errors.length) {
       const { originalCase, convertedText } = convertToCase(reqText, reqCase);
 
       const resultConvert = {
@@ -25,6 +28,7 @@ function createServer() {
         convertedText,
       };
 
+      res.status = 200;
       res.end(JSON.stringify(resultConvert));
     }
   });
