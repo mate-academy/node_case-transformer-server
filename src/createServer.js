@@ -1,7 +1,6 @@
+/* eslint-disable max-len */
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
-
-const PORT = 5700;
 
 const caseNames = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
@@ -33,24 +32,23 @@ const createServer = () => {
   const server = http.createServer((request, response) => {
     response.setHeader('Content-type', 'application/json');
 
-    const [originString, queryCase] = request.url.slice(1).split('?');
+    const searchParams = new URLSearchParams(request.url.slice(1).split('?')[1]);
+    const toCase = searchParams.get('toCase');
 
-    const toCase = queryCase?.split('=')[1];
-
-    const errors = checkValidation(originString, toCase);
+    const errors = checkValidation(request.url.slice(1).split('?')[0], toCase);
 
     if (errors.length) {
       response.statusCode = 400;
-      response.statusMessage = 'Status: Bad Request';
+      response.statusMessage = 'Bad Request';
       response.end(JSON.stringify({ errors }));
     } else {
       response.statusCode = 200;
       response.statusMessage = 'OK';
 
-      const result = convertToCase(originString, toCase);
+      const result = convertToCase(request.url.slice(1).split('?')[0], toCase);
 
       result.targetCase = toCase;
-      result.originalText = originString;
+      result.originalText = request.url.slice(1).split('?')[0];
 
       response.end(JSON.stringify(result));
     }
@@ -61,7 +59,4 @@ const createServer = () => {
 
 module.exports = {
   createServer,
-  caseNames,
-  ERROR_MESSAGES,
-  PORT,
 };
