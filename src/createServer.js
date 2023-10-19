@@ -1,44 +1,68 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
-
 const http = require('http');
-// import convertToCase
+const { convertToCase } = require('./convertToCase/convertToCase');
 
-// - snake_case (`SNAKE`)
-// - kebab-case (`KEBAB`)
-// - camelCase (`CAMEL`)
-// - PascalCase (`PASCAL`)
-// - UPPER_CASE (`UPPER`)
-
-// const PORT = process.env.PORT || 5000;
-
-// const params = new URLSearchParams(queryString);
-// const toCase = params.get('toCase');
+const supprotedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
+  const server = http.createServer((request, response) => {
+    response.setHeader('Content-Type', 'application/json');
 
-const server = http.createServer((request, response) => {
+    const [pathname, queryString] = request.url.split('?');
+    const params = new URLSearchParams(queryString);
+    const toCase = params.get('toCase');
+    const textToConvert = pathname.slice(1, pathname.length).toString();
 
-  const [pathname, queryString] = req.url.split("?")
+    const errors = [];
+    let err;
 
-  console.log(pathname)
-  console.log(queryString)
-  // const urlNormalize = new URL(request.url, `http://${request.headers.host}`)
+    if (!toCase) {
+      /* eslint-disable max-len */
+      err = '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+      errors.push({ message: err });
+    }
 
-  // 1. Parsowanie textu z URL -> string to konwersji + sposób konwersji
-  // 2. Import convertToCase i użycie tej funkcji aby przekonwertować i zwrócić text
-  // 3. Obługa błędów wg instrukcji
+    if (!textToConvert) {
+      /* eslint-disable max-len */
+      err = 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+      errors.push({ message: err });
+    }
 
-  response.end('OK!');
+    if (
+      toCase && !supprotedCases.includes(toCase)
+    ) {
+      /* eslint-disable max-len */
+      err = 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+      errors.push({ message: err });
+    }
 
+    if (errors.length > 0) {
+      const error = {
+        errors,
+      };
 
-})
+      response.statusCode = 400;
+      response.statusText = 'Bad request';
+      response.end(JSON.stringify(error));
 
-return server
+      return;
+    }
+
+    const convert = convertToCase(textToConvert, toCase);
+    const resp = {
+      convertedText: convert.convertedText,
+      originalCase: convert.originalCase,
+      originalText: textToConvert,
+      targetCase: toCase,
+    };
+
+    response.statusCode = 200;
+    response.statusText = 'OK';
+    response.end(JSON.stringify(resp));
+  });
+
+  return server;
 }
+
 module.exports = {
-  createServer
-}
-
-
+  createServer,
+};
