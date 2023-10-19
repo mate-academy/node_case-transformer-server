@@ -32,10 +32,11 @@ const createServer = () => {
   const server = http.createServer((request, response) => {
     response.setHeader('Content-type', 'application/json');
 
-    const searchParams = new URLSearchParams(request.url.slice(1).split('?')[1]);
+    const [originString, queryCase] = request.url.slice(1).split('?');
+    const searchParams = new URLSearchParams(queryCase);
     const toCase = searchParams.get('toCase');
 
-    const errors = checkValidation(request.url.slice(1).split('?')[0], toCase);
+    const errors = checkValidation(originString, toCase);
 
     if (errors.length) {
       response.statusCode = 400;
@@ -45,10 +46,10 @@ const createServer = () => {
       response.statusCode = 200;
       response.statusMessage = 'OK';
 
-      const result = convertToCase(request.url.slice(1).split('?')[0], toCase);
+      const result = convertToCase(originString, toCase);
 
       result.targetCase = toCase;
-      result.originalText = request.url.slice(1).split('?')[0];
+      result.originalText = originString;
 
       response.end(JSON.stringify(result));
     }
