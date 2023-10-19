@@ -1,51 +1,61 @@
 const http = require('http');
+const url = require('url');
 const { convertToCase } = require('./convertToCase');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    // Parsowanie URL i parametrów
-    const urlParts = req.url.split('?');
+    // Parsowanie URL
+    const parsedUrl = new url.URL(req.url, true);
+    const { pathname, query } = parsedUrl;
 
-    if (urlParts.length !== 2) {
-      // Błąd: Brak parametrów
+    if (!pathname || !query.toCase) {
+      // Obsługa błędów walidacji
       res.writeHead(400, { 'Content-Type': 'application/json' });
 
-      res.end(JSON.stringify({ errors: [{ message:
-         'Brak parametrów w URL.' }] }));
+      res.end(
+        JSON.stringify({
+          errors: [
+            {
+              message:
+                !pathname
+                  ? 'Text to convert is required. Correct request is:'
+                  + ' "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>."'
+                  : '"toCase" query param is required. Correct request is: '
+                  + '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>."',
+            },
+          ],
+        }),
+      );
 
       return;
     }
 
-    const [textToConvert, queryString] = urlParts;
-    const params = new URLSearchParams(queryString);
-    const toCase = params.get('toCase');
+    const textToConvert = pathname.substr(1);
+    const toCase = query.toCase.toUpperCase();
 
-    // Sprawdzanie poprawności parametrów
-    if (!textToConvert || !toCase) {
-      // Błąd: Brak textToConvert lub toCase
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-
-      res.end(JSON.stringify({ errors: [{ message:
-        'Brak textToConvert lub toCase.' }] }));
-
-      return;
-    }
-
-    // Obsługa nieobsługiwanych przypadków
+    // Walidacja dla obsługiwanych przypadków
     const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
     if (!supportedCases.includes(toCase)) {
-      // Błąd: toCase nie jest obsługiwane
       res.writeHead(400, { 'Content-Type': 'application/json' });
 
-      res.end(JSON.stringify({ errors: [{ message:
-        'Ten przypadek nie jest obsługiwany.' }] }));
+      res.end(
+        JSON.stringify({
+          errors: [
+            {
+              message:
+                'This case is not supported. Available cases: SNAKE, '
+                + 'KEBAB, CAMEL, PASCAL, UPPER.',
+            },
+          ],
+        }),
+      );
 
       return;
     }
 
-    // Wywołanie logiki biznesowej
-    const result = convertToCase(toCase, textToConvert);
+    // Wywołanie logiki biznesowej (funkcja convertToCase)
+    const result = convertToCase(textToConvert, toCase);
 
     // Odpowiedź do klienta
     res.writeHead(200, { 'Content-Type': 'application/json' });
