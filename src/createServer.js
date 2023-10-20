@@ -1,5 +1,5 @@
 const http = require('http');
-const serverError = require('./serverError').serverError;
+const getServerErrors = require('./getServerErrors').getServerErrors;
 const convertToCase = require('./convertToCase/convertToCase').convertToCase;
 
 function createServer() {
@@ -8,29 +8,31 @@ function createServer() {
 
     res.setHeader('Content-Type', 'application/json');
 
-    const reqText = normalizedURL.pathname.slice(1);
-    const reqCase = normalizedURL.searchParams.get('toCase');
+    const originalText = normalizedURL.pathname.slice(1);
+    const targetCase = normalizedURL.searchParams.get('toCase');
 
-    const errorsParams = serverError(reqText, reqCase);
+    const serverErrors = getServerErrors(originalText, targetCase);
 
-    if (errorsParams.errors.length) {
+    if (serverErrors.errors.length) {
       res.statusCode = 400;
-      res.end(JSON.stringify(errorsParams));
+
+      return res.end(JSON.stringify(serverErrors));
     }
 
-    if (!errorsParams.errors.length) {
-      const { originalCase, convertedText } = convertToCase(reqText, reqCase);
+    const {
+      originalCase,
+      convertedText,
+    } = convertToCase(originalText, targetCase);
 
-      const resultConvert = {
-        originalCase,
-        targetCase: reqCase,
-        originalText: reqText,
-        convertedText,
-      };
+    const resultConvert = {
+      originalCase,
+      targetCase,
+      originalText,
+      convertedText,
+    };
 
-      res.status = 200;
-      res.end(JSON.stringify(resultConvert));
-    }
+    res.status = 200;
+    res.end(JSON.stringify(resultConvert));
   });
 
   return server;
