@@ -6,10 +6,8 @@ const { validateRequest } = require('./requestValidation');
 const createServer = () => {
   const server = http.createServer((req, res) => {
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
-    const path = parsedUrl.pathname;
-    const query = parsedUrl.searchParams;
-    const originalText = path.slice(1);
-    const targetCase = query.get('toCase');
+    const originalText = parsedUrl.pathname.slice(1);
+    const targetCase = parsedUrl.searchParams.get('toCase');
 
     const errors = validateRequest(originalText, targetCase);
 
@@ -21,13 +19,12 @@ const createServer = () => {
     };
 
     if (!errors.length) {
-      const upperCaseTargetCase = targetCase.toUpperCase();
-      const { convertedText: converted, originalCase } = convertToCase(originalText, upperCaseTargetCase);
+      const { convertedText, originalCase } = convertToCase(originalText, targetCase);
 
       response.body = {
         originalText,
-        targetCase: upperCaseTargetCase,
-        convertedText: converted,
+        targetCase,
+        convertedText,
         originalCase,
       };
     }
