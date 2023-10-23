@@ -49,7 +49,7 @@ function createServer() {
 
     };
 
-    response.writeHeader(400, { 'Content-Type': 'application/json' });
+    response.writeHeader(200, { 'Content-Type': 'application/json' });
     response.write(JSON.stringify(result));
     response.end();
   });
