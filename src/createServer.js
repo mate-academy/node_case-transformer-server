@@ -4,7 +4,7 @@
 const http = require('http');
 const url = require('url');
 const { convertToCase } = require('./convertToCase/convertToCase');
-const { errorCases } = require('./errorCases');
+const { ERROR_CASES } = require('./errorCases');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -20,15 +20,15 @@ const createServer = () => {
     const errors = [];
 
     if (!textToConvert) {
-      errors.push({ message: errorCases.noTextToConvert });
+      errors.push({ message: ERROR_CASES.noTextToConvert });
     }
 
     if (!toCase) {
-      errors.push({ message: errorCases.noCase });
+      errors.push({ message: ERROR_CASES.noCase });
     }
 
     if (toCase && !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase)) {
-      errors.push({ message: errorCases.invalidCase });
+      errors.push({ message: ERROR_CASES.invalidCase });
     }
 
     if (errors.length) {
