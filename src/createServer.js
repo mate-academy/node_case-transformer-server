@@ -6,10 +6,13 @@ const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer(requestHandler) {
   const server = http.createServer((req, res) => {
-    const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
-    const text = normalizedURL.pathname.slice(1);
-    const caseName = normalizedURL.searchParams.get('toCase');
-    const { originalCase, convertedText } = convertToCase(text, caseName);
+    // const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
+
+    const urlParts = req.url.split('?');
+    const params = new URLSearchParams(urlParts[1]);
+
+    const text = urlParts[0].slice(1);
+    const caseName = params.get('toCase');
     const errors = [];
 
     if (!text) {
@@ -24,7 +27,7 @@ function createServer(requestHandler) {
       });
     }
 
-    if (!supportedCases.includes(caseName)) {
+    if (!supportedCases.includes(caseName) && caseName) {
       errors.push({
         message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
@@ -39,6 +42,8 @@ function createServer(requestHandler) {
     }
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
+
+    const { originalCase, convertedText } = convertToCase(text, caseName);
 
     res.end(JSON.stringify({
       originalCase,
