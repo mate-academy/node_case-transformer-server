@@ -17,7 +17,7 @@ const createServer = () => {
     const validationResult = validate(targetCase, originalText);
 
     if (validationResult.errors.length) {
-      getResponse(res, 200, validationResult);
+      getResponse(res, 400, validationResult);
     } else {
       const {
         originalCase,
