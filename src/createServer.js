@@ -3,8 +3,6 @@ const http = require('http');
 const { convertToCase } = require('./convertToCase');
 const { queriesError } = require('./queriesError');
 
-const PORT = process.env.PORT || 3007;
-
 const createServer = () => {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
@@ -41,10 +39,6 @@ const createServer = () => {
 
   return server;
 };
-
-createServer().listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
 
 module.exports = {
   createServer,
