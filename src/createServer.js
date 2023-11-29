@@ -8,6 +8,8 @@ const createServer = () => {
     const textToConvert = requestedUrl.split('?')[0];
     let queryString = '';
 
+    const errorMessages = [];
+
     if (requestedUrl.split('?').length > 1) {
       queryString = requestedUrl.split('?')[1];
     }
@@ -15,57 +17,30 @@ const createServer = () => {
     const params = new URLSearchParams(queryString);
 
     if (params.getAll('toCase').length !== 1) {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.statusCode = 400;
-
-      const errorMessage = {
-        errors: [
-          {
-            message: '"toCase" query param is required. '
-              + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-          },
-        ],
-      };
-
-      res.end(JSON.stringify(errorMessage));
-
-      return;
+      errorMessages.push({ message: '"toCase" query param is required. '
+        + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
     };
 
     const toCase = params.get('toCase');
 
     if (!textToConvert) {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.statusCode = 400;
-
-      const errorMessage = {
-        errors: [
-          {
-            message: 'Text to convert is required. '
-            + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-          },
-        ],
-      };
-
-      res.end(JSON.stringify(errorMessage));
-
-      return;
+      errorMessages.push({ message: 'Text to convert is required. '
+            + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
     };
 
-    if (!['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase)) {
+    if (toCase
+      && (!['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase))) {
+      errorMessages.push({ message: 'This case is not supported. '
+            + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.' });
+    };
+
+    if (errorMessages.length > 0) {
       res.setHeader('Content-Type', 'application/json');
 
       res.statusCode = 400;
 
       const errorMessage = {
-        errors: [
-          {
-            message: 'This case is not supported. '
-            + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-          },
-        ],
+        errors: errorMessages,
       };
 
       res.end(JSON.stringify(errorMessage));
