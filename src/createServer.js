@@ -8,6 +8,8 @@ const createServer = () => {
     const textToConvert = requestedUrl.split('?')[0];
     let queryString = '';
 
+    const caseTypes = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
     const errorMessages = [];
 
     if (requestedUrl.split('?').length > 1) {
@@ -29,7 +31,7 @@ const createServer = () => {
     };
 
     if (toCase
-      && (!['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase))) {
+      && (!caseTypes.includes(toCase))) {
       errorMessages.push({ message: 'This case is not supported. '
             + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.' });
     };
