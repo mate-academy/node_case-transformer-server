@@ -31,7 +31,7 @@ function validateRequest(text, method) {
     });
   }
 
-  return errors.length ? errors : true;
+  return errors;
 }
 
 module.exports = validateRequest;

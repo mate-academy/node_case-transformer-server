@@ -10,15 +10,15 @@ const PORT = process.env.PORT || 8080;
 function createServer() {
   const server = http.createServer((request, response) => {
     const { text, method } = normalizeUserInput(request.url, PORT);
-    const validation = validateRequest(text, method);
+    const validationErrors = validateRequest(text, method);
 
     response.setHeader('Content-Type', 'application/json');
 
-    if (validation instanceof Array) {
+    if (validationErrors.length) {
       response.statusCode = 400;
 
       const responseErrors = {
-        errors: validation,
+        errors: validationErrors,
       };
 
       response.end(JSON.stringify(responseErrors));
