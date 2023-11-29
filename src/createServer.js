@@ -1,6 +1,5 @@
 const http = require('http');
-const { convertToCase } = require('./convertToCase');
-// const { convertToCase } = require('./convertToCase/convertToCase');
+const { convertToCase } = require('./convertToCase/convertToCase.js');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -23,7 +22,7 @@ const createServer = () => {
       const errorMessage = {
         errors: [
           {
-            message: '"toCase" query param is required.'
+            message: '"toCase" query param is required. '
               + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
           },
         ],
@@ -36,7 +35,7 @@ const createServer = () => {
 
     const toCase = params.get('toCase');
 
-    if (!toCase) {
+    if (!textToConvert) {
       res.setHeader('Content-Type', 'application/json');
 
       res.statusCode = 400;
@@ -44,7 +43,7 @@ const createServer = () => {
       const errorMessage = {
         errors: [
           {
-            message: 'Text to convert is required.'
+            message: 'Text to convert is required. '
             + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
           },
         ],
@@ -63,7 +62,7 @@ const createServer = () => {
       const errorMessage = {
         errors: [
           {
-            message: 'This case is not supported.'
+            message: 'This case is not supported. '
             + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
           },
         ],
@@ -74,14 +73,16 @@ const createServer = () => {
       return;
     };
 
-    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Content-Type', 'application/json');
     res.statusCode = 200;
 
-    res.write(textToConvert);
-    res.write('\n');
-    res.write(toCase);
+    const result = JSON.stringify({
+      ...convertToCase(textToConvert, toCase),
+      originalText: textToConvert,
+      targetCase: toCase,
+    });
 
-    res.end();
+    res.end(result);
   });
 
   return server;
