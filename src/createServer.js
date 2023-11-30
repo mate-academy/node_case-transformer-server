@@ -6,7 +6,7 @@ const { createErrorResponse } = require('./errorResponse');
 const { createSuccessResponse } = require('./successResponse');
 const { createJsonResponse } = require('./jsonPesponse');
 
-const PORT = 4000;
+const PORT = 5700;
 
 const createServer = () => {
   const server = http.createServer((request, response) => {
@@ -42,10 +42,5 @@ const createServer = () => {
 
   return server;
 };
-
-createServer().listen(PORT, () => {
-  /* eslint-disable */
-  console.log(`Server is running on http://localhost:${PORT}/`);
-});
 
 module.exports = { createServer };
