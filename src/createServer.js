@@ -14,7 +14,7 @@ function createServer() {
 
     if (errorMessages.errors.length) {
       res.statusMessage = 'Incorrect request';
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.writeHead(400, { 'Content-Type': 'application/json' });
 
       return res.end(JSON.stringify(errorMessages));
     }
