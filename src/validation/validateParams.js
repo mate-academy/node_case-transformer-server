@@ -8,7 +8,7 @@ const validateParams = (params) => {
   try {
     const param = params.get('toCase');
 
-    if (param === null || param === '') {
+    if (!param) {
       return {
         message: errorMessages.targetCaseMissing,
       };
