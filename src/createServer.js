@@ -1,26 +1,22 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const { detectCase } = require('./convertToCase/detectCase');
+const { validateResponse } = require('./validateResponse.js');
 
 function createServer() {
   const server = http.createServer((req, res) => {
     const [urlPart, queryString] = req.url.split('?');
     const params = new URLSearchParams(queryString);
     const toCase = params.get('toCase');
+    const oldCase = detectCase(urlPart.slice(1));
 
-    if (
-      !urlPart
-      || !toCase
-      || !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase)
-    ) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
+    const errorMessages = validateResponse(urlPart.slice(1), toCase);
 
-      res.end(
-        JSON.stringify({
-          errors: [{ message: 'Your error message here' }],
-        }),
-      );
+    if (errorMessages.errors.length) {
+      res.statusMessage = 'Incorrect request';
+      res.writeHead(200, { 'Content-Type': 'application/json' });
 
-      return;
+      return res.end(JSON.stringify(errorMessages));
     }
 
     const result = convertToCase(urlPart.slice(1), toCase);
@@ -29,7 +25,7 @@ function createServer() {
 
     res.end(
       JSON.stringify({
-        originalCase: 'ORIGINAL_CASE',
+        originalCase: oldCase,
         targetCase: toCase,
         originalText: urlPart.slice(1),
         convertedText: result.convertedText,
