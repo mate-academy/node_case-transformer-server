@@ -5,8 +5,6 @@ function createServer() {
   const convertToCase = require('src/convertToCase');
 
   const server = http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-
     const myUrl = new URL(req.url, 'http://localhost:5700');
     const originalText = myUrl.pathname.slice(1);
     const targetCase = myUrl.searchParams.get('toCase');
