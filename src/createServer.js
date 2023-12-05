@@ -51,9 +51,6 @@ function createServer() {
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, resData: data }));
-
-    console.log(myUrl);
-    console.log(myUrl.searchParams.get('toCase'));
   });
 
   return server;
