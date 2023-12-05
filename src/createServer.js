@@ -1,16 +1,16 @@
 /* eslint-disable max-len */
 /* eslint-disable no-console */
 const { convertToCase } = require('./convertToCase');
-const http = require('http');
 
 function createServer() {
+  const http = require('http');
+
   const server = http.createServer((req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+
     const myUrl = new URL(req.url, 'http://localhost:5700');
     const originalText = myUrl.pathname.slice(1);
     const targetCase = myUrl.searchParams.get('toCase');
-
-    console.log(originalText);
-    console.log(targetCase);
 
     const errors = [];
 
@@ -34,16 +34,13 @@ function createServer() {
       }
     }
 
-    if (errors.length > 0) {
-      res.statusText = 'Bad request';
-      res.writeHead(400, { 'Content-Type': 'application/json' });
+    if (errors.length) {
+      res.statusCode = 400;
 
       return res.end(JSON.stringify({ errors }));
     }
 
-    const convertedResult = convertToCase(targetCase, originalText);
-
-    const { originalCase, convertedText } = convertedResult;
+    const { originalCase, convertedText } = convertToCase(originalText, targetCase);
 
     const data = {
       originalCase,
