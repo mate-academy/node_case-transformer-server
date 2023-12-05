@@ -44,7 +44,7 @@ function createServer() {
 
     const data = {
       originalCase,
-      targetCase: 'CASE_NAME',
+      targetCase,
       originalText,
       convertedText,
     };
