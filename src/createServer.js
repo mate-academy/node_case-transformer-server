@@ -32,9 +32,9 @@ function createServer() {
       JSON.stringify({
         originalCase,
         targetCase,
-        convertedText,
         originalText,
-      }),
+        convertedText,
+      })
     );
   });
 
