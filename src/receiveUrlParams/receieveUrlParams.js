@@ -2,12 +2,12 @@ const BASE = 'http://localhost:5700';
 
 function receiveUrlParams(req) {
   const normilizedURl = new URL(req.url, BASE);
-  const recivedCase = Object
+  const receivedCase = Object
     .fromEntries(normilizedURl.searchParams.entries());
-  const recievedText = normilizedURl.pathname.slice(1);
-  const { toCase } = recivedCase;
+  const receivedText = normilizedURl.pathname.slice(1);
+  const { toCase } = receivedCase;
 
-  return { recievedText, toCase };
+  return { receivedText, toCase };
 }
 
 module.exports = { receiveUrlParams };

@@ -5,7 +5,7 @@ const missingText = `Text to convert is required. Correct request is: "${correct
 const missingToCase = `"toCase" query param is required. Correct request is: "${correctRequest}".`;
 const notFromList = `This case is not supported. Available cases: ${caseTypes.join(', ')}.`;
 
-function createErrorMessage(recivedText, recivedCase, res) {
+function createErrorMessage(receivedText, receivedCase, res) {
   res.statusCode = 400;
 
   const errorMessage = {
@@ -13,36 +13,31 @@ function createErrorMessage(recivedText, recivedCase, res) {
     ],
   };
 
-  if (!caseTypes.includes(recivedCase) && recivedCase) {
+  if (!caseTypes.includes(receivedCase) && receivedCase) {
     errorMessage.errors.push({ message: notFromList });
   }
 
-  if (!recivedCase) {
+  if (!receivedCase) {
     errorMessage.errors.push({ message: missingToCase });
   }
 
-  if (!recivedText) {
+  if (!receivedText) {
     errorMessage.errors.push({ message: missingText });
   };
 
   return errorMessage;
 }
 
-function createBodyMessage(recivedText, recivedCase, res) {
-  const isError = !caseTypes.includes(recivedCase)
- || !recivedCase || !recivedText;
+function createBodyMessage(receivedText, receivedCase, res) {
+  const errorData = createErrorMessage(receivedText,
+    receivedCase, res);
 
-  if (isError) {
-    const errorData = JSON.stringify(createErrorMessage(recivedText,
-      recivedCase, res));
+  if (errorData.errors.length) {
+    return JSON.stringify(errorData);
+  }
 
-    return errorData;
-  };
-
-  const responseMessage = JSON.stringify(createResponse(recivedText,
-    recivedCase, res));
-
-  return responseMessage;
+  return JSON.stringify(createResponse(receivedText,
+    receivedCase, res));
 }
 
 module.exports = { createBodyMessage };

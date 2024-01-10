@@ -10,8 +10,8 @@ function createServer() {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    const { recievedText, toCase } = receiveUrlParams(req);
-    const data = createBodyMessage(recievedText, toCase, res);
+    const { receivedText, toCase } = receiveUrlParams(req);
+    const data = createBodyMessage(receivedText, toCase, res);
 
     res.write(data);
     res.end();
