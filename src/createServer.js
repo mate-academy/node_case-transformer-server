@@ -1,11 +1,8 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
-
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
+const { validateError } = require('./ErrorUtil/validateErrors');
 
-const PORT = 'http://localhost:3000';
+const LINK = 'http://localhost:3000';
 const urlTemplate = '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
 const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 const erorrMessages = {
@@ -21,39 +18,20 @@ function createServer() {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    const error = {
-      errors: [],
-    };
-
-    const { pathname, searchParams } = new URL(req.url, PORT);
-
+    const { pathname, searchParams } = new URL(req.url, LINK);
     const originalText = pathname.slice(1);
+    const targetCase = searchParams.get('toCase');
 
     if (originalText.includes('favicon')) {
       return res.end();
     };
 
-    const targetCase = searchParams.get('toCase');
-
-    if (targetCase) {
-      const isSupportedCase = supportedCases.includes(targetCase);
-
-      if (!isSupportedCase) {
-        error.errors.push({
-          message: erorrMessages.invalidCase,
-        });
-      }
-    } else {
-      error.errors.push({
-        message: erorrMessages.noToCaseParam,
-      });
-    }
-
-    if (originalText === '') {
-      error.errors.push({
-        message: erorrMessages.noTextToConvert,
-      });
-    }
+    const error = validateError(
+      targetCase,
+      supportedCases,
+      erorrMessages,
+      originalText,
+    );
 
     if (error.errors.length) {
       res.statusCode = 400;
@@ -78,8 +56,6 @@ function createServer() {
 
   return server;
 }
-
-// createServer().listen(3000);
 
 module.exports = {
   createServer,
