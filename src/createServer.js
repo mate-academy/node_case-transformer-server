@@ -70,8 +70,6 @@ function createServer() {
   return server;
 }
 
-createServer().listen(PORT);
-
 module.exports = {
   createServer,
 };
