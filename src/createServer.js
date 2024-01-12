@@ -79,7 +79,7 @@ function createServer() {
   return server;
 }
 
-createServer().listen(3000);
+// createServer().listen(3000);
 
 module.exports = {
   createServer,
