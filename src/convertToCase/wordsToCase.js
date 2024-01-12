@@ -43,5 +43,5 @@ function wordsToCase(words, caseName) {
 }
 
 module.exports = {
-  wordsToCase,
+  wordsToCase
 };
