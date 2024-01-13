@@ -1,5 +1,6 @@
 const http = require("http");
 const { convertToCase } = require("./convertToCase");
+const {errorsValidation} = require("./errorsValidation");
 
 const cases = ["SNAKE", "KEBAB", "CAMEL", "PASCAL", "UPPER"];
 
@@ -20,27 +21,7 @@ const createServer = () => {
     };
 
     if (isError) {
-      if (!textToTransform) {
-        errorMessages.errors.push({
-          message:
-            'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        });
-      }
-
-      if (!typeTransform) {
-        errorMessages.errors.push({
-          message:
-            '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        });
-      }
-
-      if (!cases.includes(typeTransform) && typeTransform) {
-        errorMessages.errors.push({
-          message:
-            `This case is not supported. Available cases: ${cases.join(', ')}.`,
-        });
-      }
-
+      errorsValidation(isError, textToTransform, typeTransform, cases, errorMessages);
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
       res.end(JSON.stringify(errorMessages));
@@ -67,7 +48,4 @@ const createServer = () => {
   return server;
 };
 
-
 module.exports = { createServer };
-
-
