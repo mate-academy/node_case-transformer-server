@@ -22,7 +22,7 @@ const validateError = (
     });
   }
 
-  if (originalText === '') {
+  if (!originalText) {
     error.errors.push({
       message: erorrMessages.noTextToConvert,
     });
