@@ -4,7 +4,12 @@ module.exports = {
     commonjs: true,
     es2021: true,
     mocha: true,
+    "node": 1,
+    "rules": {
+      "quotes": [2, "single", { "avoidEscape": true }]
+    }
   },
+
   globals: {
     expect: true,
   },
