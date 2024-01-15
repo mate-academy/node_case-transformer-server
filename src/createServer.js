@@ -1,67 +1,42 @@
-/* eslint-disable max-len */
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase.js');
-
-const typeOfCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-const messages = {
-  putText: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-  insertQueryParam: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-  notCorrectCase: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-};
+const { validation } = require('./validation.js');
 
 const PORT = process.env.PORT || 4000;
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
-    const newUrl = new URL(req.url, `http://localhost:${PORT}`);
-    const originalText = newUrl.pathname.slice(1);
-    const targetCase = newUrl.searchParams.get('toCase');
-    const errorsArray = [];
+    try {
+      const newUrl = new URL(req.url, `http://localhost:${PORT}`);
+      const originalText = newUrl.pathname.slice(1);
+      const targetCase = newUrl.searchParams.get('toCase');
 
-    res.setHeader('Content-Type', 'application/json');
-    res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
 
-    if (!originalText) {
-      errorsArray.push({
-        message: messages.putText,
-      });
-    }
+      validation(originalText, targetCase);
+      res.statusCode = 200;
 
-    if (!targetCase) {
-      errorsArray.push({
-        message: messages.insertQueryParam,
-      });
-    } else if (!typeOfCases.includes(targetCase)) {
-      errorsArray.push({
-        message: messages.notCorrectCase,
-      });
-    }
-
-    if (errorsArray.length) {
-      res.statusCode = 400;
+      const { originalCase, convertedText } = convertToCase(
+        originalText, targetCase,
+      );
 
       res.write(JSON.stringify({
-        errors: errorsArray,
+        originalText,
+        originalCase,
+        targetCase,
+        convertedText,
       }));
 
       res.end();
+    } catch (errors) {
+      res.statusCode = 400;
 
-      return;
+      res.write(JSON.stringify({
+        errors,
+      }));
+
+      res.end();
     }
-
-    const { originalCase, convertedText } = convertToCase(
-      originalText, targetCase,
-    );
-
-    res.write(JSON.stringify({
-      originalText,
-      originalCase,
-      targetCase,
-      convertedText,
-    }));
-
-    res.end();
   });
 
   return server;
