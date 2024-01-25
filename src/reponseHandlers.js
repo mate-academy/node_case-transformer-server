@@ -1,8 +1,9 @@
 const { convertToCase } = require('./convertToCase/convertToCase');
+const { BAD_REQUEST, OK_REQUEST } = require('./responseHeaders');
 
 function sendErrorResponse(response, errors) {
-  response.statusCode = 400;
-  response.statusMessage = 'Bad request';
+  response.statusCode = BAD_REQUEST.code;
+  response.message = BAD_REQUEST.message;
 
   response.end(JSON.stringify({ errors }));
 };
@@ -13,7 +14,8 @@ function sendSuccessResponse(response, originalText, targetCase) {
     convertedText,
   } = convertToCase(originalText, targetCase);
 
-  response.statusCode = 200;
+  response.statusCode = OK_REQUEST.code;
+  response.message = OK_REQUEST.message;
 
   response.end(JSON.stringify({
     originalCase,

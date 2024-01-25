@@ -1,3 +1,9 @@
+const {
+  CASE_NOT_SUPPORTED,
+  NO_TARGET_CASE,
+  NO_TEXT,
+} = require('./VALIDATION_ERRORS');
+
 function parseRequestUrl(request) {
   const reqUrl = new URL(request.url, `http://${request.headers.host}`);
   const targetCase = reqUrl.searchParams.get('toCase');
@@ -12,20 +18,17 @@ function validateData(targetCase, originalText) {
 
   if (!originalText) {
     errors.push({
-      // eslint-disable-next-line max-len
-      message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: NO_TEXT,
     });
   }
 
   if (!targetCase) {
     errors.push({
-      // eslint-disable-next-line max-len
-      message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: NO_TARGET_CASE,
     });
   } else if (!cases.includes(targetCase)) {
     errors.push({
-      // eslint-disable-next-line max-len
-      message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      message: CASE_NOT_SUPPORTED,
     });
   }
 

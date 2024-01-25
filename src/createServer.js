@@ -4,21 +4,23 @@ const { sendErrorResponse, sendSuccessResponse } = require('./reponseHandlers');
 
 function createServer() {
   const server = http.createServer((request, response) => {
-    if (request.url !== '/favicon.ico') {
-      const { targetCase, originalText } = parseRequestUrl(request);
+    if (request.url === '/favicon.ico') {
+      return;
+    };
 
-      response.setHeader('Content-Type', 'application/json');
+    const { targetCase, originalText } = parseRequestUrl(request);
 
-      const { errors } = validateData(targetCase, originalText);
+    response.setHeader('Content-Type', 'application/json');
 
-      if (errors.length) {
-        sendErrorResponse(response, errors);
+    const { errors } = validateData(targetCase, originalText);
 
-        return;
-      }
+    if (errors.length) {
+      sendErrorResponse(response, errors);
 
-      sendSuccessResponse(response, originalText, targetCase);
+      return;
     }
+
+    sendSuccessResponse(response, originalText, targetCase);
   });
 
   return server;
