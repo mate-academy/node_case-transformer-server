@@ -2,7 +2,7 @@
 const findErrors = (text, caseName) => {
   const errors = [];
 
-  if (!text || text === '') {
+  if (!text) {
     errors.push({ message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".' });
   }
 
@@ -14,9 +14,7 @@ const findErrors = (text, caseName) => {
 
   if (caseName && !possibleCases.includes(caseName)) {
     errors.push({
-      message: `This case is not supported. Available cases: ${possibleCases.join(
-        ', ',
-      ) + '.'}`,
+      message: `This case is not supported. Available cases: ${possibleCases.join(', ')}.`,
     });
   }
 
