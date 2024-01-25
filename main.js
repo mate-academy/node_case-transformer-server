@@ -1,4 +1,4 @@
-const { createServer } = require('./src/createServer');
+const { createServer } = require('./src/createServer.js');
 
 createServer()
   .listen(5700, () => {
