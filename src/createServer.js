@@ -2,6 +2,12 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 
+const VALIDATION_ERRORS = {
+  NO_TEXT: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+  NO_CASE: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+  INVALID_CASE: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+};
+
 const createServer = () => {
   const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
   const server = http.createServer((req, res) => {
@@ -17,34 +23,31 @@ const createServer = () => {
     };
 
     if (!originalText) {
-      errorMessages.errors
-        .push({
-          message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        });
+      errorMessages.errors.push({ message: VALIDATION_ERRORS.NO_TEXT });
     }
 
     if (!targetCase) {
-      errorMessages.errors
-        .push({
-          message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        });
+      errorMessages.errors.push({ message: VALIDATION_ERRORS.NO_CASE });
     }
 
     if (!cases.includes(targetCase) && targetCase) {
-      errorMessages.errors
-        .push({
-          message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-        });
+      errorMessages.errors.push({ message: VALIDATION_ERRORS.INVALID_CASE });
     }
 
-    if (!errorMessages.errors.length) {
+    if (errorMessages.errors.length) {
+      res.statusCode = 400;
+      res.end(JSON.stringify(errorMessages));
+    } else {
       const { originalCase, convertedText } = convertToCase(originalText, targetCase);
 
+      res.statusCode = 200;
+
       res.end(JSON.stringify({
-        originalCase, targetCase, originalText, convertedText,
+        originalCase,
+        targetCase,
+        originalText,
+        convertedText,
       }));
-    } else {
-      res.end(JSON.stringify(errorMessages));
     }
   });
 
