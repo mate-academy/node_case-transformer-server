@@ -2,12 +2,14 @@ const http = require('http');
 const { convertToCase } = require('./convertToCase');
 const { findErrors } = require('./validation');
 
+const PORT = process.env.PORT || 5700;
+
 const createServer = () => {
   return http.createServer((req, res) => {
     res.setHeader('Content-type', 'application/json');
 
     const { url } = req;
-    const normURL = new URL(url, 'http://localhost:5700');
+    const normURL = new URL(url, `http://localhost:${PORT}`);
     const [text] = url.slice(1).split('?');
     const caseName = normURL.searchParams.get('toCase');
 
@@ -15,6 +17,7 @@ const createServer = () => {
 
     if (errorsList.length > 0) {
       res.statusCode = 400;
+      res.statusMessage = 'Bad request';
 
       return res.end(JSON.stringify({ errors: errorsList }));
     }
@@ -22,6 +25,7 @@ const createServer = () => {
     const { originalCase, convertedText } = convertToCase(text, caseName);
 
     res.statusCode = 200;
+    res.statusMessage = 'Ok';
 
     res.end(
       JSON.stringify({
