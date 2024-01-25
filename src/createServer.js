@@ -14,8 +14,6 @@ const createServer = () => {
     const originalText = myURL.pathname.slice(1);
     const targetCase = myURL.searchParams.get('toCase');
 
-    console.log(originalText, targetCase);
-
     const errors = [];
 
     if (!originalText) {
