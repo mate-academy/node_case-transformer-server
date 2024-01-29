@@ -10,7 +10,7 @@ const errorMessages = {
 const findErrors = (text, caseName) => {
   const errors = [];
 
-  if (!text || text === '') {
+  if (!text) {
     errors.push({ message: errorMessages.textNotFound });
   }
 

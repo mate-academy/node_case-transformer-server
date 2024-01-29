@@ -6,7 +6,7 @@ const createServer = () => {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-type', 'application/json');
 
-    const newURL = new URL(req.url, 'http://localhost:5700');
+    const newURL = new URL(req.url, `http://${req.headers.host}`);
     const [text] = req.url.slice(1).split('?');
     const caseName = newURL.searchParams.get('toCase');
 
