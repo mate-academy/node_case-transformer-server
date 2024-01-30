@@ -2,7 +2,7 @@ const CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 const validate = (text, caseName) => {
   const errors = [];
 
-  if (text === '') {
+  if (!text) {
     errors.push({
       message:
         'Text to convert is required.'
@@ -14,11 +14,11 @@ const validate = (text, caseName) => {
     errors.push({
       message:
         'This case is not supported. '
-        + 'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        + 'Available cases: ' + CASES.join(', ') + '.',
     });
   }
 
-  if (caseName === null) {
+  if (!caseName) {
     errors.push({
       message:
         '"toCase" query param is required. '
