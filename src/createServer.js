@@ -15,6 +15,10 @@ function createServer() {
     const targetCase = normalizedURL.searchParams.get('toCase');
 
     try {
+      if (!originalText) {
+        throw new Error('Text should not be null');
+      }
+
       const convertedText = await convertToCase(originalText, targetCase);
 
       res.end(JSON.stringify({

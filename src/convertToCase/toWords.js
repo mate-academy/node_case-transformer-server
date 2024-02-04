@@ -7,10 +7,6 @@
  * @returns {string[]}
  */
 function toWords(text, originalCase) {
-  if (!text) {
-    throw new Error('Text should not be null');
-  }
-
   if (
     ['SNAKE', 'KEBAB', 'UPPER'].includes(originalCase)
   ) {
