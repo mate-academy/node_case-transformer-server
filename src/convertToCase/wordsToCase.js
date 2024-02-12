@@ -1,3 +1,5 @@
+const { toCaseValues } = require('../constants');
+
 /**
  * @typedef {'SNAKE' | 'KEBAB' | 'CAMEL' | 'PASCAL' | 'UPPER'} CaseName
  *
@@ -8,25 +10,25 @@
  */
 function wordsToCase(words, caseName) {
   switch (caseName) {
-    case 'SNAKE': {
+    case toCaseValues.SNAKE: {
       return words.join('_');
     }
 
-    case 'KEBAB': {
+    case toCaseValues.KEBAB: {
       return words.join('-');
     }
 
-    case 'UPPER': {
+    case toCaseValues.UPPER: {
       return words.map((word) => word.toUpperCase()).join('_');
     }
 
-    case 'PASCAL': {
+    case toCaseValues.PASCAL: {
       return words.map((word) => {
         return `${word[0].toUpperCase()}${word.slice(1)}`;
       }).join('');
     }
 
-    case 'CAMEL': {
+    case toCaseValues.CAMEL: {
       return words.map((word, index) => {
         if (index === 0) {
           return word;

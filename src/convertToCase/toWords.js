@@ -1,3 +1,5 @@
+const { toCaseValues } = require('../constants');
+
 /**
  * @typedef {'SNAKE' | 'KEBAB' | 'CAMEL' | 'PASCAL' | 'UPPER'} CaseName
  *
@@ -7,8 +9,14 @@
  * @returns {string[]}
  */
 function toWords(text, originalCase) {
+  const capitalizedCases = [
+    toCaseValues.SNAKE,
+    toCaseValues.KEBAB,
+    toCaseValues.UPPER,
+  ];
+
   if (
-    ['SNAKE', 'KEBAB', 'UPPER'].includes(originalCase)
+    capitalizedCases.includes(originalCase)
   ) {
     return text.split(/[_-]/).map((str) => str.toLowerCase());
   }
