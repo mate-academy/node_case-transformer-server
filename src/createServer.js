@@ -1,6 +1,9 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
-const { paramValidator, sendResponse } = require('./server');
+const {
+  paramValidator,
+  sendResponse,
+} = require('./server');
 
 function createServer() {
   const server = http.createServer((req, res) => {
