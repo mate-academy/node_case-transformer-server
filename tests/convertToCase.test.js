@@ -1,6 +1,6 @@
 const {
   convertToCase,
-} = require('../src/convertToCase');
+} = require('../src/helpers/convertToCase');
 
 describe('convertToCase', () => {
   const cases = {
