@@ -1,7 +1,5 @@
 const { createServer } = require('./src/createServer');
+const PORT = process.env.PORT;
+const server = createServer();
 
-createServer()
-  .listen(5700, () => {
-    // eslint-disable-next-line no-console
-    console.log('Server started! 🚀');
-  });
+server.listen(PORT);
