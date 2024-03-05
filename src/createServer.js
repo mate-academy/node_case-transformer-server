@@ -3,50 +3,17 @@
 // and import (require) them here
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const { checkErrors } = require('./checkErrors');
 
 function createServer() {
   return http.createServer((req, res) => {
     const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
-    const errors = [];
     const textToConvert = normalizedUrl.pathname.slice(1);
     const targetCase = normalizedUrl.searchParams.get('toCase');
+    const errors = checkErrors(textToConvert, targetCase);
 
-    console.log(errors);
-
-    if (!targetCase) {
-      errors.push(
-        '"toCase" query param is required. Correct request is:'
-          + '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      );
-    }
-
-    if (!textToConvert) {
-      errors.push(
-        {
-          message: 'Text to convert is required. Correct request is:'
-          + '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        },
-      );
-    }
-
-    if (!textToConvert) {
-      errors.push(
-        {
-          message: 'Text to convert is required. Correct request is:'
-          + '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        },
-      );
-    }
-
-    const { originalCase, convertedText } = convertToCase(
-      textToConvert,
-      targetCase,
-    );
-
-    if (errors.length) {
-      // res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.statusCode = 400;
-      res.statusMessage = 'Bad request';
+    if (errors) {
+      res.writeHead(400, 'Bad request', { 'Content-Type': 'application/json' });
 
       res.end(
         JSON.stringify({
@@ -54,6 +21,11 @@ function createServer() {
         }),
       );
     } else {
+      const { originalCase, convertedText } = convertToCase(
+        textToConvert,
+        targetCase,
+      );
+
       res.writeHead(200, { 'Content-Type': 'application/json' });
 
       res.end(
