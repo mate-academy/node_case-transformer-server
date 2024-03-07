@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+
 // Write code here
 // Also, you can create additional files in the src folder
 // and import (require) them here
@@ -6,28 +6,16 @@
 const http = require('http');
 const { detectCase } = require('./convertToCase/detectCase');
 const { convertToCase } = require('./convertToCase');
-const { validateCase } = require('./validateCase');
+const { getErrors } = require('./getErrors');
 
 function createServer() {
   const server = http.createServer((req, res) => {
+    const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
+    const toCase = normalizedURL.searchParams.get('toCase');
+    const text = req.url.split('?')[0].slice(1);
+
     try {
-      const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
-      const toCase = normalizedURL.searchParams.get('toCase');
-      const text = req.url.split('?')[0].slice(1);
-
-      const errors = [];
-
-      if (!text) {
-        errors.push('Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".');
-      }
-
-      if (!toCase) {
-        errors.push('"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".');
-      }
-
-      if (toCase && !validateCase(toCase)) {
-        errors.push('This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.');
-      }
+      const errors = getErrors(text, toCase);
 
       if (errors.length > 0) {
         throw errors;
