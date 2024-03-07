@@ -5,14 +5,7 @@
 
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
-const { sendError } = require('./utils/sendError');
-
-const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-const errorMessages = {
-  noText: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-  noCase: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-  invalidCase: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-};
+const { handleErrors } = require('./utils/handleErorrs');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -22,23 +15,9 @@ const createServer = () => {
     const textToConvert = pathname.slice(1);
     const targetCase = searchParams.get('toCase');
 
-    const messages = [];
+    const hasAnyErrors = handleErrors(res, textToConvert, targetCase);
 
-    if (!textToConvert) {
-      messages.push({ message: errorMessages.noText });
-    }
-
-    if (!targetCase) {
-      messages.push({ message: errorMessages.noCase });
-    }
-
-    if (targetCase && !supportedCases.includes(targetCase)) {
-      messages.push({ message: errorMessages.invalidCase });
-    }
-
-    if (messages.length > 0) {
-      sendError(res, 400, messages);
-
+    if (hasAnyErrors) {
       return;
     }
 
