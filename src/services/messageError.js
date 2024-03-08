@@ -16,7 +16,7 @@ const messageError = (originalText, targetCase) => {
     errors.push(ERROR_TOCASE_MISSING);
   };
 
-  if (!CASE_NAME.includes(targetCase)) {
+  if (targetCase && !CASE_NAME.includes(targetCase)) {
     errors.push(ERROR_TOCASE_INVALID);
   }
 

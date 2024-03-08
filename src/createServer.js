@@ -14,17 +14,17 @@ const createServer = () => {
     const targetCase = new URLSearchParams(inputCase).get('toCase');
     const errors = messageError(originalText, targetCase);
 
-    const {
-      originalCase,
-      convertedText,
-    } = convertToCase(originalText, targetCase);
-
     if (errors.length) {
       respons.statusCode = 400;
       respons.end(JSON.stringify({ errors }));
 
       return;
     }
+
+    const {
+      originalCase,
+      convertedText,
+    } = convertToCase(originalText, targetCase);
 
     const result = {
       originalCase,
