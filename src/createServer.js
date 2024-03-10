@@ -12,12 +12,21 @@ function createServer() {
 
     const caseName = normalizedURL.searchParams.get('toCase');
 
+    const invalidTextToConvert = 'Text to convert is required. '
+    + 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+
+    const invalidCaseName = '"toCase" query param is required. Correct request'
+    + ' is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+
+    const casesVariables = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+    const caseInvalid = 'This case is not supported. Available'
+    + ' cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+
     if (!textToConvert) {
       errors.push(
         {
-          message:
-            'Text to convert is required. Correct request is:'
-            + ' "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+          message: invalidTextToConvert,
         },
       );
     }
@@ -25,19 +34,16 @@ function createServer() {
     if (!caseName) {
       errors.push(
         {
-          message:
-            '"toCase" query param is required. Correct request'
-            + ' is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+          message: invalidCaseName,
         },
       );
     } else if (
-      !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER']
+      !casesVariables
         .includes(caseName.toUpperCase())
     ) {
       errors.push(
         {
-          message: 'This case is not supported. Available'
-            + ' cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+          message: caseInvalid,
         },
       );
     }
