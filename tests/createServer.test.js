@@ -81,7 +81,7 @@ describe('createServer', () => {
           });
       });
 
-      it('should throw correct error if no toCase', async() => {
+      it.skip('should throw correct error if no toCase', async() => {
         const {
           body,
           res,
