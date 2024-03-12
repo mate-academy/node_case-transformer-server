@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 const http = require('http');
 
 const {
@@ -11,28 +12,37 @@ function createServer() {
     const textToConvert = normalizedURL.pathname.slice(1);
     const caseName = normalizedURL.searchParams.get('toCase');
     const caseNames = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+    const ERROR_MESSAGES = {
+      textToConvertRequired: 'Text to convert is required.' +
+        ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      caseNameRequired: '"toCase" query param is required.' +
+        ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      unsupportedCase: 'This case is not supported.' +
+        ' Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+    };
+    const STATUS_CODES = {
+      successStatus: 200,
+      badRequestStatus: 400,
+    };
 
     if (!textToConvert) {
       errors.push({
-        message: 'Text to convert is required.' +
-          ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: ERROR_MESSAGES.textToConvertRequired,
       });
     }
 
     if (!caseName) {
       errors.push({
-        message: '"toCase" query param is required.' +
-          ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: ERROR_MESSAGES.caseNameRequired,
       });
     } else if (!caseNames.includes(caseName)) {
       errors.push({
-        message: 'This case is not supported.' +
-          ' Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        message: ERROR_MESSAGES.unsupportedCase,
       });
     }
 
     if (errors.length) {
-      res.writeHead(400, 'Bad request', {
+      res.writeHead(STATUS_CODES.badRequestStatus, 'Bad request', {
         'Content-Type': 'application/json',
       });
 
@@ -40,7 +50,7 @@ function createServer() {
         errors,
       }));
     } else {
-      res.writeHead(200, 'OK', {
+      res.writeHead(STATUS_CODES.successStatus, 'OK', {
         'Content-Type': 'application/json',
       });
 
