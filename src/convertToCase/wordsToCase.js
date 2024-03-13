@@ -21,19 +21,23 @@ function wordsToCase(words, caseName) {
     }
 
     case 'PASCAL': {
-      return words.map((word) => {
-        return `${word[0].toUpperCase()}${word.slice(1)}`;
-      }).join('');
+      return words
+        .map((word) => {
+          return `${word[0].toUpperCase()}${word.slice(1)}`;
+        })
+        .join('');
     }
 
     case 'CAMEL': {
-      return words.map((word, index) => {
-        if (index === 0) {
-          return word;
-        }
+      return words
+        .map((word, index) => {
+          if (index === 0) {
+            return word;
+          }
 
-        return `${word[0].toUpperCase()}${word.slice(1)}`;
-      }).join('');
+          return `${word[0].toUpperCase()}${word.slice(1)}`;
+        })
+        .join('');
     }
 
     default: {

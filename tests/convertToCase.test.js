@@ -1,6 +1,4 @@
-const {
-  convertToCase,
-} = require('../src/convertToCase');
+const { convertToCase } = require('../src/convertToCase');
 
 describe('convertToCase', () => {
   const cases = {
@@ -13,14 +11,13 @@ describe('convertToCase', () => {
 
   Object.entries(cases).forEach(([toCase, expected]) => {
     Object.entries(cases).forEach(([originalCase, text]) => {
-      it(`should convert ${originalCase} to ${toCase}`, async() => {
+      it(`should convert ${originalCase} to ${toCase}`, async () => {
         const result = convertToCase(text, toCase);
 
-        expect(result)
-          .toEqual({
-            originalCase,
-            convertedText: expected,
-          });
+        expect(result).toEqual({
+          originalCase,
+          convertedText: expected,
+        });
       });
     });
   });
