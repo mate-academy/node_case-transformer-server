@@ -2,6 +2,31 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 
+function handleErrors(toCase, text) {
+  const errors = [];
+  const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+  if (!toCase) {
+    errors.push({
+      message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    });
+  }
+
+  if (!text) {
+    errors.push({
+      message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    });
+  }
+
+  if (!cases.includes(toCase)) {
+    errors.push({
+      message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+    });
+  }
+
+  return errors;
+}
+
 function createServer() {
   const server = http.createServer((req, res) => {
     res.setHeader('content-type', 'application/json');
@@ -12,38 +37,23 @@ function createServer() {
     const text = url.replace(/^\//, '');
     const toCase = params.get('toCase');
 
-    const errors = [];
+    const CODE_STATUS_400 = 'Bad Request';
+    const CODE_STATUS_500 = 'Internal Server Error';
 
-    if (!toCase) {
-      errors.push({
-        message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    }
-
-    if (!text) {
-      errors.push({
-        message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    }
-
-    if (!['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase)) {
-      errors.push({
-        message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-      });
-    }
+    const errors = handleErrors(toCase, text);
 
     if (errors.length > 0) {
-      res.writeHead(400, 'Bad Request');
+      res.writeHead(400, CODE_STATUS_400);
       res.end(JSON.stringify({ errors }));
 
       return;
     }
 
-    const result = convertToCase(text, toCase);
+    const { originalCase, convertedText } = convertToCase(text, toCase);
 
-    if (!result || !result.originalCase || !result.convertedText) {
-      res.writeHead(500, 'Internal Server Error');
-      res.end(JSON.stringify({ error: 'Internal Server Error' }));
+    if (!originalCase || !convertedText) {
+      res.writeHead(500, CODE_STATUS_500);
+      res.end(JSON.stringify({ error: CODE_STATUS_500 }));
 
       return;
     }
@@ -51,10 +61,10 @@ function createServer() {
     res.writeHead(200, 'OK');
 
     const responseBody = {
-      originalCase: result.originalCase,
+      originalCase,
       targetCase: toCase,
       originalText: text,
-      convertedText: result.convertedText,
+      convertedText,
     };
 
     res.end(JSON.stringify(responseBody));
