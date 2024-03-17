@@ -40,9 +40,9 @@ function wordsToCase(words, caseName) {
         .join('');
     }
 
-    default: {
-      throw new Error(`Unknown case name: ${caseName}`);
-    }
+    // default: {
+    //   throw new Error(`Unknown case name: ${caseName}`);
+    // }
   }
 }
 
