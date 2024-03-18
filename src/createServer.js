@@ -6,21 +6,25 @@ function handleErrors(toCase, text) {
   const errors = [];
   const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
+  const toCaseMessage = '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+  const textMessage = 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+  const casesMessage = 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+
   if (!toCase) {
     errors.push({
-      message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: toCaseMessage,
     });
   }
 
   if (!text) {
     errors.push({
-      message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      message: textMessage,
     });
   }
 
   if (!cases.includes(toCase)) {
     errors.push({
-      message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      message: casesMessage,
     });
   }
 
@@ -37,6 +41,7 @@ function createServer() {
     const text = url.replace(/^\//, '');
     const toCase = params.get('toCase');
 
+    const CODE_STATUS_200 = 'OK';
     const CODE_STATUS_400 = 'Bad Request';
     const CODE_STATUS_500 = 'Internal Server Error';
 
@@ -58,7 +63,7 @@ function createServer() {
       return;
     }
 
-    res.writeHead(200, 'OK');
+    res.writeHead(200, CODE_STATUS_200);
 
     const responseBody = {
       originalCase,
