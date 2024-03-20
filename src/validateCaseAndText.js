@@ -1,7 +1,7 @@
 const validateCaseAndText = (caseType, text) => {
   const errorMessages = [];
   const validCaseTypes = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-  const validCaseTypesString = validCaseTypes.toString().replaceAll(',', ', ');
+  const validCaseTypesString = validCaseTypes.join(', ');
   const isCaseValid = validCaseTypes.includes(caseType);
   const correctRequestString =
     'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
