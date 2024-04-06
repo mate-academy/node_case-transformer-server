@@ -30,7 +30,7 @@ const createServer = () => {
     }
 
     if (errors.length > 0) {
-      res.writeHead(400);
+      res.statusCode = 400;
       res.end(JSON.stringify({ errors }));
 
       return;
@@ -48,7 +48,7 @@ const createServer = () => {
       convertedText,
     };
 
-    res.writeHead(200);
+    res.statusCode = 200;
     res.end(JSON.stringify(responseBody));
   });
 
