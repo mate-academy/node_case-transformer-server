@@ -1,7 +1,16 @@
 const http = require('http');
 const url = require('url');
 const { convertToCase } = require('./convertToCase');
-const casesToConvert = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const { getErrors } = require('./convertToCase/getErrors');
+const CASES_TO_CONVERT = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+const ERROR_MESSAGES = {
+  textToConvertError: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+
+  toCaseError: `"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+
+  caseToConvertError: `This case is not supported. Available cases: ${CASES_TO_CONVERT.join(', ')}.`,
+};
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -11,23 +20,12 @@ const createServer = () => {
     const textToConvert = normalizedUrl.pathname.slice(1);
     const toCase = normalizedUrl.searchParams.get('toCase');
 
-    const errors = [];
-
-    if (!textToConvert) {
-      errors.push({
-        message: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
-      });
-    }
-
-    if (!toCase) {
-      errors.push({
-        message: `"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
-      });
-    } else if (!casesToConvert.includes(toCase.toUpperCase())) {
-      errors.push({
-        message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
-      });
-    }
+    const errors = getErrors(
+      textToConvert,
+      toCase,
+      CASES_TO_CONVERT,
+      ERROR_MESSAGES,
+    );
 
     if (errors.length > 0) {
       res.statusCode = 400;
