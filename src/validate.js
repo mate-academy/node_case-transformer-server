@@ -1,16 +1,7 @@
-const validCases = ['SNAKE', 'CAMEL', 'KEBAB', 'PASCAL', 'UPPER'];
+const { validCases } = require('./validCases');
+const { errorMessages } = require('./errorMessages');
 
-const noTextErrorMessage =
-  'Text to convert is required. ' +
-  'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-
-const noParamsErrorMessage =
-  '"toCase" query param is required. ' +
-  'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-
-const invalidCaseErrorMessage =
-  'This case is not supported. ' +
-  'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+const { noTextToConvert, noParams, invalidCase } = errorMessages;
 
 function createMessage(message) {
   return { message: message };
@@ -22,26 +13,25 @@ function validate(textToConvert, toCase) {
 
   const isInvalidCase = !validCases.includes(toCase);
 
-  if (!textToConvert || !toCase || isInvalidCase) {
+  if (!textToConvert) {
+    errors.push(createMessage(noTextToConvert));
+  }
+
+  if (!toCase) {
+    errors.push(createMessage(noParams));
+  }
+
+  if (isInvalidCase && !!toCase) {
+    errors.push(createMessage(invalidCase));
+  }
+
+  if (!errors.length) {
+    response.valid = true;
+  } else {
     response.statusCode = 400;
     response.statusText = 'Bad Request';
-
-    if (!textToConvert) {
-      errors.push(createMessage(noTextErrorMessage));
-    }
-
-    if (!toCase) {
-      errors.push(createMessage(noParamsErrorMessage));
-    }
-
-    if (isInvalidCase && !!toCase) {
-      errors.push(createMessage(invalidCaseErrorMessage));
-    }
-
-    response.errors = errors;
     response.valid = false;
-  } else {
-    response.valid = true;
+    response.errors = errors;
   }
 
   return response;
