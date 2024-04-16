@@ -1,14 +1,6 @@
-/* eslint-disable no-console */
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
-
-const PORT = process.env.PORT || 5701;
-const SUPPORTEDCASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-const ERRORMESSAGE = {
-  textRequired: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
-  caseRequired: `"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
-  caseSupported: `This case is not supported. Available cases: ${SUPPORTEDCASES.join(', ')}.`,
-};
+const { PORT, SUPPORTEDCASES, ERRORMESSAGE } = require('./constants');
 
 function createServer() {
   const server = http.createServer((req, res) => {
@@ -39,7 +31,7 @@ function createServer() {
       }
 
       if (errors.length) {
-        throw new Error('error');
+        throw new Error(errors.join(', '));
       }
 
       const { originalCase, convertedText } = convertToCase(text, targetCase);
