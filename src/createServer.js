@@ -17,7 +17,7 @@ const createServer = () => {
       req.statusCode = 400;
       req.statusMessage = 'Bad request';
 
-      return res.end(JSON.stringify(errors));
+      return res.end(JSON.stringify({ errors }));
     } else {
       req.statusCode = 200;
       req.statusMessage = 'OK';
