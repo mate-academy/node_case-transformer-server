@@ -15,6 +15,8 @@ const validateCase = (originalText, targetCase) => {
 
   if (!targetCase) {
     errors.push({ message: errorMessages[1] });
+
+    return errors;
   }
 
   if (!cases.includes(targetCase)) {
