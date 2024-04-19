@@ -33,7 +33,7 @@ function createServer() {
     const caseName = searchParams.get('toCase');
 
     if (!text || !caseName || !supportedCases[caseName]) {
-      res.statusCode = 404;
+      res.statusCode = 400;
       res.statusMessage = 'Bad request';
 
       const errorObject = { errors: [] };
