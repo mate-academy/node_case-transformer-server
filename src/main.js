@@ -1,6 +1,5 @@
 const { createServer } = require('./createServer');
-
-const PORT = process.argv.PORT || 5700;
+const { PORT } = require('./convertToCase/constans');
 
 createServer().listen(PORT, () => {
   // eslint-disable-next-line no-console

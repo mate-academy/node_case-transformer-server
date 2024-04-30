@@ -1,36 +1,34 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
+const {
+  PORT,
+  availableToCases,
+  errorMessage,
+} = require('./convertToCase/constans');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    const normalizedUrl = new URL(req.url, 'http://localhost:5700');
+    const normalizedUrl = new URL(req.url, `http://localhost:${PORT}`);
 
-    const availableToCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
     const requestText = normalizedUrl.pathname.slice(1);
     const toCase = normalizedUrl.searchParams.get('toCase');
     const errors = [];
 
     if (!requestText) {
       errors.push({
-        message:
-          /* eslint-disable-next-line */
-          'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: errorMessage.textRequired,
       });
     }
 
     if (!toCase) {
       errors.push({
-        message:
-          /* eslint-disable-next-line */
-          '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: errorMessage.caseRequired,
       });
     } else if (!availableToCases.includes(toCase)) {
       errors.push({
-        message:
-          /* eslint-disable-next-line */
-          'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        message: errorMessage.caseSupported,
       });
     }
 
