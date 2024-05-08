@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
+const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
 const validator = (text, caseToTransform) => {
-  const errors = [];
-  const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+  const errors = [];  
 
   if (!text.length) {
     errors.push({
@@ -20,7 +21,7 @@ const validator = (text, caseToTransform) => {
   if (!availableCases.includes(caseToTransform) && caseToTransform) {
     errors.push({
       message:
-        'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+         `This case is not supported. Available cases: ${availableCases.join(', ')}.`,
     });
   }
 
