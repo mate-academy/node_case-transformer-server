@@ -1,75 +1,63 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 
-const PORT = process.env.PORT;
-const createServer = () => {
+function createServer() {
   const server = http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'application/json');
+    const normUrl = new URL(req.url, 'http://localhost:5700');
+    const text = normUrl.pathname.slice(1);
+    const toCase = normUrl.searchParams.get('toCase');
+    const errorsArray = [];
 
-    const urlParts = req.url.split('?');
+    try {
+      if (!text) {
+        errorsArray.push({
+          message:
+            'Text to convert is required. Correct request is: ' +
+            '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        });
+      }
 
-    if (urlParts.length !== 2) {
-      res.statusCode = 400;
+      if (!toCase) {
+        errorsArray.push({
+          message:
+            '"toCase" query param is required. Correct request is: ' +
+            '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        });
+      }
 
-      return res.end(
-        JSON.stringify({ errors: [{ message: 'Invalid request format.' }] }),
-      );
+      if (
+        !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(
+          toCase.toUpperCase(),
+        )
+      ) {
+        errorsArray.push({
+          message:
+            'This case is not supported. Available cases: ' +
+            'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        });
+      }
+
+      if (errorsArray.length) {
+        throw new Error('error');
+      }
+
+      const result = convertToCase(text, toCase);
+      const response = {
+        originalCase: result.originalCase,
+        targetCase: toCase,
+        originalText: text,
+        convertedText: result.convertedText,
+      };
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(response));
+    } catch (error) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ errors: errorsArray }));
     }
-
-    const [textToConvert, queryString] = urlParts;
-    const params = new URLSearchParams(queryString);
-    const toCase = params.get('toCase');
-
-    if (!textToConvert) {
-      res.statusCode = 400;
-
-      return res.end(
-        JSON.stringify({
-          errors: [{ message: 'Text to convert is required.' }],
-        }),
-      );
-    }
-
-    if (!toCase) {
-      res.statusCode = 400;
-
-      return res.end(
-        JSON.stringify({
-          errors: [{ message: '"toCase" query param is required.' }],
-        }),
-      );
-    }
-
-    const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-    if (!supportedCases.includes(toCase.toUpperCase())) {
-      res.statusCode = 400;
-
-      return res.end(
-        JSON.stringify({
-          errors: [{ message: 'This case is not supported.' }],
-        }),
-      );
-    }
-
-    const { originalCase, convertedText } = convertToCase(
-      textToConvert,
-      toCase.toUpperCase(),
-    );
-
-    res.statusCode = 200;
-
-    res.end(
-      JSON.stringify({
-        originalCase,
-        targetCase: toCase.toUpperCase(),
-        originalText: textToConvert,
-        convertedText,
-      }),
-    );
   });
 
-  server.listen(PORT, () => {});
-};
+  return server;
+}
 
 module.exports = { createServer };
