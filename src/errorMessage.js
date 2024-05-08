@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
-const errorMessage = (text, toCase) => {
+const AVALIABLECASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+const generateErrorMessage = (text, toCase) => {
   const errors = [];
-  const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
   if (!text.length) {
     errors.push({
@@ -17,10 +18,9 @@ const errorMessage = (text, toCase) => {
     });
   }
 
-  if (!availableCases.includes(toCase) && toCase) {
+  if (!AVALIABLECASES.includes(toCase) && toCase) {
     errors.push({
-      message:
-        'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      message: `This case is not supported. Available cases: ${AVALIABLECASES.join(', ')}.`,
     });
   }
 
@@ -31,4 +31,4 @@ const errorMessage = (text, toCase) => {
   }
 };
 
-module.exports = { errorMessage };
+module.exports = { generateErrorMessage };

@@ -1,8 +1,6 @@
-/* eslint-disable max-len */
-// src/createServer.js
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
-const { errorMessage } = require('./errorMessage');
+const { generateErrorMessage } = require('./errorMessage');
 
 const PORT = 5700;
 
@@ -15,7 +13,7 @@ function createServer() {
     const text = pathname.substring(1);
     const toCase = searchParams.get('toCase');
 
-    const errorM = errorMessage(text, toCase);
+    const errorM = generateErrorMessage(text, toCase);
 
     if (errorM) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
