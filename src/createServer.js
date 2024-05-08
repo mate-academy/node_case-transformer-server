@@ -1,7 +1,7 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 const createServer = () => {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
