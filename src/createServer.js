@@ -1,5 +1,10 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
+const {
+  invalidText,
+  invalidToCase,
+  invalidToCaseValue,
+} = require('./utils/errors');
 
 const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
@@ -14,23 +19,17 @@ const createServer = () => {
 
     if (!word) {
       errors.push({
-        message:
-          // eslint-disable-next-line max-len
-          'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: invalidText,
       });
     }
 
     if (!query) {
       errors.push({
-        message:
-          // eslint-disable-next-line max-len
-          '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: invalidToCase,
       });
     } else if (!supportedCases.includes(query)) {
       errors.push({
-        message:
-          // eslint-disable-next-line max-len
-          'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        message: invalidToCaseValue,
       });
     }
 
