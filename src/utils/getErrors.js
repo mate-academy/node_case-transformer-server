@@ -1,3 +1,5 @@
+const CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
 function getErrors(originalText, toCase) {
   const errors = [];
 
@@ -13,16 +15,15 @@ function getErrors(originalText, toCase) {
     });
   }
 
-  if (
-    toCase &&
-    !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase)
-  ) {
+  if (toCase && !CASES.includes(toCase)) {
     errors.push({
-      message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
+      message: `This case is not supported. Available cases: ${CASES.join(', ')}.`,
     });
   }
 
-  return errors;
+  if (errors.length) {
+    throw errors;
+  }
 }
 
 module.exports = getErrors;
