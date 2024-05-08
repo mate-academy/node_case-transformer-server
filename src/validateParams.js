@@ -1,6 +1,6 @@
 const CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
-function validateParams(text, toCase) {
+function validateParams(text, targetCase) {
   const errors = [];
 
   if (!text) {
@@ -11,7 +11,7 @@ function validateParams(text, toCase) {
     });
   }
 
-  if (!toCase) {
+  if (!targetCase) {
     errors.push({
       message:
         // eslint-disable-next-line max-len
@@ -19,7 +19,7 @@ function validateParams(text, toCase) {
     });
   }
 
-  if (!CASES.includes(toCase) && toCase) {
+  if (!CASES.includes(targetCase) && targetCase) {
     errors.push({
       message:
         // eslint-disable-next-line max-len

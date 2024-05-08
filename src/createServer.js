@@ -1,4 +1,5 @@
 const http = require('http');
+
 const { validateParams } = require('./validateParams');
 const { convertToCase } = require('./convertToCase');
 
@@ -6,23 +7,22 @@ function createServer() {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    const [textToConvert, queryString] = req.url.slice(1).split('?');
-    const params = new URLSearchParams(queryString);
-    const toCase = params.get('toCase');
+    const [originalText, queryString] = req.url.slice(1).split('?');
+    const targetCase = new URLSearchParams(queryString).get('toCase');
 
     try {
-      validateParams(textToConvert, toCase);
+      validateParams(originalText, targetCase);
 
       const { originalCase, convertedText } = convertToCase(
-        textToConvert,
-        toCase,
+        originalText,
+        targetCase,
       );
 
       const response = {
-        originalCase: originalCase,
-        targetCase: toCase,
-        originalText: textToConvert,
-        convertedText: convertedText,
+        originalCase,
+        targetCase,
+        originalText,
+        convertedText,
       };
 
       res.statusCode = 200;
