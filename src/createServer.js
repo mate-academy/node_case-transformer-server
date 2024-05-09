@@ -5,7 +5,7 @@ const {
   sendResponse,
   sendTransformedResponse,
 } = require('./utils/helpers');
-const { statusCodes } = require('./utils/constants');
+const { statusCodes, errorMessages } = require('./utils/constants');
 
 function createServer() {
   const server = http.createServer((req, res) => {
@@ -22,7 +22,7 @@ function createServer() {
       }
     } catch {
       sendResponse(res, INTERNAL_SERVER_ERROR, {
-        errors: ['Internal server error'],
+        errors: [{ message: errorMessages.internalError }],
       });
     }
   });
