@@ -4,7 +4,7 @@ const { sendResponse } = require('./utils/sendResponse');
 const { parseRequest } = require('./utils/parseRequest');
 const { validateInput } = require('./utils/validation');
 
-const httpStatusCodes = {
+const HTTP_STATUS_CODES = {
   BAD_REQUEST: 400,
   OK: 200,
   INTERNAL_SERVER_ERROR: 500,
@@ -15,7 +15,7 @@ const validationMiddleware =
     const validationErrors = validateInput(originalText, targetCase);
 
     if (validationErrors.length > 0) {
-      sendResponse(res, httpStatusCodes.BAD_REQUEST, {
+      sendResponse(res, HTTP_STATUS_CODES.BAD_REQUEST, {
         errors: validationErrors,
       });
     } else {
@@ -46,7 +46,7 @@ function handleValidRequest(_req, res, originalText, targetCase) {
     targetCase,
   );
 
-  sendResponse(res, httpStatusCodes.OK, {
+  sendResponse(res, HTTP_STATUS_CODES.OK, {
     originalCase,
     targetCase,
     originalText,
@@ -55,7 +55,7 @@ function handleValidRequest(_req, res, originalText, targetCase) {
 }
 
 function handleInternalServerError(res) {
-  sendResponse(res, httpStatusCodes.INTERNAL_SERVER_ERROR, {
+  sendResponse(res, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, {
     errors: ['Internal server error'],
   });
 }
