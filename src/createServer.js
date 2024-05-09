@@ -38,7 +38,7 @@ function createServer() {
       res.statusMessage = 'OK';
       res.end(JSON.stringify(resBody));
     } catch (err) {
-      res.statusCode = 400;
+      res.statusCode = 500;
       res.end(console.log(err));
     }
   });
