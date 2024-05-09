@@ -1,6 +1,10 @@
 const http = require('http');
-const { parseUrl, sendResponse, validate } = require('./utils/helpers');
-const { convertToCase } = require('./convertToCase/convertToCase');
+const {
+  parseUrl,
+  validate,
+  sendResponse,
+  sendTransformedResponse,
+} = require('./utils/helpers');
 const { statusCodes } = require('./utils/constants');
 
 function createServer() {
@@ -22,20 +26,6 @@ function createServer() {
   });
 
   return server;
-}
-
-function sendTransformedResponse(res, targetCase, originalText) {
-  const { originalCase, convertedText } = convertToCase(
-    originalText,
-    targetCase,
-  );
-
-  sendResponse(res, statusCodes.OK, {
-    originalCase,
-    targetCase,
-    originalText,
-    convertedText,
-  });
 }
 
 module.exports = {

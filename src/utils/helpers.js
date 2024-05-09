@@ -1,4 +1,5 @@
-const { supportedCases } = require('./constants');
+const { convertToCase } = require('../convertToCase/convertToCase');
+const { supportedCases, statusCodes } = require('./constants');
 
 function parseUrl(req) {
   const splitted = req.url.split('?');
@@ -12,6 +13,20 @@ function sendResponse(res, statusCode, data) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = statusCode;
   res.end(JSON.stringify(data));
+}
+
+function sendTransformedResponse(res, targetCase, originalText) {
+  const { originalCase, convertedText } = convertToCase(
+    originalText,
+    targetCase,
+  );
+
+  sendResponse(res, statusCodes.OK, {
+    originalCase,
+    targetCase,
+    originalText,
+    convertedText,
+  });
 }
 
 function validate(targetCase, originalText) {
@@ -45,6 +60,7 @@ function validate(targetCase, originalText) {
 
 module.exports = {
   parseUrl,
-  sendResponse,
   validate,
+  sendResponse,
+  sendTransformedResponse,
 };
