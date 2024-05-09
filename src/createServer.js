@@ -34,8 +34,11 @@ function createServer() {
         convertedText,
       };
 
+      res.statusCode = 200;
+      res.statusMessage = 'OK';
       res.end(JSON.stringify(resBody));
     } catch (err) {
+      res.statusCode = 400;
       res.end(console.log(err));
     }
   });
