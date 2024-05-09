@@ -1,5 +1,5 @@
 const { convertToCase } = require('../convertToCase/convertToCase');
-const { supportedCases, statusCodes } = require('./constants');
+const { supportedCases, statusCodes, errorMessages } = require('./constants');
 
 function parseUrl(req) {
   const splitted = req.url.split('?');
@@ -31,17 +31,14 @@ function sendTransformedResponse(res, targetCase, originalText) {
 
 function validate(targetCase, originalText) {
   const errors = [];
+  const { caseRequired, textRequired, inValidCase } = errorMessages;
 
   if (!targetCase) {
-    errors.push({
-      message: `"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
-    });
+    errors.push({ message: caseRequired });
   }
 
   if (!originalText.trim()) {
-    errors.push({
-      message: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
-    });
+    errors.push({ message: textRequired });
   }
 
   if (
@@ -50,9 +47,7 @@ function validate(targetCase, originalText) {
       (supportedCase) => supportedCase === targetCase.toUpperCase(),
     )
   ) {
-    errors.push({
-      message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
-    });
+    errors.push({ message: inValidCase });
   }
 
   return errors;

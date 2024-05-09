@@ -9,17 +9,19 @@ const { statusCodes } = require('./utils/constants');
 
 function createServer() {
   const server = http.createServer((req, res) => {
+    const { BAD_REQUEST, INTERNAL_SERVER_ERROR } = statusCodes;
+
     try {
       const { targetCase, originalText } = parseUrl(req);
       const errors = validate(targetCase, originalText);
 
       if (errors.length > 0) {
-        sendResponse(res, statusCodes.BAD_REQUEST, { errors });
+        sendResponse(res, BAD_REQUEST, { errors });
       } else {
         sendTransformedResponse(res, targetCase, originalText);
       }
     } catch {
-      sendResponse(res, statusCodes.INTERNAL_SERVER_ERROR, {
+      sendResponse(res, INTERNAL_SERVER_ERROR, {
         errors: ['Internal server error'],
       });
     }
