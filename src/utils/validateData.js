@@ -1,17 +1,18 @@
 const CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const ERROR_MESSAGE = `Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`;
 
-function getErrors(originalText, targetCase) {
+function validateData(originalText, targetCase) {
   const errors = [];
 
   if (!originalText) {
     errors.push({
-      message: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+      message: `Text to convert is required. ${ERROR_MESSAGE}`,
     });
   }
 
   if (!targetCase) {
     errors.push({
-      message: `"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+      message: `"toCase" query param is required. ${ERROR_MESSAGE}`,
     });
   }
 
@@ -21,7 +22,9 @@ function getErrors(originalText, targetCase) {
     });
   }
 
-  return errors;
+  if (errors.length) {
+    throw errors;
+  }
 }
 
-module.exports = { getErrors };
+module.exports = { validateData };
