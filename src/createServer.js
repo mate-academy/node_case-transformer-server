@@ -1,5 +1,6 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const { validateText, validateToCase } = require('./validateData');
 
 function createServer() {
   const server = http.createServer((req, res) => {
@@ -8,53 +9,34 @@ function createServer() {
     const toCase = normUrl.searchParams.get('toCase');
     const errorsArray = [];
 
-    try {
-      if (!text) {
-        errorsArray.push({
-          message:
-            'Text to convert is required. Correct request is: ' +
-            '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        });
-      }
+    const textError = validateText(text);
+    const toCaseError = validateToCase(toCase);
 
-      if (!toCase) {
-        errorsArray.push({
-          message:
-            '"toCase" query param is required. Correct request is: ' +
-            '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        });
-      }
+    if (textError) {
+      errorsArray.push(textError);
+    }
 
-      if (
-        !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(
-          toCase.toUpperCase(),
-        )
-      ) {
-        errorsArray.push({
-          message:
-            'This case is not supported. Available cases: ' +
-            'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-        });
-      }
+    if (toCaseError) {
+      errorsArray.push(toCaseError);
+    }
 
-      if (errorsArray.length) {
-        throw new Error('error');
-      }
-
-      const result = convertToCase(text, toCase);
-      const response = {
-        originalCase: result.originalCase,
-        targetCase: toCase,
-        originalText: text,
-        convertedText: result.convertedText,
-      };
-
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(response));
-    } catch (error) {
+    if (errorsArray.length) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ errors: errorsArray }));
+
+      return;
     }
+
+    const result = convertToCase(text, toCase);
+    const response = {
+      originalCase: result.originalCase,
+      targetCase: toCase,
+      originalText: text,
+      convertedText: result.convertedText,
+    };
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(response));
   });
 
   return server;
