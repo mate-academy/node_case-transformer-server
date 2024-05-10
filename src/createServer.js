@@ -1,12 +1,6 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
-const {
-  invalidText,
-  invalidToCase,
-  invalidToCaseValue,
-} = require('./utils/errors');
-
-const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const { validateInput } = require('./inputValidator');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -15,23 +9,8 @@ const createServer = () => {
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
     const query = parsedUrl.searchParams.get('toCase') || '';
     const word = parsedUrl.pathname.slice(1);
-    const errors = [];
 
-    if (!word) {
-      errors.push({
-        message: invalidText,
-      });
-    }
-
-    if (!query) {
-      errors.push({
-        message: invalidToCase,
-      });
-    } else if (!supportedCases.includes(query)) {
-      errors.push({
-        message: invalidToCaseValue,
-      });
-    }
+    const errors = validateInput(word, query);
 
     if (errors.length > 0) {
       res.statusCode = 400;
