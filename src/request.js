@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const BASE_URL = 'http://localhost:5700';
 
-const href = BASE_URL + '/PascalTest' + '?toCase=SNAKE';
+const href = BASE_URL + '/PascalTest' + '?toCase=SsNAKE';
 
 axios
   .get(href)

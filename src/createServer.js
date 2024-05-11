@@ -1,34 +1,15 @@
 const http = require('http');
 const { convertToCase } = require('../src/convertToCase/convertToCase.js');
 const { errorTypes } = require('./errorTypes.js');
-
-const CASES = new Set(['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER']);
+const { checkForErrors } = require('./checkForErrors.js');
 
 function createServer() {
   return http.createServer((req, res) => {
     const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
-
-    const errors = [];
-
     const toCase = normalizedUrl.searchParams.get('toCase');
-
-    if (!toCase) {
-      errors.push({
-        message: errorTypes.toCaseRequired,
-      });
-    } else if (!CASES.has(toCase.toUpperCase())) {
-      errors.push({
-        message: errorTypes.toCaseNotSupported,
-      });
-    }
-
     const textToConvert = normalizedUrl.pathname.slice(1);
 
-    if (!textToConvert) {
-      errors.push({
-        message: errorTypes.textToConvertRequired,
-      });
-    }
+    const errors = checkForErrors(toCase, textToConvert);
 
     if (errors.length > 0) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -49,7 +30,7 @@ function createServer() {
       convertedText,
     };
 
-    if (originalCase !== null && convertedText !== null) {
+    if (originalCase && convertedText) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(response));
     } else {
