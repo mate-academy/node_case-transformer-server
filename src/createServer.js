@@ -1,37 +1,42 @@
 const http = require('http');
+const ERROR_MESSAGES = require('./utils/errors');
 const { convertToCase } = require('./convertToCase/convertToCase');
-const {
-  invalidText,
-  invalidToCase,
-  invalidToCaseValue,
-} = require('./utils/errors');
 
-const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const { INVALID_TEXT, INVALID_TO_CASE, INVALID_TO_CASE_VALUE } = ERROR_MESSAGES;
+
+const UPPER_CASE = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+function validateInput(word, query) {
+  const errors = [];
+
+  if (!word) {
+    errors.push({
+      message: INVALID_TEXT,
+    });
+  }
+
+  if (!query) {
+    errors.push({
+      message: INVALID_TO_CASE,
+    });
+  } else if (!UPPER_CASE.includes(query.toUpperCase())) {
+    errors.push({
+      message: INVALID_TO_CASE_VALUE,
+    });
+  }
+
+  return errors;
+}
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
-    const query = parsedUrl.searchParams.get('toCase') || '';
-    const word = parsedUrl.pathname.slice(1);
-    const errors = [];
+    const targetCase = parsedUrl.searchParams.get('toCase') || '';
+    const originalText = parsedUrl.pathname.slice(1);
 
-    if (!word) {
-      errors.push({
-        message: invalidText,
-      });
-    }
-
-    if (!query) {
-      errors.push({
-        message: invalidToCase,
-      });
-    } else if (!supportedCases.includes(query)) {
-      errors.push({
-        message: invalidToCaseValue,
-      });
-    }
+    const errors = validateInput(originalText, targetCase);
 
     if (errors.length > 0) {
       res.statusCode = 400;
@@ -41,10 +46,10 @@ const createServer = () => {
     }
 
     try {
-      const convertedWord = convertToCase(word, query);
+      const convertedWord = convertToCase(originalText, targetCase);
       const result = {
-        originalText: word,
-        targetCase: query.toUpperCase(),
+        originalText: originalText,
+        targetCase: targetCase.toUpperCase(),
         originalCase: convertedWord.originalCase,
         convertedText: convertedWord.convertedText,
       };
