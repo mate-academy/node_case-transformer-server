@@ -1,69 +1,41 @@
 const http = require('http');
-const ERROR_MESSAGES = require('./utils/errors');
-const { convertToCase } = require('./convertToCase/convertToCase');
+const { validateParams } = require('./utils/constants');
+const { convertToCase } = require('./convertToCase');
 
-const { INVALID_TEXT, INVALID_TO_CASE, INVALID_TO_CASE_VALUE } = ERROR_MESSAGES;
-
-const UPPER_CASE = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-function validateInput(word, query) {
-  const errors = [];
-
-  if (!word) {
-    errors.push({
-      message: INVALID_TEXT,
-    });
-  }
-
-  if (!query) {
-    errors.push({
-      message: INVALID_TO_CASE,
-    });
-  } else if (!UPPER_CASE.includes(query.toUpperCase())) {
-    errors.push({
-      message: INVALID_TO_CASE_VALUE,
-    });
-  }
-
-  return errors;
-}
-
-const createServer = () => {
+function createServer() {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
-    const targetCase = parsedUrl.searchParams.get('toCase') || '';
-    const originalText = parsedUrl.pathname.slice(1);
-
-    const errors = validateInput(originalText, targetCase);
-
-    if (errors.length > 0) {
-      res.statusCode = 400;
-      res.end(JSON.stringify({ errors }));
-
-      return;
-    }
+    const [textToConvert, queryString] = req.url.slice(1).split('?');
+    const params = new URLSearchParams(queryString);
+    const toCase = params.get('toCase');
 
     try {
-      const convertedWord = convertToCase(originalText, targetCase);
-      const result = {
-        originalText: originalText,
-        targetCase: targetCase.toUpperCase(),
-        originalCase: convertedWord.originalCase,
-        convertedText: convertedWord.convertedText,
+      validateParams(textToConvert, toCase);
+
+      const { originalCase, convertedText } = convertToCase(
+        textToConvert,
+        toCase,
+      );
+
+      const response = {
+        originalCase: originalCase,
+        targetCase: toCase,
+        originalText: textToConvert,
+        convertedText: convertedText,
       };
 
       res.statusCode = 200;
-      res.statusMessage = 'OK';
-      res.end(JSON.stringify(result));
-    } catch (error) {
+      res.end(JSON.stringify(response));
+    } catch (errors) {
       res.statusCode = 400;
-      res.end(JSON.stringify({ errors: [{ message: error.message }] }));
+      res.end(JSON.stringify({ errors }));
     }
   });
 
   return server;
-};
+}
 
-module.exports = { createServer };
+module.exports = {
+  createServer,
+};
