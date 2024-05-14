@@ -8,7 +8,7 @@ function validateInput(text, caseName) {
       '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
     unsupportedCase:
       'This case is not supported. Available cases: ' +
-      'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.'
+      'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
   };
 
   const errors = [];
