@@ -4,7 +4,7 @@ function validateInput(text, caseName) {
   if (!text) {
     errors.push({
       message:
-        'Text to convert is required. Correct request is:' +
+        'Text to convert is required. Correct request is: ' +
         '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
     });
   }
@@ -12,7 +12,7 @@ function validateInput(text, caseName) {
   if (!caseName) {
     errors.push({
       message:
-        '"toCase" query param is required. Correct request is:' +
+        '"toCase" query param is required. Correct request is: ' +
         '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
     });
   }
@@ -25,7 +25,7 @@ function validateInput(text, caseName) {
   ) {
     errors.push({
       message:
-        'This case is not supported. Available cases:' +
+        'This case is not supported. Available cases: ' +
         'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
     });
   }
