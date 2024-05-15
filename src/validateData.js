@@ -1,35 +1,33 @@
-function validateText(text) {
+/* eslint-disable max-len */
+const AVAILABLE_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+function validateParams(text, toCase) {
+  const errors = [];
+
   if (!text) {
-    return {
+    errors.push({
       message:
-        'Text to convert is required. Correct request is: ' +
-        '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-    };
+        'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    });
   }
 
-  return null;
-}
-
-const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-function validateToCase(toCase) {
   if (!toCase) {
-    return {
+    errors.push({
       message:
-        '"toCase" query param is required. Correct request is: ' +
-        '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-    };
+        '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    });
   }
 
-  if (!availableCases.includes(toCase.toUpperCase())) {
-    return {
+  if (!AVAILABLE_CASES.includes(toCase) && toCase) {
+    errors.push({
       message:
-        'This case is not supported. Available cases: ' +
-        'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-    };
+        'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+    });
   }
 
-  return null;
+  if (errors.length) {
+    throw errors;
+  }
 }
 
-module.exports = { validateText, validateToCase };
+module.exports = { validateParams };

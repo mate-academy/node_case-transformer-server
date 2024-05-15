@@ -1,45 +1,41 @@
 const http = require('http');
+const { validateParams } = require('./validateData');
 const { convertToCase } = require('./convertToCase');
-const { validateText, validateToCase } = require('./validateData');
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    const normUrl = new URL(req.url, 'http://localhost:5700');
-    const text = normUrl.pathname.slice(1);
-    const toCase = normUrl.searchParams.get('toCase');
-    const errorsArray = [];
+    res.setHeader('Content-Type', 'application/json');
 
-    const textError = validateText(text);
-    const toCaseError = validateToCase(toCase);
+    const [textToConvert, queryString] = req.url.slice(1).split('?');
+    const params = new URLSearchParams(queryString);
+    const toCase = params.get('toCase');
 
-    if (textError) {
-      errorsArray.push(textError);
+    try {
+      validateParams(textToConvert, toCase);
+
+      const { originalCase, convertedText } = convertToCase(
+        textToConvert,
+        toCase,
+      );
+
+      const response = {
+        originalCase: originalCase,
+        targetCase: toCase,
+        originalText: textToConvert,
+        convertedText: convertedText,
+      };
+
+      res.statusCode = 200;
+      res.end(JSON.stringify(response));
+    } catch (errors) {
+      res.statusCode = 400;
+      res.end(JSON.stringify({ errors }));
     }
-
-    if (toCaseError) {
-      errorsArray.push(toCaseError);
-    }
-
-    if (errorsArray.length) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ errors: errorsArray }));
-
-      return;
-    }
-
-    const result = convertToCase(text, toCase);
-    const response = {
-      originalCase: result.originalCase,
-      targetCase: toCase,
-      originalText: text,
-      convertedText: result.convertedText,
-    };
-
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(response));
   });
 
   return server;
 }
 
-module.exports = { createServer };
+module.exports = {
+  createServer,
+};
