@@ -1,6 +1,7 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const { urlValidation } = require('./urlValidation/urlValidation');
+// const { urlValidation } = require('./urlValidation/urlValidation');
 
 function createServer() {
   return http.createServer((req, res) => {
@@ -11,7 +12,9 @@ function createServer() {
     if (errors.length > 0) {
       res.statusCode = 400;
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(...errors));
+      res.end(JSON.stringify({ errors }));
+
+      return;
     }
 
     try {

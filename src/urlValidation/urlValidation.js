@@ -1,40 +1,27 @@
 function urlValidation(url) {
-  const [textToConvert, searchParams] = url.split('?');
-
   const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+  const [textToConvert, searchParams] = url.split('?');
 
   const errors = [];
   const params = new URLSearchParams(searchParams);
   const toCase = params.get('toCase');
   const normilizedText = textToConvert.slice(1);
 
-  /*   if (!cases.includes(toCase)) {
-    errors.push({
-      errors: [
-        {
-          message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
-        },
-      ],
-    });
-  } */
-
   if (textToConvert.length < 2) {
     errors.push({
-      errors: [
-        {
-          message: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
-        },
-      ],
+      message: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+    });
+  }
+
+  if (!cases.includes(toCase) && toCase !== null) {
+    errors.push({
+      message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
     });
   }
 
   if (!searchParams) {
     errors.push({
-      errors: [
-        {
-          message: `"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
-        },
-      ],
+      message: `"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
     });
   }
 
