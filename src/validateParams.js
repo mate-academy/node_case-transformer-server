@@ -23,7 +23,7 @@ function validateParams(text, targetCase) {
     errors.push({
       message:
         // eslint-disable-next-line max-len
-        'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        `This case is not supported. Available cases: ${CASES.join(', ')}.`,
     });
   }
 
