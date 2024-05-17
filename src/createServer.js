@@ -49,17 +49,17 @@ const createServer = () => {
       return;
     }
 
-    const convertedText = convertToCase(originalText, toCase);
+    const convertedTextData = convertToCase(originalText, toCase);
 
-    const result = {
+    const originalTextData = {
       originalCase,
       targetCase: toCase,
       originalText: originalText,
     };
 
-    const ress = Object.assign(result, convertedText);
+    const result = Object.assign(originalTextData, convertedTextData);
 
-    res.end(JSON.stringify(ress));
+    res.end(JSON.stringify(result));
   });
 };
 
