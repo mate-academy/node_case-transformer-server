@@ -1,5 +1,6 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const { validateInputData } = require('./utils/validateInputData');
 const { detectCase } = require('./convertToCase/detectCase');
 
 const PORT = process.env.PORT || 1595;
@@ -13,35 +14,7 @@ const createServer = () => {
 
     res.setHeader('Content-Type', 'application/json');
 
-    const errors = [];
-    const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-    const handleError = (message) => {
-      const error = { message };
-
-      errors.push(error);
-    };
-
-    if (!originalText) {
-      const errorMessage =
-        'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-
-      handleError(errorMessage);
-    }
-
-    if (toCase && !cases.includes(toCase)) {
-      const errorMessage =
-        'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
-
-      handleError(errorMessage);
-    }
-
-    if (!toCase) {
-      const errorMessage =
-        '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
-
-      handleError(errorMessage);
-    }
+    const errors = validateInputData(originalText, toCase);
 
     if (errors.length) {
       res.end(JSON.stringify({ errors }));
