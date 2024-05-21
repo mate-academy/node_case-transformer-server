@@ -138,11 +138,9 @@ const createServer = () => {
           res.end(JSON.stringify(resultObj));
           break;
         case 'CAMEL':
-          resultObj.convertedText =
-            normalizeText(textToConvert.slice(1))[0] +
-            normalizeText(textToConvert.slice(1))
-              .slice(1)
-              .map((word) => word[0].toUpperCase() + word.slice(1));
+          resultObj.convertedText = normalizeText(textToConvert.slice(1))
+            .map((w, i) => (i === 0 ? w : w[0].toUpperCase() + w.slice(1)))
+            .join('');
           resultObj.targetCase = 'CAMEL';
 
           res.setHeader('Content-Type', 'application/json');
