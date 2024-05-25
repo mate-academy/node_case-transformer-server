@@ -1,8 +1,8 @@
-const CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const SUPPORTED_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 const validateInputData = (originalText, toCase) => {
   const errors = [];
-  const isCaseNotSupported = toCase && !CASES.includes(toCase);
+  const isCaseNotSupported = toCase && !SUPPORTED_CASES.includes(toCase);
 
   const handleError = (message) => {
     const error = { message };
@@ -18,8 +18,7 @@ const validateInputData = (originalText, toCase) => {
   }
 
   if (isCaseNotSupported) {
-    const errorMessage =
-      'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+    const errorMessage = `This case is not supported. Available cases: ${SUPPORTED_CASES.join(', ')}.`;
 
     handleError(errorMessage);
   }

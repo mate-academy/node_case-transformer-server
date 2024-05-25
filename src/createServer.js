@@ -10,29 +10,31 @@ const createServer = () => {
     const normalizedUrl = new URL(req.url, `http://localhost:${PORT}`);
     const originalText = decodeURIComponent(normalizedUrl.pathname.slice(1));
     const originalCase = detectCase(originalText);
-    const toCase = normalizedUrl.searchParams.get('toCase');
+    const targetCase = normalizedUrl.searchParams.get('toCase');
 
     res.setHeader('Content-Type', 'application/json');
 
-    const errors = validateInputData(originalText, toCase);
+    const errors = validateInputData(originalText, targetCase);
 
-    if (errors.length) {
+    try {
+      if (errors.length) {
+        throw new Error(`${errors}`);
+      }
+
+      const convertedTextData = convertToCase(originalText, targetCase);
+
+      const originalTextData = {
+        originalCase,
+        targetCase,
+        originalText,
+      };
+
+      const result = Object.assign(originalTextData, convertedTextData);
+
+      res.end(JSON.stringify(result));
+    } catch (error) {
       res.end(JSON.stringify({ errors }));
-
-      return;
     }
-
-    const convertedTextData = convertToCase(originalText, toCase);
-
-    const originalTextData = {
-      originalCase,
-      targetCase: toCase,
-      originalText: originalText,
-    };
-
-    const result = Object.assign(originalTextData, convertedTextData);
-
-    res.end(JSON.stringify(result));
   });
 };
 
