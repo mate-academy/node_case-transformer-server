@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/createServer.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1718096083022,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1718096083022,
+            "name": "Commit-0",
+            "content": "// Write code here\n// Also, you can create additional files in the src folder\n// and import (require) them here\n// server.js\nconst http = require('http');\nconst { convertToCase } = require('./convertToCase');\nconst errorMessages = require('./errorMessages');\n\nfunction parseUrl(url) {\n  return url.slice(1).split('?toCase=');\n}\n\nfunction validateRequest(splitUrl) {\n  const errors = [];\n\n  if (splitUrl[0] === '') {\n    errors.push({ message: errorMessages.missingText });\n  }\n\n  if (splitUrl.length === 1) {\n    errors.push({ message: errorMessages.missingCase });\n  }\n\n  const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];\n  if (!supportedCases.includes(splitUrl[1]) && splitUrl.length !== 1) {\n    errors.push({ message: errorMessages.unsupportedCase });\n  }\n\n  return errors;\n}\n\nfunction handleRequest(req, res) {\n  res.setHeader('Content-Type', 'application/json');\n  res.statusCode = 200;\n\n  const splitUrl = parseUrl(req.url);\n  const errors = validateRequest(splitUrl);\n\n  if (errors.length > 0) {\n    res.statusCode = 400;\n    res.end(JSON.stringify({ errors }));\n  } else {\n    const { convertedText, originalCase } = convertToCase(...splitUrl.slice(0, 2));\n    res.end(JSON.stringify({\n      originalCase,\n      targetCase: splitUrl[1],\n      originalText: splitUrl[0],\n      convertedText,\n    }));\n  }\n}\n\nfunction createServer() {\n  return http.createServer(handleRequest);\n}\n\nmodule.exports = {\n  createServer,\n};\n"
+        }
+    ]
+}
