@@ -1,4 +1,5 @@
 const http = require('http');
+const { supportedCases } = require('./constants/constants');
 
 const createServer = () => {
   const server = http.createServer((req, res) => {
@@ -9,13 +10,25 @@ const createServer = () => {
     const params = new URLSearchParams(queryString);
     const toCase = params.get('toCase');
 
-    const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+    const STATUS_CODE_SUCCESS = 200;
 
     const errors = [];
 
     const hasTextToConvert = textToConvert !== '/';
 
-    const resultObj = {};
+    function sendResult(convertedText, targetCase, originalCase, originalText) {
+      res.setHeader('Content-Type', 'application/json');
+      res.statusCode = STATUS_CODE_SUCCESS;
+
+      res.end(
+        JSON.stringify({
+          targetCase,
+          convertedText,
+          originalText,
+          originalCase,
+        }),
+      );
+    }
 
     const pushErrorMessage = (message) => {
       errors.push({
@@ -50,102 +63,99 @@ const createServer = () => {
       res.end(JSON.stringify({ errors }));
     }
 
-    const normalizeText = (text) => {
+    const getCase = (text) => {
       if (text.includes('-')) {
-        resultObj.originalText = text;
-        resultObj.originalCase = 'KEBAB';
-
-        return text.split('-');
+        return 'KEBAB';
       }
 
       if (text.includes('_') && text !== text.toUpperCase()) {
-        resultObj.originalText = text;
-        resultObj.originalCase = 'SNAKE';
-
-        return text.split('_').map((word) => word.toLowerCase());
+        return 'SNAKE';
       }
 
       if (text.includes('_') && text === text.toUpperCase()) {
-        resultObj.originalText = text;
-        resultObj.originalCase = 'UPPER';
-
-        return text.split('_').map((word) => word.toLowerCase());
+        return 'UPPER';
       }
 
       if (
         text[0] === text[0].toUpperCase() &&
         text[1] === text[1].toLowerCase()
       ) {
-        const wordRe = /($[a-z])|[A-Z][^A-Z]+/g;
-
-        resultObj.originalText = text;
-        resultObj.originalCase = 'PASCAL';
-
-        return text.match(wordRe).map((word) => word.toLowerCase());
+        return 'PASCAL';
       }
 
       if (text[0] === text[0].toLowerCase() && text !== text.toLowerCase()) {
-        resultObj.originalText = text;
-        resultObj.originalCase = 'CAMEL';
+        return 'CAMEL';
+      }
+    };
 
-        return text
-          .replace(/([a-z])([A-Z])/g, '$1 $2')
-          .split(' ')
-          .map((word) => word.toLowerCase());
+    const normalizeText = (text, originalCase) => {
+      switch (originalCase) {
+        case 'KEBAB':
+          return text.split('-');
+        case 'SNAKE':
+        case 'UPPER':
+          return text.split('_').map((word) => word.toLowerCase());
+        case 'PASCAL':
+          const wordRe = /($[a-z])|[A-Z][^A-Z]+/g;
+
+          return text.match(wordRe).map((word) => word.toLowerCase());
+        case 'CAMEL':
+          return text
+            .replace(/([a-z])([A-Z])/g, '$1 $2')
+            .split(' ')
+            .map((word) => word.toLowerCase());
       }
     };
 
     if (toCase && hasTextToConvert) {
+      const originalText = textToConvert.slice(1);
+      const originalCase = getCase(originalText);
+      const normalizedText = normalizeText(originalText, originalCase);
+
       switch (toCase) {
         case 'UPPER':
-          resultObj.convertedText = normalizeText(textToConvert.slice(1))
-            .join('_')
-            .toUpperCase();
-          resultObj.targetCase = 'UPPER';
-
-          res.setHeader('Content-Type', 'application/json');
-          res.statusCode = 200;
-          res.end(JSON.stringify(resultObj));
+          sendResult(
+            normalizedText.join('_').toUpperCase(),
+            toCase,
+            originalCase,
+            originalText,
+          );
           break;
         case 'SNAKE':
-          resultObj.convertedText = normalizeText(textToConvert.slice(1)).join(
-            '_',
+          sendResult(
+            normalizedText.join('_'),
+            toCase,
+            originalCase,
+            originalText,
           );
-          resultObj.targetCase = 'SNAKE';
-
-          res.setHeader('Content-Type', 'application/json');
-          res.statusCode = 200;
-          res.end(JSON.stringify(resultObj));
           break;
         case 'KEBAB':
-          resultObj.convertedText = normalizeText(textToConvert.slice(1)).join(
-            '-',
+          sendResult(
+            normalizedText.join('-'),
+            toCase,
+            originalCase,
+            originalText,
           );
-          resultObj.targetCase = 'KEBAB';
-
-          res.setHeader('Content-Type', 'application/json');
-          res.statusCode = 200;
-          res.end(JSON.stringify(resultObj));
           break;
         case 'PASCAL':
-          resultObj.convertedText = normalizeText(textToConvert.slice(1))
-            .map((word) => word[0].toUpperCase() + word.slice(1))
-            .join('');
-          resultObj.targetCase = 'PASCAL';
-
-          res.setHeader('Content-Type', 'application/json');
-          res.statusCode = 200;
-          res.end(JSON.stringify(resultObj));
+          sendResult(
+            normalizedText
+              .map((word) => word[0].toUpperCase() + word.slice(1))
+              .join(''),
+            toCase,
+            originalCase,
+            originalText,
+          );
           break;
         case 'CAMEL':
-          resultObj.convertedText = normalizeText(textToConvert.slice(1))
-            .map((w, i) => (i === 0 ? w : w[0].toUpperCase() + w.slice(1)))
-            .join('');
-          resultObj.targetCase = 'CAMEL';
-
-          res.setHeader('Content-Type', 'application/json');
-          res.statusCode = 200;
-          res.end(JSON.stringify(resultObj));
+          sendResult(
+            normalizedText
+              .map((w, i) => (i === 0 ? w : w[0].toUpperCase() + w.slice(1)))
+              .join(''),
+            toCase,
+            originalCase,
+            originalText,
+          );
           break;
       }
     }
