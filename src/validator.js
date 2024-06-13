@@ -1,6 +1,9 @@
-const { invalidText, invalidToCase, invalidToCaseValue } = require('./error');
-
-const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const {
+  invalidText,
+  invalidToCase,
+  invalidToCaseValue,
+  supportedCases,
+} = require('./error');
 
 function validateInput(word, query) {
   const errors = [];

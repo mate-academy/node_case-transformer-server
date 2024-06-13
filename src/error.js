@@ -12,4 +12,5 @@ module.exports = {
   invalidText,
   invalidToCase,
   invalidToCaseValue,
+  supportedCases,
 };

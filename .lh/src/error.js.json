@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/error.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1718107243155,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1718107248589,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,13 +3,9 @@\n const invalidText =\n   'Text to convert is required. Correct request is: \"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>\".';\n const invalidToCase =\n   '\"toCase\" query param is required. Correct request is: \"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>\".';\n-Comment on lines +2 to +7\n-@BudnikOleksii BudnikOleksii last month\n-Constant should be in UPPER_CASE\n \n-@Kacper7001\tReply...\n const invalidToCaseValue = `This case is not supported. Available cases: ${supportedCases.join(', ')}.`;\n \n module.exports = {\n   invalidText,\n"
+                },
+                {
+                    "date": 1718107253693,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,15 @@\n+/* eslint-disable max-len */\n+const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];\n+\n+const invalidText =\n+  'Text to convert is required. Correct request is: \"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>\".';\n+const invalidToCase =\n+  '\"toCase\" query param is required. Correct request is: \"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>\".';\n+\n+const invalidToCaseValue = `This case is not supported. Available cases: ${supportedCases.join(', ')}.`;\n+\n+module.exports = {\n+  invalidText,\n+  invalidToCase,\n+  invalidToCaseValue,\n+};\n"
+                },
+                {
+                    "date": 1718269457050,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,19 +11,6 @@\n module.exports = {\n   invalidText,\n   invalidToCase,\n   invalidToCaseValue,\n+  supportedCases\n };\n-const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];\n-\n-const invalidText =\n-  'Text to convert is required. Correct request is: \"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>\".';\n-const invalidToCase =\n-  '\"toCase\" query param is required. Correct request is: \"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>\".';\n-\n-const invalidToCaseValue = `This case is not supported. Available cases: ${supportedCases.join(', ')}.`;\n-\n-module.exports = {\n-  invalidText,\n-  invalidToCase,\n-  invalidToCaseValue,\n-};\n"
+                }
+            ],
+            "date": 1718107243155,
+            "name": "Commit-0",
+            "content": "const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];\n\nconst invalidText =\n  'Text to convert is required. Correct request is: \"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>\".';\nconst invalidToCase =\n  '\"toCase\" query param is required. Correct request is: \"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>\".';\nComment on lines +2 to +7\n@BudnikOleksii BudnikOleksii last month\nConstant should be in UPPER_CASE\n\n@Kacper7001\tReply...\nconst invalidToCaseValue = `This case is not supported. Available cases: ${supportedCases.join(', ')}.`;\n\nmodule.exports = {\n  invalidText,\n  invalidToCase,\n  invalidToCaseValue,\n};\n"
+        }
+    ]
+}

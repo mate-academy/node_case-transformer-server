@@ -1,0 +1,42 @@
+{
+    "sourceFile": "src/validator.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 6,
+            "patches": [
+                {
+                    "date": 1718107288306,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1718107298753,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,27 @@\n+const { invalidText, invalidToCase, invalidToCaseValue } = require('./error');\n+\n+const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];\n+\n+function validateInput(word, query) {\n+  const errors = [];\n+\n+  if (!word) {\n+    errors.push({\n+      message: invalidText,\n+    });\n+  }\n+\n+  if (!query) {\n+    errors.push({\n+      message: invalidToCase,\n+    });\n+  } else if (!supportedCases.includes(query)) {\n+    errors.push({\n+      message: invalidToCaseValue,\n+    });\n+  }\n+\n+  return errors;\n+}\n+\n+module.exports = { validateInput };\n"
+                },
+                {
+                    "date": 1718129254085,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,25 @@\n+const { invalidText, invalidToCase, invalidToCaseValue } = require('./error');\n+\n+function validateInput(word, query) {\n+  const errors = [];\n+\n+  if (!word) {\n+    errors.push({\n+      message: invalidText,\n+    });\n+  }\n+\n+  if (!query) {\n+    errors.push({\n+      message: invalidToCase,\n+    });\n+  } else if (!supportedCases.includes(query)) {\n+    errors.push({\n+      message: invalidToCaseValue,\n+    });\n+  }\n+\n+  return errors;\n+}\n+\n+module.exports = { validateInput };\n"
+                },
+                {
+                    "date": 1718129261568,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,8 @@\n const { invalidText, invalidToCase, invalidToCaseValue } = require('./error');\n \n+const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];\n+\n function validateInput(word, query) {\n   const errors = [];\n \n   if (!word) {\n"
+                },
+                {
+                    "date": 1718132199000,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,7 @@\n const { invalidText, invalidToCase, invalidToCaseValue } = require('./error');\n+const supportedCases = require('./supportedCases');\n \n-const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];\n-\n function validateInput(word, query) {\n   const errors = [];\n \n   if (!word) {\n"
+                },
+                {
+                    "date": 1718132204786,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,6 @@\n const { invalidText, invalidToCase, invalidToCaseValue } = require('./error');\n+const supportedCases = require('./supportedCases');\n \n function validateInput(word, query) {\n   const errors = [];\n \n"
+                },
+                {
+                    "date": 1718132210735,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,26 @@\n+const { invalidText, invalidToCase, invalidToCaseValue } = require('./error');\n+const supportedCases = require('./supportedCases');\n+\n+function validateInput(word, query) {\n+  const errors = [];\n+\n+  if (!word) {\n+    errors.push({\n+      message: invalidText,\n+    });\n+  }\n+\n+  if (!query) {\n+    errors.push({\n+      message: invalidToCase,\n+    });\n+  } else if (!supportedCases.includes(query)) {\n+    errors.push({\n+      message: invalidToCaseValue,\n+    });\n+  }\n+\n+  return errors;\n+}\n+\n+module.exports = { validateInput };\n"
+                }
+            ],
+            "date": 1718107288306,
+            "name": "Commit-0",
+            "content": "const { invalidText, invalidToCase, invalidToCaseValue } = require('./errors');\n\nconst supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];\n@BudnikOleksii BudnikOleksii last month\nYou have the same variable in errors file\n\n@Kacper7001\tReply...\n\nfunction validateInput(word, query) {\n  const errors = [];\n\n  if (!word) {\n    errors.push({\n      message: invalidText,\n    });\n  }\n\n  if (!query) {\n    errors.push({\n      message: invalidToCase,\n    });\n  } else if (!supportedCases.includes(query)) {\n    errors.push({\n      message: invalidToCaseValue,\n    });\n  }\n\n  return errors;\n}\n\nmodule.exports = { validateInput };\n"
+        }
+    ]
+}
