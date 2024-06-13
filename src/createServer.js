@@ -30,9 +30,7 @@ function createServer() {
 
     if (toCase && !validCases.includes(toCase.toUpperCase())) {
       errors.push({
-        message:
-          'This case is not supported. Available cases: ' +
-          'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        message: `This case is not supported. Available cases: ${validCases.join(', ')}.`,
       });
     }
 
