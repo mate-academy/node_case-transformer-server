@@ -6,9 +6,9 @@ const {
   validateRequest,
 } = require('./utils');
 
-function createServer() {
-  const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
+function createServer() {
   return http.createServer((req, res) => {
     const { url: reqUrl } = req;
     const [path, queryString] = reqUrl.split('?');
