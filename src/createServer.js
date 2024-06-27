@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
   return http.createServer((req, res) => {
@@ -20,8 +21,6 @@ function createServer() {
       });
     }
 
-    const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
     if (!toCase) {
       errors.push({
         message:
@@ -35,11 +34,7 @@ function createServer() {
     }
 
     if (errors.length) {
-      res.statusCode = 400;
-      res.statusMessage = 'Bad Request';
-      res.end(JSON.stringify({ errors }));
-
-      return;
+      return res.end(JSON.stringify({ errors }));
     }
 
     const result = convertToCase(text, toCase);
