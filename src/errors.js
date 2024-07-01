@@ -1,5 +1,6 @@
+const validCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
 function checkError(originalText, targetCase) {
-  const validCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
   const errors = [];
 
   if (!originalText) {
@@ -16,9 +17,7 @@ function checkError(originalText, targetCase) {
         '"toCase" query param is required.' +
         ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
     });
-  }
-
-  if (targetCase && !validCases.some((cas) => cas === targetCase)) {
+  } else if (!validCases.some((cas) => cas === targetCase)) {
     errors.push({
       message:
         'This case is not supported. ' +
