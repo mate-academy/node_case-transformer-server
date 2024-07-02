@@ -1,5 +1,6 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const { SUPPORTED_CASES } = require('./supportedCases');
 
 function createServer() {
   const server = http.createServer((req, res) => {
@@ -25,9 +26,7 @@ function createServer() {
       });
     }
 
-    const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-    if (toCase && !supportedCases.includes(toCase.toUpperCase())) {
+    if (toCase && !SUPPORTED_CASES.includes(toCase.toUpperCase())) {
       errors.push({
         // eslint-disable-next-line
         message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
