@@ -26,18 +26,22 @@ function createServer() {
       response.statusCode = STATUS_CODES.NOT_FOUND;
       response.write(JSON.stringify({ errors }));
       response.end();
+
       return;
     }
 
     const result = convertToCase(text, toCase);
 
     response.statusCode = STATUS_CODES.OK;
-    response.write(JSON.stringify({
-      originalCase: result.originalCase,
-      targetCase: toCase,
-      originalText: text,
-      convertedText: result.convertedText,
-    }));
+
+    response.write(
+      JSON.stringify({
+        originalCase: result.originalCase,
+        targetCase: toCase,
+        originalText: text,
+        convertedText: result.convertedText,
+      }),
+    );
     response.end();
   });
 }
