@@ -1,6 +1,4 @@
 /* eslint-disable max-len */
-const { sendError } = require('./sendError');
-
 const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 const errorMessages = {
   noText:
@@ -11,7 +9,7 @@ const errorMessages = {
     'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
 };
 
-const handleErrors = (res, textToConvert, targetCase) => {
+const handleErrors = (textToConvert, targetCase) => {
   const messages = [];
 
   if (!textToConvert) {
@@ -26,13 +24,7 @@ const handleErrors = (res, textToConvert, targetCase) => {
     messages.push({ message: errorMessages.invalidCase });
   }
 
-  if (messages.length > 0) {
-    sendError(res, 400, messages);
-
-    return true;
-  }
-
-  return false;
+  return messages;
 };
 
 module.exports = { handleErrors };

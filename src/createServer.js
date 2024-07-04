@@ -18,9 +18,13 @@ const createServer = () => {
     const textToConvert = pathname.slice(1);
     const targetCase = searchParams.get('toCase');
 
-    const hasAnyErrors = handleErrors(res, textToConvert, targetCase);
+    const hasAnyErrors = handleErrors(textToConvert, targetCase);
 
-    if (hasAnyErrors) {
+    if (hasAnyErrors.length > 0) {
+      res.statusCode = 400;
+      res.statusMessage = 'Bad request';
+      res.end(JSON.stringify({ errors: hasAnyErrors }));
+
       return;
     }
 
@@ -32,6 +36,9 @@ const createServer = () => {
       originalText: textToConvert,
       convertedText: result.convertedText,
     };
+
+    res.statusCode = 200;
+    res.statusMessage = 'OK';
 
     res.end(JSON.stringify(response));
   });
