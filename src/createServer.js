@@ -11,7 +11,7 @@ module.exports.createServer = () =>
     const errorCollector = getErrorCollector();
     const url = new URL(request.url, `http://${request.headers.host}`);
     const originalText = url.pathname.slice(1);
-    const targetCase = new URLSearchParams(url.search).get(TO_CASE_QUERY);
+    const targetCase = url.searchParams.get(TO_CASE_QUERY);
 
     if (!originalText) {
       errorCollector.catchIfThrown(() => {
