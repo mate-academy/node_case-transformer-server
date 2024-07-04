@@ -24,29 +24,23 @@ const createServer = () => {
     const textToConvert = normalizedURL.pathname.slice(1);
     const targetCase = searchParams.get('toCase');
 
-    // If no 'text to convert', set error in errors array
     if (!textToConvert.length) {
       responseData.errors.push({
         message: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
       });
     }
 
-    // If no toCase query param
     if (!searchParams.has('toCase')) {
       responseData.errors.push({
         message: `"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
       });
-
-      // If Case not supported -> Append error
     } else if (targetCase === null || !supportedCases.includes(targetCase)) {
       responseData.errors.push({
-        message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
+        message: `This case is not supported. Available cases: ${supportedCases.join(', ')}.`,
       });
     }
 
-    // If no errors -> Convert the text
     if (!responseData.errors.length) {
-      // Remove the empty errors array
       delete responseData.errors;
 
       responseData.originalCase = detectCase(textToConvert);
