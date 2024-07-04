@@ -15,20 +15,23 @@ function createServer() {
 
     if (!textToConvert) {
       errors.push({
-        // eslint-disable-next-line
-        message: 'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".'
+        message:
+          // eslint-disable-next-line
+          'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
     if (!toCase) {
       errors.push({
-        // eslint-disable-next-line
-        message: '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".'
+        message:
+          // eslint-disable-next-line
+          '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     } else if (!supportedCases.includes(toCase)) {
       errors.push({
-        // eslint-disable-next-line
-        message: 'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.'
+        message:
+          // eslint-disable-next-line
+          'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
     }
 
