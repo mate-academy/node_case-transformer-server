@@ -12,7 +12,7 @@ function validate(targetWord, toCase) {
 
   const NOT_SUPPORTED_CASE =
     'This case is not supported.' +
-    'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+    ' Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
 
   if (!targetWord) {
     errorsArray.push({
