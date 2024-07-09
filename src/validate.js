@@ -4,11 +4,11 @@ function validate(targetWord, toCase) {
   const errorsArray = [];
   const TEXT_TO_CONVERT_ERROR =
     'Text to convert is required.' +
-    'Correct request is:"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+    ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
 
   const TO_CASE_ERROR =
     '"toCase" query param is required.' +
-    'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+    ' Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
 
   const NOT_SUPPORTED_CASE =
     'This case is not supported.' +
