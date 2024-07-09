@@ -2,6 +2,7 @@ const http = require('node:http');
 
 const { convertToCase } = require('./convertToCase/convertToCase');
 const { validateParams } = require('./validation');
+const { STATUS_CODES } = require('./utils/constants');
 
 function createServer() {
   const server = http.createServer((req, res) => {
@@ -16,8 +17,8 @@ function createServer() {
       const data = JSON.stringify({ errors });
 
       res.setHeader('Content-Type', 'application/json');
-      res.statusCode = 400;
-      res.statusMessage = 'Bad request';
+      res.statusCode = STATUS_CODES.BAD_REQUEST.status_code;
+      res.statusMessage = STATUS_CODES.BAD_REQUEST.status_text;
       res.end(data);
 
       return;
@@ -29,8 +30,8 @@ function createServer() {
     result.originalText = textToConvert;
 
     res.setHeader('Content-Type', 'application/json');
-    res.statusCode = 200;
-    res.statusMessage = 'OK';
+    res.statusCode = STATUS_CODES.OK.status_code;
+    res.statusMessage = STATUS_CODES.OK.status_text;
 
     res.end(JSON.stringify(result));
   });

@@ -1,5 +1,16 @@
 /* eslint-disable max-len */
 
+const STATUS_CODES = {
+  OK: {
+    status_code: 200,
+    status_text: 'OK',
+  },
+  BAD_REQUEST: {
+    status_code: 400,
+    status_text: 'Bad Request',
+  },
+};
+
 const CASES_TO_CONVERT = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 const MESSAGES = {
@@ -18,6 +29,7 @@ const MESSAGES = {
 };
 
 module.exports = {
+  STATUS_CODES,
   CASES_TO_CONVERT,
   MESSAGES,
 };
