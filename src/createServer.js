@@ -6,6 +6,7 @@ function createServer() {
     const params = new URLSearchParams(req.url.split('?')[1]);
     const text = req.url.slice(1).split('?')[0];
     const toCase = params.get('toCase');
+    const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
     const errorData = {
       errors: [],
     };
@@ -13,21 +14,33 @@ function createServer() {
     res.setHeader('Content-Type', 'application/json');
 
     try {
+      if (!text.trim()) {
+        throw Error;
+      }
+
       const result = convertToCase(text, toCase);
 
       res.end(JSON.stringify(result));
     } catch {
+      if (!toCase) {
+        errorData.errors.push({
+          message:
+            // eslint-disable-next-line max-len
+            '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        });
+      } else if (!cases.includes(toCase)) {
+        errorData.errors.push({
+          message:
+            // eslint-disable-next-line max-len
+            'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        });
+      }
+
       if (!text.trim()) {
         errorData.errors.push({
-          message: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
-        });
-      } else if (!toCase) {
-        errorData.errors.push({
-          message: `"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
-        });
-      } else {
-        errorData.errors.push({
-          message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
+          message:
+            // eslint-disable-next-line max-len
+            'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
         });
       }
 
