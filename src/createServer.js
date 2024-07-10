@@ -1,72 +1,39 @@
-const http = require('node:http');
+const http = require('http');
 const { convertToCase } = require('./convertToCase');
+const {
+  sendJsonResponse,
+  respondWithError,
+  validateRequest,
+} = require('./utils');
+
+const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
   return http.createServer((req, res) => {
-    const url = new URL(req.url, `http://${req.headers.host}`);
-    const pathname = url.pathname.slice(1); // Remove the leading '/'
-    const toCase = url.searchParams.get('toCase');
+    const { url: reqUrl } = req;
+    const [path, queryString] = reqUrl.split('?');
 
-    const errors = [];
+    const text = path.substring(1);
+    const params = new URLSearchParams(queryString);
+    const toCase = params.get('toCase');
 
-    if (!pathname) {
-      errors.push({
-        message:
-          'Text to convert is required. Correct request is: ' +
-          '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
+    const errors = validateRequest(text, toCase, supportedCases);
+
+    if (errors.length > 0) {
+      return respondWithError(res, errors);
     }
 
-    if (!toCase) {
-      errors.push({
-        message:
-          '"toCase" query param is required. Correct request is: ' +
-          '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    } else if (
-      !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase)
-    ) {
-      errors.push({
-        message:
-          'This case is not supported. ' +
-          'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-      });
-    }
+    const result = convertToCase(text, toCase);
 
-    if (errors.length) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ errors }));
-
-      return;
-    }
-
-    try {
-      const { originalCase, convertedText } = convertToCase(pathname, toCase);
-
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-
-      res.end(
-        JSON.stringify({
-          originalCase,
-          targetCase: toCase,
-          convertedText,
-          originalText: pathname,
-        }),
-      );
-    } catch (error) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-
-      res.end(
-        JSON.stringify({
-          errors: [
-            {
-              message: error.message,
-            },
-          ],
-        }),
-      );
-    }
+    sendJsonResponse(res, 200, {
+      originalCase: result.originalCase,
+      targetCase: toCase,
+      originalText: text,
+      convertedText: result.convertedText,
+    });
   });
 }
 
-module.exports = { createServer };
+module.exports = {
+  createServer,
+};
