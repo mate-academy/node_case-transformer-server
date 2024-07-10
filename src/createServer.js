@@ -20,6 +20,9 @@ function createServer() {
 
       const result = convertToCase(text, toCase);
 
+      result.originalText = text;
+      result.targetCase = toCase;
+
       res.end(JSON.stringify(result));
     } catch {
       if (!toCase) {
