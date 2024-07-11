@@ -1,7 +1,10 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
-
-const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const {
+  SUPPORTED_CASES,
+  STATUS_CODES,
+  ERROR_MESSAGES,
+} = require('./constants');
 
 function createServer() {
   return http.createServer((req, res) => {
@@ -14,31 +17,19 @@ function createServer() {
     const errors = [];
 
     if (!textToConvert) {
-      errors.push({
-        message:
-          // eslint-disable-next-line
-          'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
+      errors.push({ message: ERROR_MESSAGES.TEXT_REQUIRED });
     }
 
     if (!toCase) {
-      errors.push({
-        message:
-          // eslint-disable-next-line
-          '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    } else if (!supportedCases.includes(toCase)) {
-      errors.push({
-        message:
-          // eslint-disable-next-line
-          'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-      });
+      errors.push({ message: ERROR_MESSAGES.CASE_REQUIRED });
+    } else if (!SUPPORTED_CASES.includes(toCase)) {
+      errors.push({ message: ERROR_MESSAGES.CASE_NOT_SUPPORTED });
     }
 
     res.setHeader('Content-Type', 'application/json');
 
     if (errors.length > 0) {
-      res.writeHead(400);
+      res.writeHead(STATUS_CODES.BAD_REQUEST);
       res.end(JSON.stringify({ errors }));
 
       return;
@@ -46,7 +37,7 @@ function createServer() {
 
     const result = convertToCase(textToConvert, toCase);
 
-    res.writeHead(200);
+    res.writeHead(STATUS_CODES.OK);
 
     res.end(
       JSON.stringify({
