@@ -56,35 +56,29 @@ function createServer() {
         );
         break;
       case 'no text':
-        res.setHeader('Content-Type', 'application/json');
-        res.statusCode = 400;
-
         res.end(
           createErrorResponse(
             'Text to convert is required. Correct request is: ' +
               '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+            res,
           ),
         );
         break;
       case 'not type':
-        res.setHeader('Content-Type', 'application/json');
-        res.statusCode = 400;
-
         res.end(
           createErrorResponse(
             '"toCase" query param is required. Correct request is: ' +
               '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+            res,
           ),
         );
         break;
       case 'wrong case':
-        res.setHeader('Content-Type', 'application/json');
-        res.statusCode = 400;
-
         res.end(
           createErrorResponse(
             'This case is not supported. Available cases: ' +
               'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+            res,
           ),
         );
         break;
@@ -106,7 +100,10 @@ function createServer() {
   });
 }
 
-const createErrorResponse = (message) => {
+const createErrorResponse = (message, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.statusCode = 400;
+
   return JSON.stringify({
     errors: [
       {
