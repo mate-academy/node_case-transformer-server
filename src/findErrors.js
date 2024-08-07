@@ -7,7 +7,7 @@ function findErrors(textToConvert, caseName) {
     errors.push({
       message:
         // eslint-disable-next-line max-len
-        'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"',
+        'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
     });
   }
 
@@ -15,7 +15,7 @@ function findErrors(textToConvert, caseName) {
     errors.push({
       message:
         // eslint-disable-next-line max-len
-        '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"',
+        '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
     });
   }
 
