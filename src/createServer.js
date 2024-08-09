@@ -42,6 +42,8 @@ function createServer() {
       res.statusMessage = 'Bad request';
 
       res.end(JSON.stringify({ errors }));
+
+      return;
     }
 
     const { originalCase, convertedText } = convertToCase(
