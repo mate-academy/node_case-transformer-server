@@ -4,25 +4,21 @@ const { convertToCase } = require('./convertToCase');
 const CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
-  return http.createServer((req, res) => {
-    const url = new URL(req.url);
+  const server = http.createServer((req, res) => {
+    const url = new URL(req.url, `http://${req.headers.host}`);
 
     res.setHeader('Content-Type', 'application/json');
 
-    let response = {};
-
-    const addError = (message) => {
-      if (!response.errors) {
-        response.errors = [];
-      }
-
-      response.errors.push({ message });
-    };
-
-    const text = url.pathname.slice(1);
+    const originalText = url.pathname.slice(1);
     const targetCase = url.searchParams.get('toCase');
 
-    if (!text) {
+    const errors = [];
+
+    const addError = (message) => {
+      errors.push({ message });
+    };
+
+    if (!originalText) {
       addError(
         'Text to convert is required. Correct request is: ' +
           '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
@@ -34,34 +30,39 @@ function createServer() {
         '"toCase" query param is required. ' +
           'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       );
-    }
-
-    if (!CASES.includes(targetCase)) {
+    } else if (!CASES.includes(targetCase)) {
       addError(
         'This case is not supported. ' +
           'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       );
     }
 
-    if (response.errors) {
+    if (errors.length) {
       res.statusCode = '400';
       res.statusMessage = 'Bad request';
-    } else {
-      const { originalCase, convertedText } = convertToCase(text, targetCase);
 
-      response = {
-        originalCase,
-        targetCase,
-        text,
-        convertedText,
-      };
+      res.end(JSON.stringify({ errors }));
     }
+
+    const { originalCase, convertedText } = convertToCase(
+      originalText,
+      targetCase,
+    );
 
     res.statusCode = '200';
     res.statusMessage = 'OK';
 
-    res.end(JSON.stringify(response));
+    res.end(
+      JSON.stringify({
+        originalCase,
+        targetCase,
+        originalText,
+        convertedText,
+      }),
+    );
   });
+
+  return server;
 }
 
 module.exports = {
