@@ -7,6 +7,10 @@ function main() {
   server.listen(port, () => {
     // eslint-disable-next-line no-console
     console.log(`Server is running on http://localhost:${port}`);
+
+    server.setTimeout(() => {
+      server.end();
+    }, 500);
   });
 }
 

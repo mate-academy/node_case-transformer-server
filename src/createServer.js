@@ -39,7 +39,7 @@ function createServer() {
       return;
     }
 
-    const result = convertToCase(toCase, textToConvert);
+    const result = convertToCase(textToConvert, toCase);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
 
