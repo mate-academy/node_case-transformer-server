@@ -4,6 +4,7 @@
  * @param {string} text
  * @returns {CaseName}
  */
+
 function detectCase(text) {
   if (text.toUpperCase() === text) {
     return 'UPPER';

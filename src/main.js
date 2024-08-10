@@ -1,6 +1,13 @@
-const { createServer } = require('./createServer');
+const { createServer } = require('./src/createServer');
 
-createServer().listen(5700, () => {
-  // eslint-disable-next-line no-console
-  console.log('Server started! 🚀');
-});
+function main() {
+  const server = createServer();
+  const port = process.env.PORT || 5701;
+
+  server.listen(port, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+}
+
+module.exports = { main };

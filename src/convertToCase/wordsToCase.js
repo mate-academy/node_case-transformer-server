@@ -6,6 +6,7 @@
  *
  * @returns {string}
  */
+
 function wordsToCase(words, caseName) {
   switch (caseName) {
     case 'SNAKE': {
