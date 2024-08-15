@@ -4,10 +4,9 @@ const { convertToCase } = require('./convertToCase');
 
 function createServer() {
   return http.createServer((request, response) => {
-    const normalUrl = new URL(request.url, `http://${request.headers.host}`);
-
-    const toCase = normalUrl.searchParams.get('toCase');
-    const text = normalUrl.pathname.slice(1);
+    const normalizeUrl = new URL(request.url, `http://${request.headers.host}`);
+    const toCase = normalizeUrl.searchParams.get('toCase');
+    const text = normalizeUrl.pathname.slice(1);
     const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
     response.setHeader('Content-Type', 'application/json');
