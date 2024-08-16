@@ -29,9 +29,7 @@ function createServer() {
       });
     } else if (!cases.includes(toCase)) {
       errors.push({
-        message:
-          'This case is not supported. ' +
-          'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+        message: `This case is not supported. Available cases: ${cases.join(', ')}.`,
       });
     }
 
