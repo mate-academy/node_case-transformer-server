@@ -77,6 +77,7 @@ describe('createServer', () => {
 
       it('should throw correct error if no toCase', async () => {
         const { body, res } = await request('/helloWorld');
+        // console.log(body)
 
         expect(res.headers['content-type']).toEqual('application/json');
 

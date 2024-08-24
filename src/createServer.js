@@ -10,16 +10,11 @@ function createServer() {
 
     const errors = [];
 
-    // const normalizedURL = new URL(req.url, 'http://localhost:5700');
-
     const [baseURL, query] = req.url.split('?');
     const params = new URLSearchParams(query);
 
     const toCase = params.get('toCase');
     const text = baseURL.slice(1);
-
-    // const text = normalizedURL.pathname.slice(1);
-    // const toCase = normalizedURL.searchParams.get('toCase');
 
     if (!text) {
       errors.push({
@@ -40,7 +35,6 @@ function createServer() {
     }
 
     if (errors.length > 0) {
-      // console.log(errors);
       return sendErrorResponse(res, errors);
     }
 
