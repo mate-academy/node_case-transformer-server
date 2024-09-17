@@ -41,7 +41,7 @@ function wordsToCase(words, caseName) {
     }
 
     default: {
-      throw new Error(`Unknown case name: ${caseName}`);
+      return '';
     }
   }
 }
