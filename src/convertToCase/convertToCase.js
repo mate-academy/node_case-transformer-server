@@ -3,6 +3,7 @@ const { toWords } = require('./toWords');
 const { wordsToCase } = require('./wordsToCase');
 
 /**
+ *
  * @typedef {'SNAKE' | 'KEBAB' | 'CAMEL' | 'PASCAL' | 'UPPER'} CaseName
  *
  * @param {string} text
