@@ -32,27 +32,33 @@ function createServer() {
       });
     }
 
-    res.setHeader('content-type', 'application/json');
+    res.setHeader('Content-Type', 'application/json');
 
     if (errors.length) {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
-
-      const data = { errors };
-
-      res.end(JSON.stringify(data));
+      res.end(JSON.stringify({ errors }));
 
       return;
     }
 
-    const result = convertToCase(textToConvert, toCase);
+    try {
+      const result = convertToCase(textToConvert, toCase);
 
-    result.targetCase = toCase;
-    result.originalText = textToConvert;
+      result.targetCase = toCase;
+      result.originalText = textToConvert;
 
-    res.statusCode = 200;
-    res.statusMessage = 'OK';
-    res.end(JSON.stringify(result));
+      res.statusCode = 200;
+      res.statusMessage = 'OK';
+      res.end(JSON.stringify(result));
+    } catch (err) {
+      res.statusCode = 400;
+      res.statusMessage = 'Bad request';
+
+      const data = { errors: [{ message: err.message }] };
+
+      res.end(JSON.stringify(data));
+    }
   });
 
   return server;
