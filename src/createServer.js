@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable no-console */
 
 const possibleErrors = [
   {
@@ -28,16 +28,14 @@ const html = require('http');
 const { convertToCase } = require('./convertToCase');
 
 function createServer() {
-  const server = html.createServer(async (req, res) => {
+  const server = html.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
+    const newSearchParams = new URL(req.url, `http://${req.headers.host}`);
 
     const allCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-    const params = req.url.split('?');
-    const isText = params[0] === '/';
-    const text = !isText && params[0].slice(1);
-    const queryString = params[1];
-    const newSearchParams = new URLSearchParams(queryString);
-    const toCase = newSearchParams.get('toCase');
+    const isText = newSearchParams.pathname === '/';
+    const text = !isText && newSearchParams.pathname.slice(1);
+    const toCase = newSearchParams.searchParams.get('toCase');
     const isValidCase = allCases.includes(toCase);
     const isCase = !!toCase;
 
@@ -79,5 +77,4 @@ function createServer() {
 
   return server;
 }
-
 module.exports = { createServer };
