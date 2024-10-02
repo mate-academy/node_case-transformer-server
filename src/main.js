@@ -1,6 +1,8 @@
+/* eslint-disable no-console */
 const { createServer } = require('./createServer');
 
-createServer().listen(5700, () => {
-  // eslint-disable-next-line no-console
+const PORT = 5700;
+
+createServer().listen(PORT, () => {
   console.log('Server started! 🚀');
 });
