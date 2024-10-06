@@ -13,6 +13,7 @@ function createServer() {
     if (!originalText) {
       errors.push({
         message:
+        // eslint-disable-next-line max-len
           'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
@@ -20,6 +21,7 @@ function createServer() {
     if (!targetCase) {
       errors.push({
         message:
+        // eslint-disable-next-line max-len
           '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     } else if (
@@ -27,6 +29,7 @@ function createServer() {
     ) {
       errors.push({
         message:
+        // eslint-disable-next-line max-len
           'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
     }
