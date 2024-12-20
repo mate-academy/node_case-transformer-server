@@ -1,3 +1,63 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
+/* eslint-disable max-len */
+const http = require('http');
+const { url } = require('url');
+const { convertToCase } = require('./convertToCase');
+
+function createServer() {
+  return http.createServer((req, resp) => {
+    resp.setHeader('Content-Type', 'application/json');
+
+    const parsedUrl = url.parse(req.url);
+    const queryParams = new URLSearchParams(parsedUrl.query);
+
+    const textToConvert = parsedUrl.pathname.slice(1);
+    const targetCase = queryParams.get('toCase');
+
+    const errors = [];
+
+    if (!textToConvert) {
+      errors.push({
+        message:
+          'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      });
+    }
+
+    if (!targetCase) {
+      errors.push({
+        message:
+          '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      });
+    }
+
+    const validCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+    if (targetCase && !validCases.includes(targetCase)) {
+      errors.push({
+        message: `This case is not supported. Available cases: ${validCases.join(', ')}.`,
+      });
+    }
+
+    if (errors.length > 0) {
+      resp.end(JSON.stringify({ errors }));
+
+      return;
+    }
+
+    try {
+      const result = convertToCase(textToConvert, targetCase);
+
+      resp.end(
+        JSON.stringify({
+          originalCase: result.originalCase,
+          targetCase,
+          originalText: textToConvert,
+          convertedText: result.convertedText,
+        }),
+      );
+    } catch (error) {
+      return error;
+    }
+  });
+}
+
+module.exports = { createServer };
