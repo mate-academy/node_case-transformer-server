@@ -1,14 +1,12 @@
-/* eslint-disable max-len */
 const http = require('http');
-const { url } = require('url');
-const { convertToCase } = require('./convertToCase');
+const { convertToCase } = require('./convertToCase'); // Импорт бизнес-логики
 
 function createServer() {
   return http.createServer((req, resp) => {
     resp.setHeader('Content-Type', 'application/json');
 
-    const parsedUrl = url.parse(req.url);
-    const queryParams = new URLSearchParams(parsedUrl.query);
+    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+    const queryParams = parsedUrl.searchParams;
 
     const textToConvert = parsedUrl.pathname.slice(1);
     const targetCase = queryParams.get('toCase');
@@ -18,14 +16,16 @@ function createServer() {
     if (!textToConvert) {
       errors.push({
         message:
-          'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+          'Text to convert is required. Correct request is:' +
+          ' "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
     if (!targetCase) {
       errors.push({
         message:
-          '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+          '"toCase" query param is required. Correct request is:' +
+          ' "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
@@ -55,7 +55,7 @@ function createServer() {
         }),
       );
     } catch (error) {
-      return error;
+      resp.end(JSON.stringify({ error: error.message }));
     }
   });
 }
