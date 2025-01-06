@@ -1,0 +1,27 @@
+function validateRequest(targetCase, originalText) {
+  const errors = []; // Масив для зберігання помилок
+
+  if (!originalText) {
+    errors.push({
+      message: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+    });
+  }
+
+  if (!targetCase) {
+    errors.push({
+      message: `"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+    });
+  } else if (
+    !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(targetCase)
+  ) {
+    errors.push({
+      message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
+    });
+  }
+
+  return errors;
+}
+
+module.exports = {
+  validateRequest,
+};
