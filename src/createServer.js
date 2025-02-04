@@ -12,8 +12,13 @@ function createServer() {
     const errors = validateRequest(targetCase, originalText);
 
     if (errors.length > 0) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ errors }));
+      res.writeHead(400, 'Bad request', { 'Content-Type': 'application/json' });
+
+      res.end(
+        JSON.stringify({
+          errors: errors.map((error) => ({ message: error })),
+        }),
+      );
 
       return;
     }
