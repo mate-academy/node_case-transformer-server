@@ -13,8 +13,7 @@ const createServer = () => {
 
     if (!textToConvert || textToConvert === '') {
       errors.push({
-        message: `Text to convert is required. Correct request is:
-           "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+        message: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
       });
     }
 
@@ -35,16 +34,13 @@ const createServer = () => {
       return;
     }
 
-    const { originalCase, convertedText } = convertToCase(
-      toCase,
-      textToConvert,
-    );
+    const result = convertToCase(textToConvert, toCase);
 
     const response = {
-      originalCase: originalCase,
+      originalCase: result.originalCase,
       targetCase: toCase,
       originalText: textToConvert,
-      convertedText: convertedText,
+      convertedText: result.convertedText,
     };
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
