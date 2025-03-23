@@ -5,9 +5,11 @@ const http = require('node:http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const { checkErrors } = require('./checkErrors');
 
-function newServer() {
+function createServer() {
   const server = http.createServer((req, res) => {
     const url = req.url;
+
+    res.setHeader('Content-Type', 'application/json');
 
     if (url === '/favicon.ico') {
       return res.end();
@@ -49,5 +51,5 @@ function newServer() {
 // newServer();
 
 module.exports = {
-  newServer,
+  createServer,
 };

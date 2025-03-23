@@ -16,7 +16,7 @@ function checkErrors(text, toCase) {
     });
   }
 
-  if (!corectCases.includes(toCase)) {
+  if (toCase && !corectCases.includes(toCase)) {
     errors.errors.push({
       message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
     });
