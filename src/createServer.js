@@ -12,7 +12,7 @@ function createServer() {
   return http.createServer((req, res) => {
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
     const textToConvert = decodeURIComponent(parsedUrl.pathname.slice(1));
-    const toCase = parsedUrl.query.toCase;
+    const toCase = parsedUrl.searchParams.get('toCase');
 
     const errors = [];
 
