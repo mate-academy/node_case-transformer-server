@@ -50,7 +50,6 @@ function createServer() {
       return;
     }
 
-    // Конвертація та відповідь
     const result = convertToCase(textToConvert, toCase);
 
     res.writeHead(200, 'OK');
