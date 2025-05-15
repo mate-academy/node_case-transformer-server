@@ -2,9 +2,7 @@
 /* eslint-disable no-unused-vars */
 
 const http = require('http');
-const url = require('url');
 const { convertToCase } = require('./convertToCase');
-const { parse } = require('path');
 
 const SUPPORTED_CASES = new Set(['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER']);
 
@@ -12,9 +10,9 @@ function createServer() {
   return http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    const parsedUrl = url.URL(req.url, true);
+    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
     const pathname = parsedUrl.pathname.slice(1);
-    const targetCase = parsedUrl.query.toCase;
+    const targetCase = parsedUrl.searchParams.get('toCase');
 
     const errors = [];
 
