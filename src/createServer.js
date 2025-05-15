@@ -4,9 +4,11 @@
 'use strict';
 
 const http = require('http');
-const { detectCase } = require('./detectCase');
-const { toWords } = require('./toWords');
-const { wordsToCase } = require('./wordsToCase');
+const { convertToCase } = require('./convertToCase/convertToCase');
+const { detectCase } = require('./convertToCase/detectCase');
+const { toWords } = require('./convertToCase/toWords');
+const { wordsToCase } = require('./convertToCase/wordsToCase');
+
 
 const SUPPORTED_CASES = new Set(['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER']);
 
@@ -46,24 +48,17 @@ function createServer() {
       return res.end(JSON.stringify({ errors }));
     }
 
-    // Detect original case
-    const originalCase = detectCase(pathname);
+    // Convert text using the provided business logic
+    const result = convertToCase(pathname, targetCase);
 
-    // Convert text to words
-    const words = toWords(pathname, originalCase);
-
-    // Convert words to target case
-    const convertedText = wordsToCase(words, targetCase);
-
-    // Send response
     res.statusCode = 200;
     res.end(
       JSON.stringify({
-        originalCase,
-        targetCase,
+        originalCase: result.originalCase,
+        targetCase: targetCase,
         originalText: pathname,
-        convertedText,
-      }),
+        convertedText: result.convertedText,
+      })
     );
   });
 }
