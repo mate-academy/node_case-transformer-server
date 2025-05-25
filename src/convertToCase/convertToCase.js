@@ -1,6 +1,6 @@
-const { detectCase } = require('./detectCase');
-const { toWords } = require('./toWords');
-const { wordsToCase } = require('./wordsToCase');
+const { detectCase } = require('./detectCase.js');
+const { toWords } = require('./toWords.js');
+const { wordsToCase } = require('./wordsToCase.js');
 
 /**
  * @typedef {'SNAKE' | 'KEBAB' | 'CAMEL' | 'PASCAL' | 'UPPER'} CaseName
@@ -21,7 +21,4 @@ function convertToCase(text, caseName) {
 
   return { originalCase, convertedText };
 }
-
-module.exports = {
-  convertToCase,
-};
+module.exports = { convertToCase };
