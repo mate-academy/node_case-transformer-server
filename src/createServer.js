@@ -18,24 +18,24 @@ function createServer() {
     if (!textToTransform) {
       errors.push({
         message:
-          'Text to convert is required.' +
-          'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+          // eslint-disable-next-line max-len
+          'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
     if (!toCase) {
       errors.push({
         message:
-          '"toCase" query param is required.' +
-          'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+          // eslint-disable-next-line max-len
+          '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
     if (toCase && !SUPPORTED_CASES.includes(toCase.toUpperCase())) {
       errors.push({
         message:
-          'This case is not supported.' +
-          'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+          // eslint-disable-next-line max-len
+          'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
     }
 
