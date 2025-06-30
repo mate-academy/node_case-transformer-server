@@ -10,15 +10,15 @@ const createServer = () => {
     res.setHeader('Content-Type', 'application/json');
 
     const [path, queryString] = req.url.split('?');
+    const pathSegments = path.split('/').filter(Boolean);
 
-    const textToConvert = path.slice(1);
-
+    const textToConvert = pathSegments[0];
     const params = new URLSearchParams(queryString);
     const toCase = params.get('toCase');
 
     const errors = [];
 
-    if (!textToConvert) {
+    if (pathSegments.length !== 1 || !textToConvert) {
       errors.push({
         message:
           'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
