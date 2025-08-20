@@ -1,6 +1,20 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase.js');
 
+const VALID_TARGET_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+const MSG_TEXT_REQUIRED =
+  'Text to convert is required. Correct request' +
+  ' is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+
+const MSG_TOCASE_REQUIRED =
+  '"toCase" query param is required. Correct request' +
+  ' is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
+
+const MSG_UNSUPPORTED =
+  'This case is not supported. Available cases:' +
+  ' SNAKE, KEBAB, CAMEL, PASCAL, UPPER.';
+
 const createServer = () => {
   const server = http.createServer((req, res) => {
     if (req.url === '/favicon.ico') {
@@ -10,42 +24,28 @@ const createServer = () => {
       return;
     }
 
-    res.setHeader('Content-Type', 'application/json');
-    res.statusCode = 200;
-    res.statusMessage = 'OK';
-
+    const [path, queryString] = req.url.split('?');
+    const originalText = path.slice(1);
+    const params = new URLSearchParams(queryString);
+    const toCase = params.get('toCase');
     const errors = [];
-    const VALID_TARGET_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-
-    const url = new URL(req.url || '', `http://${req.headers.host}`);
-    const originalText = url.pathname.slice(1);
-    const targetCase = url.searchParams.get('toCase');
 
     if (!originalText) {
       errors.push({
-        message:
-          'Text to convert is required. Correct request' +
-          'is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+        message: MSG_TEXT_REQUIRED,
       });
     }
 
-    if (!targetCase) {
-      errors.push({
-        message:
-          '"toCase" query param is required. Correct request' +
-          'is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-      });
-    }
-
-    if (!VALID_TARGET_CASES.includes(targetCase)) {
-      errors.push({
-        message:
-          'This case is not supported. Available cases:' +
-          ' SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-      });
+    if (!toCase) {
+      errors.push({ message: MSG_TOCASE_REQUIRED });
+    } else {
+      if (!VALID_TARGET_CASES.includes(toCase)) {
+        errors.push({ message: MSG_UNSUPPORTED });
+      }
     }
 
     if (errors.length > 0) {
+      res.setHeader('Content-Type', 'application/json');
       res.statusCode = 400;
       res.statusMessage = 'Bad Request';
       res.end(JSON.stringify({ errors }));
@@ -53,12 +53,16 @@ const createServer = () => {
       return;
     }
 
-    const transformText = convertToCase(originalText, targetCase);
+    const transformText = convertToCase(originalText, toCase);
+
+    res.setHeader('Content-Type', 'application/json');
+    res.statusCode = 200;
+    res.statusMessage = 'OK';
 
     res.end(
       JSON.stringify({
         originalCase: transformText.originalCase,
-        targetCase: targetCase,
+        targetCase: toCase,
         originalText: originalText,
         convertedText: transformText.convertedText,
       }),
