@@ -49,7 +49,7 @@ That means you should always add a correct `Content-Type` header.
 
 #### Validation
 Text in the URL and query param `toCase` are mandatory. Also, `toCase` value should be one of the supported cases.
-If something is not correct, you should respond with 400 status, `Bad request` statusText and the next payload:
+If something is not correct, you should respond with 400 status, `git ` statusText and the next payload:
 ```json
 {
   "errors": [

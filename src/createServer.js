@@ -10,10 +10,10 @@ function createServer() {
 
     const errors = [];
 
-    const normalaizedURL = req.url.split('?');
-    const params = new URLSearchParams(normalaizedURL[1]);
+    const normalizedURL = req.url.split('?');
+    const params = new URLSearchParams(normalizedURL[1]);
     const toCase = params.get('toCase');
-    const textToConvert = normalaizedURL[0].replace('/', '');
+    const textToConvert = normalizedURL[0].replace('/', '');
 
     if (!textToConvert) {
       errors.push({
