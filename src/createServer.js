@@ -53,7 +53,7 @@ const createServer = () => {
       return;
     }
 
-    const transformText = convertToCase(toCase, originalText);
+    const transformText = convertToCase(originalText, toCase);
 
     res.setHeader('Content-Type', 'application/json');
     res.statusCode = 200;
