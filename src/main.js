@@ -1,4 +1,4 @@
-const { createServer } = require('./createServer');
+const { createServer } = require('./createServer.js');
 
 createServer().listen(5700, () => {
   // eslint-disable-next-line no-console
