@@ -1,4 +1,3 @@
-// src/createServer.js
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 
@@ -57,10 +56,10 @@ function createServer() {
       const errors = validateParams({ toCase, text });
 
       if (errors.length > 0) {
-        return sendJSON(res, 400, 'Bad Request', { errors });
+        return sendJSON(res, 400, 'Bad request', { errors });
       }
 
-      const { originalCase, convertedText } = convertToCase(text, toCase);
+      const { originalCase, convertedText } = convertToCase(toCase, text);
 
       return sendJSON(res, 200, 'OK', {
         originalCase,
