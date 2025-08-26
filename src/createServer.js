@@ -46,11 +46,7 @@ const createServer = () => {
     }
 
     if (validationErrors.length > 0) {
-      const statusCode = validationErrors.some((e) => e.status === 404)
-        ? 404
-        : 400;
-
-      res.writeHead(statusCode, { 'Content-Type': 'application/json' });
+      res.writeHead(400, 'Bad request', { 'Content-Type': 'application/json' });
 
       res.end(
         JSON.stringify({
@@ -61,9 +57,9 @@ const createServer = () => {
       return;
     }
 
-    const result = convertToCase(pathString, toCase);
+    const result = convertToCase(toCase, pathString);
 
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(200, 'OK', { 'Content-Type': 'application/json' });
 
     res.end(
       JSON.stringify({
