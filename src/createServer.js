@@ -20,7 +20,7 @@ const createServer = () => {
       {
         message:
           'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-        status: 404,
+        status: 400,
       },
       {
         message:
