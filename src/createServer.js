@@ -57,7 +57,7 @@ const createServer = () => {
       return;
     }
 
-    const result = convertToCase(toCase, pathString);
+    const result = convertToCase(pathString, toCase);
 
     res.writeHead(200, 'OK', { 'Content-Type': 'application/json' });
 
