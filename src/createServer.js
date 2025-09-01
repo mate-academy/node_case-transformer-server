@@ -52,7 +52,7 @@ function createServer() {
 
     const result = {
       originalCase,
-      targetCase,
+      toCaseParam,
       originalText,
       convertedText,
     };
