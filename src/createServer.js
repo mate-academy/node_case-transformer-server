@@ -1,5 +1,6 @@
 const http = require('node:http');
 const { convertToCase } = require('./convertToCase/index');
+const { CASES } = require('./cases');
 
 function createServer() {
   return http.createServer((req, res) => {
@@ -24,13 +25,7 @@ function createServer() {
           // eslint-disable-next-line max-len
           '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
-    } else if (
-      targetCase !== 'SNAKE' &&
-      targetCase !== 'KEBAB' &&
-      targetCase !== 'CAMEL' &&
-      targetCase !== 'PASCAL' &&
-      targetCase !== 'UPPER'
-    ) {
+    } else if (!Object.values(CASES).includes(targetCase)) {
       errors.push({
         message:
           // eslint-disable-next-line max-len
