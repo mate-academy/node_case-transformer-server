@@ -42,7 +42,7 @@ function createServer() {
       return sendError(res, 400, errors);
     }
 
-    res.setHeader('Content-type', 'application/json');
+    res.setHeader('Content-Type', 'application/json');
     res.statusCode = 200;
 
     const { originalCase, convertedText } = convertToCase(
