@@ -48,7 +48,7 @@ function createServer() {
       return;
     }
 
-    const result = convertToCase(caseName, text);
+    const result = convertToCase(text, caseName);
 
     res.statusCode = 200;
     res.statusMessage = 'OK';
