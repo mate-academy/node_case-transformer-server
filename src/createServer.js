@@ -6,31 +6,31 @@ const SUPPORTED_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    const error = [];
+    const errors = [];
 
-    const [path, querySting] = req.url.split('?');
+    const [path, queryString] = req.url.split('?');
 
     const text = path.slice(1);
 
     if (!text) {
-      error.push({
+      errors.push({
         message:
           'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
-    const params = new URLSearchParams(querySting);
+    const params = new URLSearchParams(queryString);
     const toCase = params.get('toCase');
 
-    const caseName = toCase ? toCase.toUpperCase() : null;
+    const caseName = toCase || null;
 
     if (!toCase) {
-      error.push({
+      errors.push({
         message:
           '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     } else if (!SUPPORTED_CASES.includes(caseName)) {
-      error.push({
+      errors.push({
         message:
           'This case is not supported. Available cases: ' +
           SUPPORTED_CASES.join(', ') +
@@ -40,10 +40,10 @@ function createServer() {
 
     res.setHeader('Content-Type', 'application/json');
 
-    if (error.length > 0) {
+    if (errors.length > 0) {
       res.statusCode = 400;
-      res.statusMessage = 'Bad Request';
-      res.end(JSON.stringify({ errors: error }, null, 2));
+      res.statusMessage = 'Bad request';
+      res.end(JSON.stringify({ errors: errors }, null, 2));
 
       return;
     }
