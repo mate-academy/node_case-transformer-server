@@ -3,8 +3,6 @@ const convertToCase = require('./convertToCase').convertToCase;
 const errorHandler = require('./convertToCase/errorHandler').errorHandler;
 
 function createServer() {
-  const PORT = process.env.PORT || 3000;
-
   const server = http.createServer((req, res) => {
     if (req.method !== 'GET') {
       res.statusCode = 404;
@@ -41,8 +39,6 @@ function createServer() {
       }),
     );
   });
-
-  server.listen(PORT, () => {});
 
   return server;
 }
