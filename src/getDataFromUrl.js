@@ -1,7 +1,7 @@
-function getDataFromUrl(req) {
-  const urlInfo = new URL(req.url, `http://${req.headers.host}`);
-  const textForTransform = urlInfo.pathname.slice(1);
-  const toCase = urlInfo.searchParams.get('toCase');
+function getDataFromUrl(url) {
+  const [path, searchParams] = url.split('?');
+  const textForTransform = (path || '').slice(1);
+  const toCase = new URLSearchParams(searchParams || '').get('toCase');
 
   return { textForTransform, toCase };
 }
