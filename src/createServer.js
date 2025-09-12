@@ -1,40 +1,55 @@
 const http = require('http');
 const convertToCase = require('./convertToCase').convertToCase;
-const errorHandler = require('./convertToCase/errorHandler').errorHandler;
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    if (req.method !== 'GET') {
-      res.statusCode = 404;
-      res.end('Not Found');
-
-      return;
-    }
+    const errors = [];
 
     res.setHeader('Content-Type', 'application/json');
 
-    const url = new URL(req.url || '', `http://${req.headers.host}`);
-    const requestedPath = url.pathname?.slice(1);
-    const toCase = url.searchParams.get('toCase');
+    const [requestedPath, queryString] = req.url.split('?');
+    const requestValue = requestedPath?.slice(1);
+    const params = new URLSearchParams(queryString);
+    const toCase = params.get('toCase');
 
-    const errors = errorHandler(requestedPath, toCase);
+    if (requestValue === '') {
+      const message = `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`;
 
-    if (errors) {
+      errors.push({
+        message,
+      });
+    }
+
+    if (!toCase) {
+      errors.push({
+        message: `"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+      });
+    } else if (
+      !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(toCase)
+    ) {
+      errors.push({
+        message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
+      });
+    }
+
+    if (errors.length) {
       res.statusCode = 400;
+      res.statusMessage = 'Bad request'
       res.end(JSON.stringify({ errors }));
 
       return;
     }
 
-    const result = convertToCase(requestedPath, toCase);
+    const result = convertToCase(requestValue, toCase);
 
     res.statusCode = 200;
+    res.statusMessage = 'OK'
 
     res.end(
       JSON.stringify({
         convertedText: result.convertedText,
         originalCase: result.originalCase,
-        originalText: requestedPath,
+        originalText: requestValue,
         targetCase: toCase,
       }),
     );
@@ -44,5 +59,5 @@ function createServer() {
 }
 
 module.exports = {
-  createServer,
+  createServer
 };
