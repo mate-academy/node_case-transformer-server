@@ -7,12 +7,20 @@ function createServer() {
 
     res.setHeader('Content-Type', 'application/json');
 
-    const [requestedPath, queryString] = req.url.split('?');
-    const requestValue = requestedPath?.slice(1);
-    const params = new URLSearchParams(queryString);
+    const [requestedPath, queryString] = (req.url || '').split('?');
+    const rawPath = (requestedPath || '').slice(1);
+    let decodedOriginalText = '';
+
+    try {
+      decodedOriginalText = decodeURIComponent(rawPath);
+    } catch (e) {
+      decodedOriginalText = rawPath;
+    }
+
+    const params = new URLSearchParams(queryString || '');
     const toCase = params.get('toCase');
 
-    if (requestValue === '') {
+    if (!decodedOriginalText) {
       const message = `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`;
 
       errors.push({
@@ -34,22 +42,22 @@ function createServer() {
 
     if (errors.length) {
       res.statusCode = 400;
-      res.statusMessage = 'Bad request'
+      res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
 
       return;
     }
 
-    const result = convertToCase(requestValue, toCase);
+    const result = convertToCase(decodedOriginalText, toCase);
 
     res.statusCode = 200;
-    res.statusMessage = 'OK'
+    res.statusMessage = 'OK';
 
     res.end(
       JSON.stringify({
         convertedText: result.convertedText,
         originalCase: result.originalCase,
-        originalText: requestValue,
+        originalText: decodedOriginalText,
         targetCase: toCase,
       }),
     );
@@ -59,5 +67,5 @@ function createServer() {
 }
 
 module.exports = {
-  createServer
+  createServer,
 };
