@@ -51,7 +51,7 @@ function createServer() {
 
     // Conversion
     try {
-      const result = convertToCase(textToConvert, toCase);
+      const result = convertToCase(toCase, textToConvert);
 
       const responsePayload = {
         originalCase: result.originalCase,
