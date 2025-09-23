@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
+
 const SUPPORTED_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
@@ -8,9 +9,11 @@ function createServer() {
     res.setHeader('Content-Type', 'application/json');
 
     const errors = [];
+
     const [path, queryString] = req.url.split('?');
     const textToConvert =
       path && path !== '/' ? decodeURIComponent(path.slice(1)) : '';
+
     const params = new URLSearchParams(queryString || '');
     const toCase = params.get('toCase');
 
@@ -45,6 +48,7 @@ function createServer() {
       toCase,
       textToConvert,
     );
+
     const response = {
       originalCase,
       targetCase: toCase,
@@ -59,4 +63,5 @@ function createServer() {
 
   return server;
 }
+
 module.exports = { createServer };
