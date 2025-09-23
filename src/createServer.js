@@ -1,10 +1,10 @@
-const http = require('http');
+const { createServer: _createServer } = require('http');
 const { convertToCase } = require('./convertToCase');
 
 const SUPPORTED_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
-  const server = http.createServer((req, res) => {
+  const server = _createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     const fullUrl = new URL(req.url, `http://${req.headers.host}`);
@@ -43,7 +43,7 @@ function createServer() {
 
     if (errors.length > 0) {
       res.statusCode = 400;
-      res.statusMessage = 'Bad Request';
+      res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
 
       return;
