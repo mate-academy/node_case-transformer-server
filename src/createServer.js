@@ -65,6 +65,7 @@ function createServer() {
       res.end(JSON.stringify(body));
     } catch (error) {
       res.statusCode = 500;
+      res.statusMessage = 'Internal Server Error';
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify({ errors: [{ message: error.message }] }));
     }
