@@ -3,7 +3,9 @@ const http = require('http');
 const CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function convertToCase(caseName, text) {
-  if (!text) return { originalCase: 'UNKNOWN', convertedText: '' };
+  if (!text) {
+    return { originalCase: 'UNKNOWN', convertedText: '' };
+  }
 
   const words = text
     .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
@@ -15,29 +17,35 @@ function convertToCase(caseName, text) {
     case 'SNAKE':
       return {
         originalCase: detectCase(text),
-        convertedText: words.map(w => w.toLowerCase()).join('_'),
+        convertedText: words.map((w) => w.toLowerCase()).join('_'),
       };
     case 'KEBAB':
       return {
         originalCase: detectCase(text),
-        convertedText: words.map(w => w.toLowerCase()).join('-'),
+        convertedText: words.map((w) => w.toLowerCase()).join('-'),
       };
     case 'CAMEL':
       return {
         originalCase: detectCase(text),
         convertedText: words
-          .map((w, i) => (i === 0 ? w.toLowerCase() : w[0].toUpperCase() + w.slice(1).toLowerCase()))
+          .map((w, i) =>
+            i === 0
+              ? w.toLowerCase()
+              : w[0].toUpperCase() + w.slice(1).toLowerCase(),
+          )
           .join(''),
       };
     case 'PASCAL':
       return {
         originalCase: detectCase(text),
-        convertedText: words.map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(''),
+        convertedText: words
+          .map((w) => w[0].toUpperCase() + w.slice(1).toLowerCase())
+          .join(''),
       };
     case 'UPPER':
       return {
         originalCase: detectCase(text),
-        convertedText: words.map(w => w.toUpperCase()).join('_'),
+        convertedText: words.map((w) => w.toUpperCase()).join('_'),
       };
     default:
       throw new Error(`Unknown case name: ${caseName}`);
@@ -45,20 +53,23 @@ function convertToCase(caseName, text) {
 }
 
 function detectCase(text) {
+  if (text === text.toUpperCase() && text.match(/[A-Z]/)) return 'UPPER'; 
   if (text.includes('_')) return 'SNAKE';
   if (text.includes('-')) return 'KEBAB';
   if (/^[A-Z]/.test(text)) return 'PASCAL';
   if (/^[a-z]/.test(text) && /[A-Z]/.test(text)) return 'CAMEL';
-  if (text === text.toUpperCase()) return 'UPPER';
   return 'UNKNOWN';
 }
+
 
 function createServer() {
   return http.createServer((req, res) => {
     try {
       const [path, queryString] = req.url.split('?');
       const rawText = path.slice(1);
-      const text = decodeURIComponent(rawText).replace(/^\/+|\/+$/g, '').trim();
+      const text = decodeURIComponent(rawText)
+        .replace(/^\/+|\/+$/g, '')
+        .trim();
 
       const params = new URLSearchParams(queryString || '');
       const toCase = params.get('toCase');
@@ -89,23 +100,30 @@ function createServer() {
         res.statusMessage = 'Bad request';
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ errors }, null, 2));
+
         return;
       }
 
       let result;
+
       try {
         result = convertToCase(toCase, text);
       } catch (err) {
         res.statusCode = 500;
         res.statusMessage = 'Internal Server Error';
         res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ errors: [{ message: err.message }] }, null, 2));
+
+        res.end(
+          JSON.stringify({ errors: [{ message: err.message }] }, null, 2),
+        );
+
         return;
       }
 
       res.statusCode = 200;
       res.statusMessage = 'OK';
       res.setHeader('Content-Type', 'application/json');
+
       res.end(
         JSON.stringify(
           {
@@ -115,8 +133,8 @@ function createServer() {
             convertedText: result.convertedText,
           },
           null,
-          2
-        )
+          2,
+        ),
       );
     } catch (err) {
       res.statusCode = 500;
@@ -128,4 +146,3 @@ function createServer() {
 }
 
 module.exports = { createServer };
-
