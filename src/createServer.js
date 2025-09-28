@@ -1,15 +1,16 @@
 const http = require('node:http');
 const { convertToCase } = require('./convertToCase/index.js');
 
+const validCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
 const createServer = () => {
   const server = http.createServer((req, res) => {
-    const fullUrl = `http://localhost${req.url}`;
-    const parsedUrl = new URL(fullUrl);
-    const textToConvert = parsedUrl.pathname.slice(1);
-    const targetCase = parsedUrl.searchParams.get('toCase');
+    const [path, queryString] = req.url.split('?');
+    const textToConvert = (path || '').slice(1);
+    const params = new URLSearchParams(queryString);
+    const targetCase = params.get('toCase');
 
     const errors = [];
-    const validCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
     if (textToConvert === '') {
       errors.push({
@@ -19,7 +20,7 @@ const createServer = () => {
       });
     }
 
-    if (targetCase === null) {
+    if (!targetCase) {
       errors.push({
         message:
           '"toCase" query param is required. ' +
@@ -27,7 +28,7 @@ const createServer = () => {
       });
     }
 
-    if (targetCase !== null && !validCases.includes(targetCase)) {
+    if (targetCase && !validCases.includes(targetCase)) {
       errors.push({
         message:
           'This case is not supported. ' +
@@ -36,7 +37,7 @@ const createServer = () => {
     }
 
     if (errors.length > 0) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.writeHead(400, 'Bad request', { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ errors }));
 
       return;
@@ -51,7 +52,7 @@ const createServer = () => {
       convertedText: result.convertedText,
     };
 
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(200, 'OK', { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(response));
   });
 
