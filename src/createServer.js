@@ -40,13 +40,13 @@ function createServer() {
       return;
     }
 
-    const convertedText = convertToCase(textToTransform, toCase);
+    const result = convertToCase(toCase, textToTransform);
 
     const body = {
-      originalCase: convertedText.originalCase,
+      originalCase: result.originalCase,
       targetCase: toCase,
       originalText: textToTransform,
-      convertedText: convertedText.convertedText,
+      convertedText: result.convertedText,
     };
 
     res.statusCode = 200;
