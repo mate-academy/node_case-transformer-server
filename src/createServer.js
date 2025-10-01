@@ -40,7 +40,7 @@ function createServer() {
       return;
     }
 
-    const convertedText = convertToCase(textToTransform, toCase);
+    const convertedText = convertToCase(toCase, textToTransform);
 
     const body = {
       originalCase: convertedText.originalCase,
