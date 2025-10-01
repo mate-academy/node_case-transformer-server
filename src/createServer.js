@@ -11,10 +11,10 @@ const wrongCase = `This case is not supported. Available cases: SNAKE, KEBAB, CA
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    const normalizedUrl = new URL(req.url, 'http://localhost:5700');
-    const textToTransform = normalizedUrl.pathname.slice(1);
-    const toCase = normalizedUrl.searchParams.get('toCase');
+    const [path, queryString] = req.url.split('?');
 
+    const textToTransform = (path || '').slice(1);
+    const toCase = new URLSearchParams(queryString).get('toCase');
     const errors = [];
 
     if (!textToTransform) {
@@ -31,7 +31,7 @@ function createServer() {
 
     if (errors.length > 0) {
       res.statusCode = 400;
-      res.statusMessage = 'Bad Request';
+      res.statusMessage = 'Bad request';
 
       res.end(
         JSON.stringify({ errors: errors.map((message) => ({ message })) }),
