@@ -15,26 +15,26 @@ function createServer() {
 
     const textToTransform = (path || '').slice(1);
     const toCase = new URLSearchParams(queryString).get('toCase');
-    const errors = [];
+    const error = [];
 
     if (!textToTransform) {
-      errors.push(notText);
+      error.push(notText);
     }
 
     if (!toCase) {
-      errors.push(noCase);
+      error.push(noCase);
     } else if (!CASES.includes(toCase)) {
-      errors.push(wrongCase);
+      error.push(wrongCase);
     }
 
     res.setHeader('Content-Type', 'application/json');
 
-    if (errors.length > 0) {
+    if (error.length > 0) {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
 
       res.end(
-        JSON.stringify({ errors: errors.map((message) => ({ message })) }),
+        JSON.stringify({ errors: error.map((message) => ({ message })) }),
       );
 
       return;
