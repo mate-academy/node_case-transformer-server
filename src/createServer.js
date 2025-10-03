@@ -44,8 +44,8 @@ function createServer() {
     }
 
     const { originalCase, convertedText } = convertToCase(
-      toCase,
       textToConvert,
+      toCase,
     );
 
     res.statusCode = 200;
