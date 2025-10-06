@@ -7,18 +7,18 @@ const { convertToCase } = require('./convertToCase/convertToCase');
 function createServer() {
   const server = http.createServer((req, res) => {
     if (req.method !== 'GET') {
-      res.statusCode = 404;
-      res.end('Not Found');
+      res.writeHead(404, 'Bad request', { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'Only GET method is supported' }));
 
       return;
     }
 
     const availableCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-    const base = `http://${req.headers.host || 'localhost'}`;
-    const parsed = new URL(req.url, base);
 
-    const toCase = parsed.searchParams.get('toCase');
-    const text = decodeURIComponent(parsed.pathname.slice(1));
+    const [path, queryString] = req.url.split('?');
+    const params = new URLSearchParams(queryString || '');
+    const toCase = params.get('toCase');
+    const text = decodeURIComponent((path || '/').slice(1));
 
     const errors = [];
 
