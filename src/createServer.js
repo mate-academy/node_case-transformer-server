@@ -7,7 +7,9 @@ const { convertToCase } = require('./convertToCase/convertToCase');
 function createServer() {
   const server = http.createServer((req, res) => {
     if (req.method !== 'GET') {
-      res.writeHead(404, 'Bad request', { 'Content-Type': 'application/json' });
+      res.writeHead(405, 'Method Not Allowed', {
+        'Content-Type': 'application/json',
+      });
       res.end(JSON.stringify({ message: 'Only GET method is supported' }));
 
       return;
