@@ -5,10 +5,10 @@ const possibleTypes = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 const createServer = () =>
   http.createServer((req, res) => {
-    const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
-
-    const text = (normalizedURL.pathname ?? '').slice(1);
-    const toCase = normalizedURL.searchParams.get('toCase');
+    const [pathPart, queryString] = (req.url || '').split('?');
+    const text = (pathPart || '').slice(1);
+    const searchParams = new URLSearchParams(queryString);
+    const toCase = searchParams.get('toCase');
 
     const errors = [];
 
