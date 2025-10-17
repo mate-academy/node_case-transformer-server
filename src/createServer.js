@@ -23,7 +23,7 @@ function createServer() {
     const [path, queryString] = req.url.split('?');
 
     // Extract text from path (remove leading '/')
-    const textToConvert = path.substring(1);
+    const textToConvert = decodeURIComponent(path.substring(1));
 
     // Parse query params
     const params = new URLSearchParams(queryString || '');
