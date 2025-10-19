@@ -1,23 +1,17 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 
-const PORT = process.env.PORT || 5700;
 const VALID_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
   const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    const normalizedUrl = new URL(req.url, `http://localhost:${PORT}`);
-    const path = normalizedUrl.pathname.slice(1);
-    // const toCase = normalizedUrl.searchParams.get('toCase');
-    const toCase = normalizedUrl.searchParams
-      .get('toCase')
-      ?.trim()
-      .toUpperCase();
+    const [pathPart, queryString] = req.url.split('?');
+    const path = pathPart.slice(1);
+
+    const params = new URLSearchParams(queryString);
+    const toCase = params.get('toCase');
 
     const errors = [];
     let textToConvert = path;
@@ -42,14 +36,12 @@ function createServer() {
       });
     }
 
-    if (toCase) {
-      if (!VALID_CASES.includes(toCase)) {
-        errors.push({
-          message:
-            // eslint-disable-next-line max-len
-            'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-        });
-      }
+    if (toCase && !VALID_CASES.includes(toCase)) {
+      errors.push({
+        message:
+          // eslint-disable-next-line max-len
+          'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      });
     }
 
     if (errors.length > 0) {
@@ -73,9 +65,6 @@ function createServer() {
         convertedText: conversionResult.convertedText,
       }),
     );
-
-    // eslint-disable-next-line no-console
-    console.log(`path: ${path} query: ${toCase}`);
   });
 
   return server;
