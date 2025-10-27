@@ -2,6 +2,7 @@
   "name": "node_case-transformer-server",
   "version": "1.0.0",
   "description": "Case transformer server",
+  "type": "commonjs",
   "main": "src/main.js",
   "scripts": {
     "init": "mate-scripts init",
@@ -11,13 +12,14 @@
     "test:only": "mate-scripts test",
     "update": "mate-scripts update",
     "postinstall": "npm run update",
-    "test": "npm run lint && npm run test:only"
+    "test": "npm run lint && npm run test:only",
+    "dev": "nodemon src/main.js"
   },
   "author": "Mate academy",
   "license": "GPL-3.0",
   "devDependencies": {
     "@mate-academy/eslint-config": "latest",
-    "@mate-academy/scripts": "^1.8.6",
+    "@mate-academy/scripts": "^2.1.1",
     "eslint": "^8.57.0",
     "eslint-plugin-jest": "^28.6.0",
     "eslint-plugin-node": "^11.1.0",
