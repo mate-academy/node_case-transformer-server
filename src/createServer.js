@@ -2,24 +2,24 @@
 // Also, you can create additional files in the src folder
 // and import (require) them here
 const http = require('http');
-const url = require('url');
 const { convertToCase } = require('./convertToCase');
 
 const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
   return http.createServer((req, res) => {
-    res.setHeaders('Content-type', 'application/json');
+    res.setHeader('Content-type', 'application/json');
 
-    const [path, query] = url.split('?');
-    const textConvert = path.subString(1);
+    const [path, query] = req.url.split('?');
+    const textConvert = path.substring(1);
     const params = new URLSearchParams(query);
     const toCase = params.get('toCase');
+
     const errors = [];
 
     if (!textConvert) {
       errors.push({
-        messege:
+        message:
           'Text to convert is required. Correct request is: ' +
           '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
@@ -27,7 +27,7 @@ function createServer() {
 
     if (!toCase) {
       errors.push({
-        messege:
+        message:
           '"toCase" query param is required. Correct request is: ' +
           '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"',
       });
@@ -43,6 +43,8 @@ function createServer() {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
+
+      return;
     }
 
     const result = convertToCase(textConvert, toCase);
