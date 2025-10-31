@@ -4,7 +4,7 @@ In this task you will learn how to work with `http` module in Node.js, creating 
 
 ## Requirements
 
-You need to create and export (as an object field) a `createServer` function inside `src/createServer.js`.
+You need to create and iexport (as an object field) a `createServer` function inside `src/createServer.js`.
 Inside the function you should implement a server (from `http` module) and return it.
 
 You can create as many files as you want and split logic between them.
