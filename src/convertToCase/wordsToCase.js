@@ -46,6 +46,4 @@ function wordsToCase(words, caseName) {
   }
 }
 
-module.exports = {
-  wordsToCase,
-};
+module.exports = { wordsToCase };

@@ -30,6 +30,4 @@ function detectCase(text) {
   return 'CAMEL';
 }
 
-module.exports = {
-  detectCase,
-};
+module.exports = { detectCase };
