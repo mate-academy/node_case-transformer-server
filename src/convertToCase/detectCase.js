@@ -1,35 +1,29 @@
-/**
- * @typedef {'SNAKE' | 'KEBAB' | 'CAMEL' | 'PASCAL' | 'UPPER'} CaseName
- *
- * @param {string} text
- * @returns {CaseName}
- */
 function detectCase(text) {
-  if (text.toUpperCase() === text) {
+  if (typeof text !== 'string') {
+    return 'UNKNOWN';
+  }
+
+  if (/^[A-Z_]+$/.test(text)) {
     return 'UPPER';
   }
 
-  if (text.toLowerCase() === text) {
-    if (text.includes('_') || text.includes('-')) {
-      // There are no uppercase in the text, so it's one of the lower cases
-      // See if they're snake or kebab
-      if (text.includes('_')) {
-        return 'SNAKE';
-      }
-
-      if (text.includes('-')) {
-        return 'KEBAB';
-      }
-    }
+  if (text.includes('_')) {
+    return 'SNAKE';
   }
 
-  if (text[0].toUpperCase() === text[0]) {
+  if (text.includes('-')) {
+    return 'KEBAB';
+  }
+
+  if (/^[A-Z]/.test(text) && /[a-z]/.test(text)) {
     return 'PASCAL';
   }
 
-  return 'CAMEL';
+  if (/^[a-z]/.test(text) && /[A-Z]/.test(text)) {
+    return 'CAMEL';
+  }
+
+  return 'UNKNOWN';
 }
 
-module.exports = {
-  detectCase,
-};
+module.exports = detectCase;

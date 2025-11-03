@@ -1,51 +1,20 @@
-/**
- * @typedef {'SNAKE' | 'KEBAB' | 'CAMEL' | 'PASCAL' | 'UPPER'} CaseName
- *
- * @param {string[]} words
- * @param {CaseName} caseName
- *
- * @returns {string}
- */
-function wordsToCase(words, caseName) {
-  switch (caseName) {
-    case 'SNAKE': {
+function wordToCase(words, targetCase) {
+  switch (targetCase) {
+    case 'SNAKE':
       return words.join('_');
-    }
-
-    case 'KEBAB': {
+    case 'KEBAB':
       return words.join('-');
-    }
-
-    case 'UPPER': {
-      return words.map((word) => word.toUpperCase()).join('_');
-    }
-
-    case 'PASCAL': {
+    case 'CAMEL':
       return words
-        .map((word) => {
-          return `${word[0].toUpperCase()}${word.slice(1)}`;
-        })
+        .map((w, i) => (i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)))
         .join('');
-    }
-
-    case 'CAMEL': {
-      return words
-        .map((word, index) => {
-          if (index === 0) {
-            return word;
-          }
-
-          return `${word[0].toUpperCase()}${word.slice(1)}`;
-        })
-        .join('');
-    }
-
-    default: {
-      throw new Error(`Unknown case name: ${caseName}`);
-    }
+    case 'PASCAL':
+      return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+    case 'UPPER':
+      return words.join('_').toUpperCase();
+    default:
+      return words.join(' ');
   }
 }
 
-module.exports = {
-  wordsToCase,
-};
+module.exports = wordToCase;
