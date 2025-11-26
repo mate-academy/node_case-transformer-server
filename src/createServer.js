@@ -17,14 +17,14 @@ function createServer() {
     if (!text) {
       errors.push({
         message:
-          'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"',
+          'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
     if (toCase === null) {
       errors.push({
         message:
-          '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"',
+          '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
@@ -64,8 +64,7 @@ function createServer() {
 const server = createServer();
 
 server.listen(3000, () =>
-  console.log('Server running on http://localhost:3000'),
-);
+  console.log('Server running on http://localhost:3000'),);
 
 module.exports = {
   createServer,
