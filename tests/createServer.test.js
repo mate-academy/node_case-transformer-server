@@ -57,126 +57,49 @@ describe('createServer', () => {
       server.close();
     });
 
-    describe('Validation', () => {
-      it('should throw correct error if no text to convert', async () => {
-        const { body, res } = await request('/?toCase=SNAKE');
+    describe('Users Module', () => {
+      it('should return correct response for /users', async () => {
+        const { body, res } = await request('/users');
 
         expect(res.headers['content-type']).toEqual('application/json');
+        expect(res.statusCode).toBe(200);
 
         const data = JSON.parse(body);
 
         expect(data).toEqual({
-          errors: [
-            {
-              message:
-                'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-            },
-          ],
-        });
-      });
-
-      it('should throw correct error if no toCase', async () => {
-        const { body, res } = await request('/helloWorld');
-
-        expect(res.headers['content-type']).toEqual('application/json');
-
-        const data = JSON.parse(body);
-
-        expect(data).toEqual({
-          errors: [
-            {
-              message:
-                '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-            },
-          ],
-        });
-      });
-
-      it('should throw correct error if toCase is invalid', async () => {
-        const { body, res } = await request('/helloWorld?toCase=invalid');
-
-        expect(res.headers['content-type']).toEqual('application/json');
-
-        const data = JSON.parse(body);
-
-        expect(data).toEqual({
-          errors: [
-            {
-              message:
-                'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-            },
-          ],
-        });
-      });
-
-      it('should throw correct error for empty URL', async () => {
-        const { body, res } = await request('/');
-
-        expect(res.headers['content-type']).toEqual('application/json');
-
-        const data = JSON.parse(body);
-
-        expect(data).toEqual({
-          errors: expect.arrayContaining([
-            expect.objectContaining({
-              message:
-                'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-            }),
-            expect.objectContaining({
-              message:
-                '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-            }),
-          ]),
-        });
-      });
-
-      it('should throw correct error if no text to convert and invalid toCase', async () => {
-        const { body, res } = await request('/?toCase=LOWER');
-
-        expect(res.headers['content-type']).toEqual('application/json');
-
-        const data = JSON.parse(body);
-
-        expect(data).toEqual({
-          errors: expect.arrayContaining([
-            expect.objectContaining({
-              message:
-                'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
-            }),
-            expect.objectContaining({
-              message:
-                'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-            }),
-          ]),
+          message: 'Users module reached',
+          users: [],
         });
       });
     });
 
-    describe('Response', () => {
-      const cases = {
-        SNAKE: 'hello_world',
-        KEBAB: 'hello-world',
-        CAMEL: 'helloWorld',
-        PASCAL: 'HelloWorld',
-        UPPER: 'HELLO_WORLD',
-      };
+    describe('Expenses Module', () => {
+      it('should return correct response for /expenses', async () => {
+        const { body, res } = await request('/expenses');
 
-      Object.entries(cases).forEach(([toCase, expected]) => {
-        Object.entries(cases).forEach(([originalCase, text]) => {
-          it(`should convert ${originalCase} to ${toCase}`, async () => {
-            const { body, res } = await request(`/${text}?toCase=${toCase}`);
+        expect(res.headers['content-type']).toEqual('application/json');
+        expect(res.statusCode).toBe(200);
 
-            expect(res.headers['content-type']).toEqual('application/json');
+        const data = JSON.parse(body);
 
-            const data = JSON.parse(body);
+        expect(data).toEqual({
+          message: 'Expenses module reached',
+          expenses: [],
+        });
+      });
+    });
 
-            expect(data).toEqual({
-              originalCase,
-              targetCase: toCase,
-              convertedText: expected,
-              originalText: text,
-            });
-          });
+    describe('Unknown Routes', () => {
+      it('should return 404 for unknown routes', async () => {
+        const { body, res } = await request('/random');
+
+        expect(res.headers['content-type']).toEqual('application/json');
+        expect(res.statusCode).toBe(404);
+
+        const data = JSON.parse(body);
+
+        expect(data).toEqual({
+          error: 'Route not found',
         });
       });
     });
