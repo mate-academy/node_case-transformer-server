@@ -3,7 +3,6 @@ const http = require('http');
 const { convertToCase } = require('./convertToCase/index');
 
 const PORT = 8080;
-const BASE_URL = 'http://localhost';
 
 const SUPPORTED_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
@@ -12,10 +11,12 @@ function createServer() {
     res.setHeader('Content-Type', 'application/json');
 
     try {
-      const requestUrl = new URL(req.url, BASE_URL);
+      const [path, queryString] = req.url.split('?');
 
-      const textToConvert = requestUrl.pathname.substring(1);
-      const toCase = requestUrl.searchParams.get('toCase');
+      const textToConvert = path.startsWith('/') ? path.slice(1) : path;
+
+      const params = new URLSearchParams(queryString || '');
+      const toCase = params.get('toCase');
 
       const errors = [];
 
@@ -46,7 +47,7 @@ function createServer() {
         return res.end(JSON.stringify({ errors }));
       }
 
-      const conversionResult = convertToCase(textToConvert, toCase);
+      const conversionResult = await convertToCase(textToConvert, toCase);
 
       const { originalCase, convertedText } = conversionResult;
 
