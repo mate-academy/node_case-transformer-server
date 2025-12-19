@@ -42,6 +42,8 @@ const createServer = () => {
 
     console.log(result);
 
+    res.statusCode = 200;
+    res.statusMessage = 'OK';
     res.end(JSON.stringify(result));
   });
 };
