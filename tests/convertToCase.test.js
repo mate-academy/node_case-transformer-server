@@ -12,7 +12,7 @@ describe('convertToCase', () => {
   Object.entries(cases).forEach(([toCase, expected]) => {
     Object.entries(cases).forEach(([originalCase, text]) => {
       it(`should convert ${originalCase} to ${toCase}`, async () => {
-        const result = convertToCase(text, toCase);
+        const result = convertToCase(toCase, text);
 
         expect(result).toEqual({
           originalCase,
