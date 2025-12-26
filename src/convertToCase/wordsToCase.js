@@ -41,7 +41,10 @@ function wordsToCase(words, caseName) {
     }
 
     default: {
-      throw new Error(`Unknown case name: ${caseName}`);
+      throw new Error(
+        // eslint-disable-next-line max-len, prettier/prettier
+        'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+      );
     }
   }
 }
