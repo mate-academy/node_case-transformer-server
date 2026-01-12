@@ -36,7 +36,7 @@ const createServer = () => {
 
     if (errors.length) {
       res.statusCode = 400;
-      res.statusMessage = 'Bad Request';
+      res.statusText = 'Bad Request';
 
       res.end(
         JSON.stringify({
@@ -48,7 +48,7 @@ const createServer = () => {
     }
 
     res.statusCode = 200;
-    res.statusMessage = 'OK';
+    res.statusText = 'OK';
 
     const { originalCase, convertedText } = convertToCase(pathname, toCase);
 
