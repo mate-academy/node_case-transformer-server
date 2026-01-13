@@ -48,7 +48,7 @@ const createServer = () => {
     }
 
     res.statusCode = 200;
-    res.statusText = 'ok';
+    res.statusText = 'OK';
 
     const { originalCase, convertedText } = convertToCase(pathname, toCase);
 
