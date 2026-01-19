@@ -5,6 +5,7 @@ const { wordsToCase } = require('./wordsToCase');
 /**
  * @typedef {'SNAKE' | 'KEBAB' | 'CAMEL' | 'PASCAL' | 'UPPER'} CaseName
  *
+ // eslint-disable-next-line prettier/prettier
  * @param {string} text
  * @param {CaseName} caseName
  *
