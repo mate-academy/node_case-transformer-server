@@ -21,6 +21,7 @@ Supported cases:
 Server accepts request to the URL in the next format:
 `/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>`.
 
+
 <details>
   <summary><strong>How to parse URL query params</strong></summary>
   Node.js has built-in global class `URLSearchParams`. [Documentation](https://nodejs.org/api/url.html#class-urlsearchparams).
