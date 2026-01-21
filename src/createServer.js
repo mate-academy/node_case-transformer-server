@@ -1,3 +1,82 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
+const http = require('http');
+const { convertToCase } = require('./convertToCase/convertToCase');
+
+function createServer() {
+  const server = http.createServer((req, res) => {
+    const { textToConvert, targetCase, errors } = processRequest(req);
+
+    if (errors.length > 0) {
+      return sendErrorResponse(res, errors);
+    }
+
+    const result = convertToCase(textToConvert, targetCase);
+    const response = createResponse(result, targetCase, textToConvert);
+
+    sendSuccessResponse(res, response);
+  });
+
+  return server;
+}
+
+function processRequest(req) {
+  const [pathname, queryString] = req.url.split('?');
+  const params = new URLSearchParams(queryString);
+  const targetCase = params.get('toCase');
+  const textToConvert = pathname.slice(1);
+
+  const errors = [];
+
+  if (!textToConvert) {
+    errors.push({
+      message:
+        'Text to convert is required. Correct request is: '
+        + '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    });
+  }
+
+  if (!targetCase) {
+    errors.push({
+      message:
+        '"toCase" query param is required. Correct request is: '
+        + '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+    });
+  }
+
+  if (targetCase
+    && !['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'].includes(targetCase)) {
+    errors.push({
+      message:
+        'This case is not supported. Available cases: '
+        + 'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+    });
+  }
+
+  return {
+    textToConvert,
+    targetCase,
+    errors,
+  };
+}
+
+function sendSuccessResponse(res, data) {
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify(data));
+}
+
+function sendErrorResponse(res, errors) {
+  res.writeHead(400, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ errors }));
+}
+
+function createResponse(result, targetCase, textToConvert) {
+  return {
+    originalCase: result.originalCase,
+    targetCase,
+    originalText: textToConvert,
+    convertedText: result.convertedText,
+  };
+}
+
+module.exports = {
+  createServer,
+};
