@@ -98,6 +98,8 @@ Response body should be the next JSON:
 }
 ```
 
+
+
 Example:
 ```json
 {
