@@ -49,8 +49,11 @@ describe('createServer', () => {
 
     beforeAll(async () => {
       server = createServer();
-
+      // eslint-disable-next-line no-console
+      console.log('beforeAll start');
       await listen(5701);
+      // eslint-disable-next-line no-console
+      console.log('beforeAll end');
     });
 
     afterAll(() => {
