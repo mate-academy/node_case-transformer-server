@@ -27,7 +27,17 @@ function detectCase(text) {
     return 'PASCAL';
   }
 
-  return 'CAMEL';
+  const isCamel = text
+    .split('')
+    .slice(1, -1)
+    .filter(item => item.toUpperCase() === item)
+    .length === 1;
+
+  if (isCamel) {
+    return 'CAMEL';
+  }
+
+  return null;
 }
 
 module.exports = {
