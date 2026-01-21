@@ -12,6 +12,7 @@ function toWords(text, originalCase) {
   }
 
   const words = [];
+
   let lastChar = -1;
 
   for (let i = 0; i < text.length; i++) {
