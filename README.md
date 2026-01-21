@@ -97,7 +97,7 @@ Response body should be the next JSON:
   "convertedText": "CONVERTED_TEXT"
 }
 ```
-
+ 
 Example:
 ```json
 {
