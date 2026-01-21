@@ -1,3 +1,10 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
+const { handleRequest } =  require('./convertToCase/handleRequest');
+const http = require('http');
+
+const createServer = () => {
+  return http.createServer(handleRequest);
+};
+
+module.exports = {
+  createServer,
+};
