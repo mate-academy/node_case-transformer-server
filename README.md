@@ -19,7 +19,7 @@ Supported cases:
 - UPPER_CASE (`UPPER`)
 
 Server accepts request to the URL in the next format:
-`/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>`.
+`/<TEXT_TO_CONVERT>?toCase=<SNAKE>`.
 
 <details>
   <summary><strong>How to parse URL query params</strong></summary>
