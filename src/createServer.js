@@ -108,7 +108,8 @@ const createServer = () => {
       .split(/\s+/)
       .map((w) => w.toLowerCase())
       .filter(Boolean);
-    // .filter(Boolean) fjerner alle "tomme" eller "ugyldige" elementer i words[]
+    // .filter(Boolean) fjerner alle "tomme" eller "ugyldige" elementer i
+    // words[]
     const convertedText = convertToTarget(words, targetCase);
 
     // 4. Send svar
