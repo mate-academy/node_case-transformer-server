@@ -22,6 +22,9 @@ function convertToCase(text, caseName) {
   return { originalCase, convertedText };
 }
 
+const CASE_NAMES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
 module.exports = {
   convertToCase,
+  CASE_NAMES,
 };
