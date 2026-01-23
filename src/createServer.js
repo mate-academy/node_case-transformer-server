@@ -1,4 +1,5 @@
 const { createServer: httpCreateServer } = require('node:http');
+const { convertToCase } = require('./convertToCase');
 
 /**
  * Hjælpefunktion til at detektere formatet (Early Return)
@@ -95,6 +96,11 @@ const createServer = () => {
       return res.end(JSON.stringify({ errors }));
     }
 
+    // convertToCase(text, toCase);  ->{ originalCase, convertedText };
+    const { originalCase, convertedText } = convertToCase(text, targetCase);
+    // ændres nemlig ikke senere
+
+    /*
     // 3. Logik: Detektér, Split til ord, og Konvertér
     const originalCase = detectCase(text);
 
@@ -111,7 +117,7 @@ const createServer = () => {
     // .filter(Boolean) fjerner alle "tomme" eller "ugyldige" elementer i
     // words[]
     const convertedText = convertToTarget(words, targetCase);
-
+    */
     // 4. Send svar
     const response = {
       originalCase,
@@ -124,4 +130,8 @@ const createServer = () => {
   });
 };
 
-module.exports = { createServer };
+module.exports = {
+  createServer,
+  detectCase,
+  convertToTarget,
+};
