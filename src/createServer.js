@@ -4,6 +4,7 @@ const { convertToCase } = require('./convertToCase');
 /**
  * Hjælpefunktion til at detektere formatet (Early Return)
  */
+/*
 function detectCase(text) {
   if (text.includes('-')) {
     return 'KEBAB';
@@ -23,10 +24,12 @@ function detectCase(text) {
 
   return 'SNAKE'; // Default hvis det bare er ét ord
 }
+*/
 
 /**
  * Konverterer et array af ord til det ønskede format, til eet ord
  */
+/*
 function convertToTarget(words, targetCase) {
   switch (targetCase) {
     case 'SNAKE':
@@ -51,6 +54,7 @@ function convertToTarget(words, targetCase) {
       return words.join('');
   }
 }
+*/
 
 // en Arrow Function (pile-funktion), () er argumenter, ingen her, { body }
 const createServer = () => {
@@ -130,8 +134,8 @@ const createServer = () => {
   });
 };
 
+// EKSPORTÉR ALT HER,  detectCase og convertToTarget fkt, hvis de ikke bruges
+// - så accepterr linteren de ubrugte fkt detectCase
 module.exports = {
   createServer,
-  detectCase,
-  convertToTarget,
 };
