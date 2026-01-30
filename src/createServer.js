@@ -32,7 +32,7 @@ const validation = function (textToConvert, toCase, errors) {
 function createServer() {
   const server = http.createServer((req, res) => {
     const [urlText, query] = req.url.split('?');
-    const textToConvert = urlText.slice(1);
+    const textToConvert = decodeURIComponent(urlText.slice(1));
     const toCase = new URLSearchParams(query).get('toCase');
 
     res.setHeader('Content-Type', 'application/json');
