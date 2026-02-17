@@ -15,15 +15,15 @@ const createServer = () => {
 
     if (!originalText) {
       errors.push({
-        message: `Text to convert is required. Correct request is:
-           "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+        message: 'Text to convert is required. ' +
+          'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
     if (!targetCase) {
       errors.push({
-        message: `"toCase" query param is required. Correct
-          request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+        message: '"toCase" query param is required. ' +
+          'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     } else if (!SUPPORTED_CASES.includes(targetCase)) {
       errors.push({

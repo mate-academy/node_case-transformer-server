@@ -69,8 +69,7 @@ describe('createServer', () => {
           errors: [
             {
               message:
-                `Text to convert is required. Correct request is:
-           "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+                'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
             },
           ],
         });
@@ -87,8 +86,7 @@ describe('createServer', () => {
           errors: [
             {
               message:
-                `"toCase" query param is required. Correct
-          request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+                '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
             },
           ],
         });
@@ -122,13 +120,11 @@ describe('createServer', () => {
           errors: expect.arrayContaining([
             expect.objectContaining({
               message:
-                `Text to convert is required. Correct request is:
-           "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+                'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
             }),
             expect.objectContaining({
               message:
-                `"toCase" query param is required. Correct
-          request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+                '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
             }),
           ]),
         });
@@ -145,8 +141,7 @@ describe('createServer', () => {
           errors: expect.arrayContaining([
             expect.objectContaining({
               message:
-                `Text to convert is required. Correct request is:
-           "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+                'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
             }),
             expect.objectContaining({
               message:
