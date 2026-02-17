@@ -15,14 +15,16 @@ const createServer = () => {
 
     if (!originalText) {
       errors.push({
-        message: 'Text to convert is required. ' +
+        message:
+          'Text to convert is required. ' +
           'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
     if (!targetCase) {
       errors.push({
-        message: '"toCase" query param is required. ' +
+        message:
+          '"toCase" query param is required. ' +
           'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     } else if (!SUPPORTED_CASES.includes(targetCase)) {
@@ -52,7 +54,7 @@ const createServer = () => {
       );
     } catch (error) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end();
+      res.end(errors);
     }
   });
 
