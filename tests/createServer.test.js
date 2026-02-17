@@ -69,7 +69,8 @@ describe('createServer', () => {
           errors: [
             {
               message:
-                'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+                `Text to convert is required. Correct request is:
+           "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
             },
           ],
         });
