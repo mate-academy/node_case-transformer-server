@@ -25,8 +25,8 @@ const createServer = () => {
     if (!toCase) {
       errors.push({
         message:
-          'Text to convert is required. Correct request is: "' +
-          '/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+          '"toCase" query param is required. Correct request is: ' +
+          '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     } else if (!supportedCases.includes(toCase)) {
       errors.push({
