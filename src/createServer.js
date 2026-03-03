@@ -16,10 +16,11 @@ function sendJson(res, statusCode, statusMessage, payload) {
 
 function createServer() {
   return http.createServer((req, res) => {
-    const url = new URL(req.url || '/', 'http://localhost');
+    const [pathPart, queryString] = (req.url || '/').split('?');
+    const textToConvert = decodeURIComponent(pathPart).slice(1);
 
-    const textToConvert = decodeURIComponent(url.pathname).slice(1);
-    const toCase = url.searchParams.get('toCase');
+    const params = new URLSearchParams(queryString || '');
+    const toCase = params.get('toCase');
 
     const errors = [];
 
