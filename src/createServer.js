@@ -1,6 +1,6 @@
-import http from 'http';
+const http = require('http');
 
-const convertToCase = require('./convertToCase/convertToCase.js');
+const { convertToCase } = require('./convertToCase/convertToCase');
 
 function createServer() {
   const server = http.createServer((req, res) => {
@@ -13,7 +13,7 @@ function createServer() {
 
     const errors = [];
 
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Content-Type', 'application/json');
 
     if (!textToConvert) {
       errors.push({
