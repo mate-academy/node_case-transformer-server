@@ -18,7 +18,7 @@ function createServer() {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ errors: message }));
+      res.end(JSON.stringify({ errors: [...message] }));
     }
 
     function sucRes(originalCase, targetCase, originalText, convertedText) {
@@ -38,8 +38,7 @@ function createServer() {
 
     if (text === '') {
       errors.push({
-        message: `Text to convert is required. Correct request is:
-        "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
+        message: `Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".`,
       });
     }
 
@@ -68,6 +67,4 @@ function createServer() {
   });
 }
 
-module.exports = {
-  createServer,
-};
+module.exports = { createServer };
