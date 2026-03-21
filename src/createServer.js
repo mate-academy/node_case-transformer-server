@@ -13,6 +13,7 @@ function createServer() {
         const errorResponse = prepareErrors(params.errorArr);
 
         res.statusCode = 400;
+        res.statusMessage = 'Bad request';
         res.setHeader('Content-Type', 'application/json');
 
         return res.end(JSON.stringify({ errors: errorResponse }));
@@ -28,10 +29,12 @@ function createServer() {
       };
 
       res.statusCode = 200;
+      res.statusMessage = 'OK';
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify(response));
     } catch (err) {
       res.statusCode = 500;
+      res.statusMessage = 'Internal Server Error';
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify({ error: 'Internal Server Error' }));
     }
