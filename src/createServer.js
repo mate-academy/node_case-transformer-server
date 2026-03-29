@@ -34,7 +34,7 @@ function createServer() {
       errors.push({
         message:
           'This case is not supported. Available cases: ' +
-          'SNAKE, KEBAB, CAMEL, PASCAL, UPPER',
+          'SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
     }
 
