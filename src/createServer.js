@@ -1,8 +1,9 @@
 // Write code here
 // Also, you can create additional files in the src folder
 // and import (require) them here
+/* eslint-disable max-len */
 const http = require('http');
-const convertToCase = require('./convertToCase');
+const { convertToCase } = require('./convertToCase/convertToCase');
 
 function createServer() {
   const server = http.createServer((req, res) => {
@@ -15,24 +16,21 @@ function createServer() {
     if (!urlPath) {
       errors.push({
         message:
-          'Text to convert is required. Correct request is: ' +
-          '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>"',
+          'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
     if (!urlCase) {
       errors.push({
         message:
-          '"toCase" query param is required. Correct request is: ' +
-          '"/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+          '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
       });
     }
 
     if (urlCase && !caseFunctions.includes(urlCase)) {
       errors.push({
         message:
-          'This case is not supported. ' +
-          'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+          'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
     }
 
