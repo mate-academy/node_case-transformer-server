@@ -2,7 +2,7 @@
 // Also, you can create additional files in the src folder
 // and import (require) them here
 const http = require('http');
-const convertToCase = require('./convertToCase/convertToCase');
+const { convertToCase } = require('./convertToCase/convertToCase');
 const allowedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
@@ -31,8 +31,8 @@ function createServer() {
     } else if (!allowedCases.includes(toCase)) {
       errors.push({
         message:
-          'This case is not supported.' +
-          ' Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+          'This case is not supported. ' +
+          'Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
     }
 
@@ -54,7 +54,7 @@ function createServer() {
     res.statusMessage = 'OK';
     res.setHeader('Content-Type', 'application/json');
 
-    const result = convertToCase.convertToCase(textToConvert, toCase);
+    const result = convertToCase(textToConvert, toCase);
 
     const responseBody = {
       originalCase: result.originalCase,
