@@ -5,23 +5,63 @@ import http from 'http';
 import { convertToCase } from './convertToCase/convertToCase';
 export function createServer() {
   const server = http.createServer((r, s) => {
-    const url = r.url.split('?');
-    if (url[1] === undefined) {
-      return;
+    s.setHeader('Content-Type', 'application/json');
+    const word = r.url.split('?')[0].replace('/', '');
+    const params = new URLSearchParams(r.url.split('?')[1]);
+    const toCase = params.get('toCase');
+    if (!word) {
+      s.statusCode = 400;
+      return s.end(
+        JSON.stringify({
+          errors: [
+            {
+              message:
+                'Text to convert is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+            },
+          ],
+        }),
+      );
+    } else if (!toCase) {
+      s.statusCode = 400;
+      return s.end(
+        JSON.stringify({
+          errors: [
+            {
+              message:
+                '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+            },
+          ],
+        }),
+      );
+    } else if (
+      toCase !== 'SNAKE' &&
+      toCase !== 'KEBAB' &&
+      toCase !== 'CAMEL' &&
+      toCase !== 'PASCAL' &&
+      toCase !== 'UPPER'
+    ) {
+      s.statusCode = 400;
+      return s.end(
+        JSON.stringify({
+          errors: [
+            {
+              message:
+                'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+            },
+          ],
+        }),
+      );
     }
-    const word = url[0].replace('/', '');
-    if (url[1].includes('UPPER')) {
-      return convertToCase(word, 'UPPER');
-    } else if (url[1].includes('KEBAB')) {
-      return convertToCase(word, 'KEBAB');
-    } else if (url[1].includes('CAMEL')) {
-      return convertToCase(word, 'CAMEL');
-    } else if (url[1].includes('PASCAL')) {
-      return convertToCase(word, 'PASCAL');
-    } else if (url[1].includes('SNAKE')) {
-      return convertToCase(word, 'SNAKE');
-    }
-    s.end('ok');
+    // conteudo principal
+    s.statusCode = 200;
+    s.end(
+      JSON.stringify({
+        originalCase: convertToCase(word, toCase).originalCase,
+        targetCase: toCase,
+        originalText: word,
+        convertedText: convertToCase(word, toCase).convertedText,
+      }),
+    );
   });
   return server;
 }
