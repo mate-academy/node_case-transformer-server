@@ -11,8 +11,7 @@ function createServer() {
 
     const normalizedUrl = new URL(req.url, `http://${req.headers.host}`);
     const textToConvert = normalizedUrl.pathname.slice(1);
-    const params = new URLSearchParams(normalizedUrl);
-    const caseName = params.get('toCase');
+    const caseName = normalizedUrl.searchParams.get('toCase');
 
     const isErrors = checkErrors(textToConvert, caseName);
 
