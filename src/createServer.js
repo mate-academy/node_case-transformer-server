@@ -1,8 +1,4 @@
 /* eslint-disable max-len */
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
-
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
 
@@ -11,9 +7,12 @@ const createServer = () => {
     res.setHeader('Content-Type', 'application/json');
 
     const cases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
-    const url = new URL(req.url, `http://${req.headers.host}`);
-    const toCase = url.searchParams.get('toCase');
-    const text = url.pathname.slice(1);
+
+    const [path, queryString] = req.url.split('?');
+    const params = new URLSearchParams(queryString || '');
+
+    const toCase = params.get('toCase');
+    const text = path.slice(1);
     const errors = { errors: [] };
 
     if (text.length < 1) {
@@ -32,7 +31,8 @@ const createServer = () => {
 
     if (toCase && !cases.includes(toCase)) {
       errors.errors.push({
-        message: `This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.`,
+        message:
+          'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
     }
 
@@ -50,6 +50,7 @@ const createServer = () => {
     result.targetCase = toCase;
 
     res.statusCode = 200;
+    res.statusMessage = 'OK';
     res.end(JSON.stringify(result));
   });
 };
