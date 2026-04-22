@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const { detectCase } = require('./detectCase');
 const { toWords } = require('./toWords');
 const { wordsToCase } = require('./wordsToCase');
