@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const { createServer } = require('./createServer');
 
 createServer().listen(5700, () => {
