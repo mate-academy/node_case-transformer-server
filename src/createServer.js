@@ -42,7 +42,7 @@ function createServer() {
     }
 
     if (errors.length > 0) {
-      res.writeHead(400, 'Errors', {
+      res.writeHead(400, 'Bad request', {
         'Content-Type': 'application/json',
       });
       res.end(JSON.stringify({ errors: errors }));
