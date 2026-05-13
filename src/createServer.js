@@ -3,6 +3,12 @@ const { convertToCase } = require('./convertToCase');
 
 function createServer() {
   const server = http.createServer((req, res) => {
+    if (req.url === '/favicon.ico') {
+      res.statusCode = 204;
+
+      return res.end();
+    }
+
     res.setHeader('Content-Type', 'application/json');
 
     const [path, queryString = ''] = req.url.split('?');
