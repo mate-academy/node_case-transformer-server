@@ -1,3 +1,17 @@
-// Write code here
-// Also, you can create additional files in the src folder
-// and import (require) them here
+const http = require('http');
+const {
+  handleCaseTransformRequest,
+} = require('./http/handleCaseTransformRequest');
+
+function createServer() {
+  const server = http.createServer((req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    handleCaseTransformRequest(req, res);
+  });
+
+  return server;
+}
+
+module.exports = {
+  createServer,
+};
