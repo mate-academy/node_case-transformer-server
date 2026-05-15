@@ -1,6 +1,8 @@
 # IDE
 .idea
 .vscode
+.github
+.gitignore
 
 # Node
 node_modules
