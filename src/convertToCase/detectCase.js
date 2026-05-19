@@ -10,7 +10,6 @@ function detectCase(text) {
   }
 
   if (text.toLowerCase() === text) {
-    if (text.includes('_') || text.includes('-')) {
       // There are no uppercase in the text, so it's one of the lower cases
       // See if they're snake or kebab
       if (text.includes('_')) {
@@ -21,7 +20,6 @@ function detectCase(text) {
         return 'KEBAB';
       }
     }
-  }
 
   if (text[0].toUpperCase() === text[0]) {
     return 'PASCAL';
