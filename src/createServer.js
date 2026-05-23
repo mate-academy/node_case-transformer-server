@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const http = require('http');
 const convertToCase = require('./convertToCase');
 
@@ -31,7 +32,7 @@ function createServer() {
     if (toCase && !AVAILABLE_CASES.includes(toCase)) {
       errors.push({
         message:
-        'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
+          'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
     }
 
@@ -41,15 +42,15 @@ function createServer() {
 
       res.end(
         JSON.stringify({
-          errors
-        })
+          errors,
+        }),
       );
 
       return;
     }
 
     const result = convertToCase(textToConvert, toCase);
-    
+
     res.statusCode = 200;
     res.statusMessage = 'OK';
 
@@ -67,5 +68,5 @@ function createServer() {
 }
 
 module.exports = {
-  createServer
+  createServer,
 };
