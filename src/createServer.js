@@ -4,13 +4,14 @@
 const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 
-const posibbleData = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+const possibleData = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
   const server = http.createServer((req, res) => {
     if (req.method !== 'GET') {
       res.statusCode = 404;
-      res.end('Not found');
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ message: 'Not Found' }));
 
       return;
     }
@@ -37,7 +38,7 @@ function createServer() {
       });
     }
 
-    if (newRes && !posibbleData.includes(newRes)) {
+    if (newRes && !possibleData.includes(newRes)) {
       errors.push({
         message:
           'This case is not supported. ' +
