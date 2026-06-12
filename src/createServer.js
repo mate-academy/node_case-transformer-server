@@ -11,6 +11,10 @@ function createServer() {
 
     const errors = [];
 
+    // Білий список підтримуваних регістрів
+    const allowedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+
+    // 1. Перевірка наявності тексту
     if (!textToConvert) {
       errors.push({
         message:
@@ -18,28 +22,20 @@ function createServer() {
       });
     }
 
+    // 2. Перевірка параметра toCase та його валідності
     if (!toCase) {
       errors.push({
         message:
-          // Виправлено "search" на "query"
           '"toCase" query param is required. Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".',
+      });
+    } else if (!allowedCases.includes(toCase)) {
+      errors.push({
+        message:
+          'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
       });
     }
 
-    let result = null;
-
-    if (toCase) {
-      try {
-        result = convertToCase(textToConvert, toCase);
-      } catch (error) {
-        // Підміняємо системну помилку на ту, яку вимагає специфікація API
-        errors.push({
-          message:
-            'This case is not supported. Available cases: SNAKE, KEBAB, CAMEL, PASCAL, UPPER.',
-        });
-      }
-    }
-
+    // 3. Якщо є хоча б одна помилка — повертаємо 400 і обриваємо виконання
     if (errors.length > 0) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ errors }));
@@ -47,8 +43,12 @@ function createServer() {
       return;
     }
 
+    // 4. Викликаємо бізнес-логіку ТІЛЬКИ якщо валідація пройдена успішно (try/catch більше не потрібен)
+    const result = convertToCase(textToConvert, toCase);
+
     res.writeHead(200, { 'Content-Type': 'application/json' });
 
+    // 5. Віддаємо плоский об'єкт
     res.end(
       JSON.stringify({
         originalCase: result.originalCase,
