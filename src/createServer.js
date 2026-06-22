@@ -39,6 +39,9 @@ function createServer() {
     if (errors.length !== 0) {
       const finalErrors = errors.map((error) => ({ message: error }));
 
+      res.statusCode = 400;
+      res.statusMessage = 'Bad request';
+
       res.end(JSON.stringify({ errors: finalErrors }));
 
       return;
