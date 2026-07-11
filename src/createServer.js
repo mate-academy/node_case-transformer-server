@@ -16,8 +16,8 @@ const createServer = () => {
     }
 
     const pathText = path.slice(1);
-    const params = new URLSearchParams(query);
-    const toCase = query ? params.get('toCase') : null;
+    const params = query ? new URLSearchParams(query) : null;
+    const toCase = params ? params.get('toCase') : null;
 
     const errors = [];
 
@@ -48,6 +48,7 @@ const createServer = () => {
       const { originalCase, convertedText } = convertToCase(pathText, toCase);
 
       res.statusCode = 200;
+      res.statusMessage = 'OK';
 
       return res.end(
         JSON.stringify({
