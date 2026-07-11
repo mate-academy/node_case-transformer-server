@@ -56,7 +56,7 @@ function createServer() {
 
     if (errors.length) {
       res.statusCode = 400;
-      res.statusMessage = 'Bad request'
+      res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
 
       return;
