@@ -25,11 +25,7 @@ const checkRequest = (text, toCase) => {
 
   if (!toCase) {
     errors.push(errorCases.noToCase);
-
-    return errors;
-  }
-
-  if (!supportedCases.includes(toCase)) {
+  } else if (!supportedCases.includes(toCase)) {
     errors.push(errorCases.invalidToCase);
   }
 
