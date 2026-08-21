@@ -30,9 +30,9 @@ const createServer = () => {
       });
     }
 
-    const suportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
+    const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
-    if (toCase !== null && !suportedCases.includes(toCase)) {
+    if (toCase !== null && !supportedCases.includes(toCase)) {
       errors.push({
         message:
           'This case is not supported. Available cases: ' +
@@ -42,6 +42,8 @@ const createServer = () => {
 
     if (errors.length > 0) {
       res.statusCode = 400;
+      res.statusMessage = 'Bad request';
+
       res.setHeader('Content-Type', 'application/json');
 
       res.end(JSON.stringify({ errors }));
@@ -49,7 +51,7 @@ const createServer = () => {
       const result = convertToCase(text, toCase);
 
       res.statusCode = 200;
-      res.statusMessage = 'Ok';
+      res.statusMessage = 'OK';
       res.setHeader('Content-Type', 'application/json');
 
       res.end(
