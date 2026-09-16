@@ -1,4 +1,4 @@
-const { createServer: Server } = require('node:http');
+const { createServer: Server, request } = require('node:http');
 const { convertToCase } = require('./convertToCase');
 
 function createServer() {
@@ -41,13 +41,13 @@ function createServer() {
       res.statusMessage = 'Bad request';
       res.setHeader('Content-Type', 'application/json');
 
-      const errorsJson = {
+      const errorsOfRequest = {
         errors: errors,
       };
 
-      const errorsInJson = JSON.stringify(errorsJson);
+      const requestErrorsFormated = JSON.stringify(errorsOfRequest);
 
-      res.end(errorsInJson);
+      res.end(requestErrorsFormated);
 
       return;
     }
