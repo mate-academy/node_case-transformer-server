@@ -1,4 +1,4 @@
-const { createServer: Server, request } = require('node:http');
+const { createServer: Server } = require('node:http');
 const { convertToCase } = require('./convertToCase');
 
 function createServer() {
@@ -8,11 +8,10 @@ function createServer() {
     const paramts = new URLSearchParams(queryString);
     const newText = text.slice(1);
     const toCase = paramts.get('toCase');
-
-    // Validação dos dados antes de chamar convertToCase.
     const errors = [];
     const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
+    // Verificando e adicionado erros no array errors.
     if (!newText) {
       errors.push({
         message:
