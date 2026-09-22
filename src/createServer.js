@@ -3,7 +3,7 @@
 // and import (require) them here
 const http = require('http');
 const { convertToCase } = require('./convertToCase');
-
+/*eslint-disable */
 const SUPPORTED_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
@@ -15,7 +15,7 @@ function createServer() {
     const params = new URLSearchParams(queryString);
     const toCase = params.get('toCase');
 
-    let errors = [];
+    const errors = [];
 
     if (!text) {
       errors.push({
@@ -44,6 +44,7 @@ function createServer() {
       res.statusCode = 400;
       res.statusMessage = 'Bad request';
       res.end(JSON.stringify({ errors }));
+
       return;
     }
 
@@ -51,6 +52,7 @@ function createServer() {
 
     res.statusCode = 200;
     res.statusMessage = 'OK';
+
     res.end(
       JSON.stringify({
         originalCase,
@@ -60,6 +62,7 @@ function createServer() {
       }),
     );
   });
+
   return server;
 }
 
