@@ -3,15 +3,14 @@
 // and import (require) them here
 
 const http = require('node:http');
-const wordsToCase = require('./wordsToCase');
-const detectCase = require('./detectCase');
+const { convertToCase } = require('./convertToCase/convertToCase');
 
 function createServer() {
   const server = http.createServer((req, res) => {
     const url = req.url;
     const textToConvert = url.slice(1).split('?')[0];
     const targetCase = new URLSearchParams(url.split('?')[1]).get('toCase');
-    const supportedCases = ['CAMEL', 'SNAKE', 'KEBAB', 'PASCAL', 'UPPER'];
+    const supportedCases = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
     const errors = [];
 
@@ -48,10 +47,10 @@ function createServer() {
 
     res.end(
       JSON.stringify({
-        originalCase: detectCase(textToConvert),
+        originalCase: convertToCase.originalCase,
         targetCase: targetCase,
         originalText: textToConvert,
-        convertedText: wordsToCase(textToConvert, targetCase),
+        convertedText: convertToCase(textToConvert, targetCase),
       }),
     );
   });
