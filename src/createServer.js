@@ -43,14 +43,16 @@ function createServer() {
       return;
     }
 
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    const result = convertToCase(textToConvert, targetCase);
+
+    res.writeHead(200, 'OK', { 'Content-Type': 'application/json' });
 
     res.end(
       JSON.stringify({
-        originalCase: convertToCase.originalCase,
-        targetCase: targetCase,
+        originalCase: result.originalCase,
+        targetCase,
         originalText: textToConvert,
-        convertedText: convertToCase(textToConvert, targetCase),
+        convertedText: result.convertedText,
       }),
     );
   });
