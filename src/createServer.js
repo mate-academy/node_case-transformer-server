@@ -1,81 +1,15 @@
 'use strict';
 
 const http = require('http');
+const { convertToCase } = require('./convertToCase/convertToCase');
 
 const SUPPORTED_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 const HINT = 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
 
-function detectCase(text) {
-  if (text.includes('_')) {
-    return text === text.toUpperCase() ? 'UPPER' : 'SNAKE';
-  }
-
-  if (text.includes('-')) {
-    return 'KEBAB';
-  }
-
-  if (/^[A-Z]/.test(text) && /[a-z]/.test(text)) {
-    return 'PASCAL';
-  }
-
-  if (/^[a-z]/.test(text) && /[A-Z]/.test(text)) {
-    return 'CAMEL';
-  }
-
-  return 'CAMEL';
-}
-
-function splitToWords(text, originalCase) {
-  switch (originalCase) {
-    case 'SNAKE':
-    case 'UPPER':
-      return text.split('_').filter(Boolean);
-    case 'KEBAB':
-      return text.split('-').filter(Boolean);
-    default:
-      return text.split(/(?=[A-Z])/).filter(Boolean);
-  }
-}
-
-function capitalize(word) {
-  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-}
-
-function convert(text, targetCase) {
-  const originalCase = detectCase(text);
-  const words = splitToWords(text, originalCase);
-
-  let convertedText;
-
-  switch (targetCase) {
-    case 'SNAKE':
-      convertedText = words.map((w) => w.toLowerCase()).join('_');
-      break;
-    case 'KEBAB':
-      convertedText = words.map((w) => w.toLowerCase()).join('-');
-      break;
-    case 'UPPER':
-      convertedText = words.map((w) => w.toUpperCase()).join('_');
-      break;
-    case 'PASCAL':
-      convertedText = words.map(capitalize).join('');
-      break;
-    case 'CAMEL':
-      convertedText = words
-        .map((w, i) => (i === 0 ? w.toLowerCase() : capitalize(w)))
-        .join('');
-      break;
-    default:
-      convertedText = text;
-  }
-
-  return { originalCase, convertedText };
-}
-
 function createServer() {
   return http.createServer((req, res) => {
     const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-    const originalText = decodeURIComponent(url.pathname.slice(1));
+    const originalText = url.pathname.slice(1);
     const targetCase = url.searchParams.get('toCase');
 
     const errors = [];
@@ -104,7 +38,10 @@ function createServer() {
       return;
     }
 
-    const { originalCase, convertedText } = convert(originalText, targetCase);
+    const { originalCase, convertedText } = convertToCase(
+      originalText,
+      targetCase,
+    );
 
     res.statusCode = 200;
 
