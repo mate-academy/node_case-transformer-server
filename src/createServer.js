@@ -8,9 +8,9 @@ const HINT = 'Correct request is: "/<TEXT_TO_CONVERT>?toCase=<CASE_NAME>".';
 
 function createServer() {
   return http.createServer((req, res) => {
-    const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-    const originalText = url.pathname.slice(1);
-    const targetCase = url.searchParams.get('toCase');
+    const [pathname, query] = req.url.split('?');
+    const originalText = pathname.slice(1);
+    const targetCase = new URLSearchParams(query).get('toCase');
 
     const errors = [];
 
