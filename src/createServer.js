@@ -5,9 +5,9 @@ const CaseName = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
   return server((req, res) => {
-    const url = new URL(req.url, 'http://localhost');
-    const text = url.pathname.slice(1);
-    const toCase = url.searchParams.get('toCase');
+    const [pathname, queryString] = req.url.split('?');
+    const text = pathname.slice(1);
+    const toCase = new URLSearchParams(queryString).get('toCase');
     const errors = [];
 
     if (!text) {
@@ -35,6 +35,8 @@ function createServer() {
     }
 
     if (errors.length > 0) {
+      res.statusCode = 400;
+      res.statusMessage = 'Bad request';
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify({ errors }));
 
