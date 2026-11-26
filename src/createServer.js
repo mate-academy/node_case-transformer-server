@@ -21,7 +21,7 @@ function createServer() {
       });
     }
 
-    if (!targetCase) {
+    if (!params.has('toCase')) {
       errors.push({
         message: `"toCase" query param is required. ${correctRequest}`,
       });
